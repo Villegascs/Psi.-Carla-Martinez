@@ -2,10 +2,12 @@ import { NextResponse } from 'next/server';
 import { getAdminDb } from '@/lib/firebase/admin';
 
 export async function POST(request: Request) {
+  let debugStep = "INIT";
   try {
+    debugStep = "PARSING_FORMDATA";
     const formData = await request.formData();
     
-    // Parse quantity and participants
+    debugStep = "EXTRACTING_FIELDS";
     const quantity = parseInt(formData.get("quantity") as string) || 1;
     const participantsRaw = formData.get("participants") as string;
     let participants: any[] = [];
@@ -28,9 +30,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "Falta el comprobante de pago." }, { status: 400 });
     }
 
-    // 1. Save to Firebase FIRST (to ensure we don't lose the data if Telegram times out)
+    debugStep = "INIT_FIREBASE_DB";
     const adminDb = getAdminDb();
+    
+    debugStep = "CREATING_DOC_REF";
     const orderRef = adminDb.collection('tickets').doc();
+    
+    debugStep = "PREPARING_DATA";
     const orderDataObj = {
       id: orderRef.id,
       quantity,
@@ -39,16 +45,15 @@ export async function POST(request: Request) {
       paymentMethod,
       paymentDetails: paymentData,
       status: "PENDING_APPROVAL",
-      used: false, // legacy single-use, now we'll track inside participants array but keep for backwards compatibility if needed
+      used: false,
       createdAt: new Date().toISOString()
     };
-
-    // Initialize all participants as not used
     orderDataObj.participants = orderDataObj.participants.map((p: any) => ({ ...p, used: false }));
 
+    debugStep = "SAVING_TO_FIREBASE";
     await orderRef.set(orderDataObj);
 
-    // 2. Prepare Telegram Details
+    debugStep = "PREPARING_TELEGRAM";
     let paymentDetailsText = "";
     if (paymentMethod === "pago_movil") {
       paymentDetailsText = `*Método:* Pago Móvil\n*Banco:* ${paymentData.bank}\n*Cédula:* ${paymentData.paymentId}\n*Teléfono:* ${paymentData.paymentPhone}`;
@@ -57,21 +62,20 @@ export async function POST(request: Request) {
     } else if (paymentMethod === "zelle") {
       paymentDetailsText = `*Método:* Zelle\n*Referencia:* ${paymentData.reference}`;
     } else if (paymentMethod === "efectivo") {
-      paymentDetailsText = `*Método:* Efectivo (Presencial)\n*Billetes:* ${paymentData.billDenomination}`;
+      paymentDetailsText = `*Método:* Efectivo (Presencial)\n*Billetes:* ${paymentData.billDenomination || 'No especificado'}`;
     }
 
     let participantsText = participants.map((p, i) => `👤 *Participante ${i+1}:* ${p.firstName} ${p.lastName} (C.I: ${p.idNumber})`).join("\n");
-    
     const tgCaption = `🎟️ *Nueva Inscripción a Taller (${quantity} Cupos)*\n\n*Taller:* ${workshopName}\n\n${participantsText}\n\n${paymentDetailsText}\n\nRevisa el panel de admin para aprobar esta inscripción y enviar los QRs.`;
 
     const botToken = process.env.TELEGRAM_BOT_TOKEN;
     const chatId = process.env.TELEGRAM_CHAT_ID;
 
-    // 3. Send to Telegram with Timeout (Vercel has 10s max execution for hobby)
     if (botToken && chatId) {
+      debugStep = "SENDING_TELEGRAM";
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 6000); // 6 seconds timeout for Telegram
+        const timeoutId = setTimeout(() => controller.abort(), 6000);
 
         if (paymentMethod !== "efectivo" && paymentProof) {
           const tgFormData = new FormData();
@@ -89,7 +93,6 @@ export async function POST(request: Request) {
           
           const tgData = await tgRes.json();
           if (!tgData.ok && tgData.error_code === 400) {
-             // Fallback for unsupported photo format
              const fallbackFormData = new FormData();
              fallbackFormData.append("chat_id", chatId);
              fallbackFormData.append("text", `${tgCaption}\n\n⚠️ *(El capture tenía un formato no soportado, pero está registrado en Firebase)*`);
@@ -97,28 +100,27 @@ export async function POST(request: Request) {
              await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, { method: "POST", body: fallbackFormData });
           }
         } else {
-          // Cash payment - just send text via JSON (much safer in serverless)
           await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, { 
             method: "POST", 
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              chat_id: chatId,
-              text: tgCaption,
-              parse_mode: "Markdown"
-            }),
+            body: JSON.stringify({ chat_id: chatId, text: tgCaption, parse_mode: "Markdown" }),
             signal: controller.signal 
           });
           clearTimeout(timeoutId);
         }
       } catch (tgError) {
         console.error("Telegram Request failed or timed out:", tgError);
-        // We do NOT fail the request because Firebase already saved it!
       }
     }
 
+    debugStep = "SUCCESS";
     return NextResponse.json({ success: true, orderId: orderRef.id });
   } catch (error: any) {
-    console.error("Workshop Registration Error:", error);
-    return NextResponse.json({ success: false, error: error.message || "Error interno del servidor al procesar la inscripción." }, { status: 500 });
+    console.error("Workshop Registration Error at step:", debugStep, error);
+    // Explicitly return a 200 with success: false so Vercel doesn't intercept it and return an empty 500 HTML
+    return NextResponse.json({ 
+      success: false, 
+      error: `Error at ${debugStep}: ${error.message || "Error interno"}`
+    }, { status: 200 });
   }
 }
