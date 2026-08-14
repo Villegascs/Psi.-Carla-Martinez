@@ -148,14 +148,15 @@ export default function TalleresPage() {
       });
 
       if (!res.ok) {
+        const text = await res.text();
         let errorText = "";
         try {
-          const errData = await res.json();
-          errorText = errData.error || "Error desconocido en el servidor";
+          const errData = JSON.parse(text);
+          errorText = errData.error || "Error desconocido";
         } catch (e) {
-          errorText = await res.text();
+          errorText = text;
         }
-        throw new Error(`Error ${res.status}: ${errorText.substring(0, 100)}...`);
+        throw new Error(`Error ${res.status}: ${errorText.substring(0, 150)}...`);
       }
 
       const resData = await res.json();

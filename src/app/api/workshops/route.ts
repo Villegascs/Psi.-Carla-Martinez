@@ -96,12 +96,17 @@ export async function POST(request: Request) {
              await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, { method: "POST", body: fallbackFormData });
           }
         } else {
-          // Cash payment - just send text
-          const tgFormData = new FormData();
-          tgFormData.append("chat_id", chatId);
-          tgFormData.append("text", tgCaption);
-          tgFormData.append("parse_mode", "Markdown");
-          await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, { method: "POST", body: tgFormData, signal: controller.signal });
+          // Cash payment - just send text via JSON (much safer in serverless)
+          await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, { 
+            method: "POST", 
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              chat_id: chatId,
+              text: tgCaption,
+              parse_mode: "Markdown"
+            }),
+            signal: controller.signal 
+          });
           clearTimeout(timeoutId);
         }
       } catch (tgError) {
