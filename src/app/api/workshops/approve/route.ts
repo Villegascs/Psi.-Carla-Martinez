@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
-import { adminDb } from '@/lib/firebase/admin';
+import { getAdminDb } from '@/lib/firebase/admin';
 import QRCode from 'qrcode';
 import nodemailer from 'nodemailer';
 
 export async function GET() {
   try {
+    const adminDb = getAdminDb();
     const snapshot = await adminDb.collection('tickets').orderBy('createdAt', 'desc').get();
     const tickets = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     return NextResponse.json({ success: true, tickets });
@@ -22,6 +23,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "Faltan datos (orderId o email)." }, { status: 400 });
     }
 
+    const adminDb = getAdminDb();
     const orderRef = adminDb.collection('tickets').doc(orderId);
     const doc = await orderRef.get();
 

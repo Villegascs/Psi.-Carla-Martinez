@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { adminDb } from '@/lib/firebase/admin';
+import { getAdminDb } from '@/lib/firebase/admin';
 import { FieldValue } from 'firebase-admin/firestore';
 
 export async function POST(request: Request) {
@@ -7,6 +7,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { patientName, patientLastName, patientId, dateOfBirth, reason, date, price } = body;
 
+    const adminDb = getAdminDb();
     const newAppointmentRef = adminDb.collection('appointments').doc();
     const appointmentData = {
       id: newAppointmentRef.id,

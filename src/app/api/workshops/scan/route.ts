@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { adminDb } from '@/lib/firebase/admin';
+import { getAdminDb } from '@/lib/firebase/admin';
 
 export async function POST(request: Request) {
   try {
@@ -14,6 +14,7 @@ export async function POST(request: Request) {
     const orderId = parts[0];
     const participantIndex = parseInt(parts[1]);
 
+    const adminDb = getAdminDb();
     const orderRef = adminDb.collection('tickets').doc(orderId);
     const doc = await orderRef.get();
 

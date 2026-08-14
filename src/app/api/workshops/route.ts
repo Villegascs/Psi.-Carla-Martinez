@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { adminDb } from '@/lib/firebase/admin';
+import { getAdminDb } from '@/lib/firebase/admin';
 
 export async function POST(request: Request) {
   try {
@@ -29,6 +29,7 @@ export async function POST(request: Request) {
     }
 
     // 1. Save to Firebase FIRST (to ensure we don't lose the data if Telegram times out)
+    const adminDb = getAdminDb();
     const orderRef = adminDb.collection('tickets').doc();
     const orderDataObj = {
       id: orderRef.id,
