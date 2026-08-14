@@ -50,38 +50,56 @@ export async function POST(req: Request) {
     // Handle Email & QRs if Approved
     if (action === 'approve' && orderData.buyerEmail) {
       try {
+        const workshopSnapshot = await adminDb.collection('workshops').where('title', '==', orderData.workshopName).limit(1).get();
+        let workshopData = null;
+        if (!workshopSnapshot.empty) {
+          workshopData = workshopSnapshot.docs[0].data();
+        }
+        const isVirtual = workshopData && workshopData.type === 'Virtual';
+        const virtualLink = workshopData ? workshopData.virtualLink : '#';
+
         const attachments = [];
         let ticketsHtml = '';
         
-        // Generate a QR for each participant
-        for (let i = 0; i < orderData.participants.length; i++) {
-          const participant = orderData.participants[i];
-          const qrData = JSON.stringify({
-            orderId: orderId,
-            participantIndex: i,
-            idNumber: `${participant.idType}-${participant.idNumber}`
-          });
-          
-          const qrBuffer = await QRCode.toBuffer(qrData, { width: 300, margin: 2 });
-          
-          attachments.push({
-            filename: `Entrada_${participant.firstName}_${participant.lastName}.png`,
-            content: qrBuffer,
-            cid: `qr_${i}`
-          });
-
-          ticketsHtml += `
-            <div style="background-color: #111111; color: #ffffff; padding: 30px 20px; border-radius: 12px; text-align: center; max-width: 350px; margin: 0 auto 20px auto; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; border: 1px solid #333;">
-              <p style="color: #ffffff; font-size: 1rem; font-weight: 600; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 1px;">Entrada ${i + 1} de ${orderData.participants.length}</p>
-              <h3 style="font-size: 1.2rem; font-weight: 400; margin: 0 0 20px 0;"><strong style="font-weight: 700;">Titular:</strong> ${participant.firstName} ${participant.lastName}</h3>
-              
-              <div style="background-color: #ffffff; padding: 15px; border-radius: 8px; display: inline-block; margin-bottom: 20px;">
-                <img src="cid:qr_${i}" alt="QR Code" style="width: 200px; height: 200px; display: block;" />
-              </div>
-              
-              <p style="color: #aaaaaa; font-size: 0.85rem; margin: 0;">ID: ${orderId.substring(0, 8)}</p>
+        if (isVirtual) {
+          ticketsHtml = `
+            <div style="background-color: #fdf8f6; padding: 30px; border-radius: 12px; text-align: center; border: 1px solid #f9dad0; margin-bottom: 30px;">
+              <h2 style="color: #111; margin-top: 0;">¡Ya puedes ingresar a tu curso virtual!</h2>
+              <p style="color: #555; margin-bottom: 24px;">Haz clic en el botón de abajo para acceder a la sala virtual.</p>
+              <a href="${virtualLink}" style="display: inline-block; background-color: #111; color: #fff; text-decoration: none; padding: 16px 32px; border-radius: 8px; font-weight: bold; font-size: 1.1rem;">Ingresar al Curso</a>
             </div>
           `;
+        } else {
+          // Generate a QR for each participant
+          for (let i = 0; i < orderData.participants.length; i++) {
+            const participant = orderData.participants[i];
+            const qrData = JSON.stringify({
+              orderId: orderId,
+              participantIndex: i,
+              idNumber: `${participant.idType}-${participant.idNumber}`
+            });
+            
+            const qrBuffer = await QRCode.toBuffer(qrData, { width: 300, margin: 2 });
+            
+            attachments.push({
+              filename: `Entrada_${participant.firstName}_${participant.lastName}.png`,
+              content: qrBuffer,
+              cid: `qr_${i}`
+            });
+
+            ticketsHtml += `
+              <div style="background-color: #111111; color: #ffffff; padding: 30px 20px; border-radius: 12px; text-align: center; max-width: 350px; margin: 0 auto 20px auto; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; border: 1px solid #333;">
+                <p style="color: #ffffff; font-size: 1rem; font-weight: 600; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 1px;">Entrada ${i + 1} de ${orderData.participants.length}</p>
+                <h3 style="font-size: 1.2rem; font-weight: 400; margin: 0 0 20px 0;"><strong style="font-weight: 700;">Titular:</strong> ${participant.firstName} ${participant.lastName}</h3>
+                
+                <div style="background-color: #ffffff; padding: 15px; border-radius: 8px; display: inline-block; margin-bottom: 20px;">
+                  <img src="cid:qr_${i}" alt="QR Code" style="width: 200px; height: 200px; display: block;" />
+                </div>
+                
+                <p style="color: #aaaaaa; font-size: 0.85rem; margin: 0;">ID: ${orderId.substring(0, 8)}</p>
+              </div>
+            `;
+          }
         }
 
         // Send Email with NodeMailer
@@ -96,7 +114,7 @@ export async function POST(req: Request) {
         const info = await transporter.sendMail({
           from: `"Carla Martinez | Entradas" <${process.env.EMAIL_USER}>`,
           to: orderData.buyerEmail,
-          subject: `Entradas Confirmadas - ${orderData.workshopName}`,
+          subject: `Inscripción Confirmada - ${orderData.workshopName}`,
           html: `
             <div style="background-color: #f4f4f5; padding: 40px 20px; font-family: sans-serif;">
               <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
@@ -106,7 +124,7 @@ export async function POST(req: Request) {
                 <div style="padding: 30px;">
                   <p style="font-size: 1.1rem; color: #111111; font-weight: 600;">Hola,</p>
                   <p style="font-size: 1.1rem; color: #333333; line-height: 1.5;">Tu pago para el <strong>${orderData.workshopName}</strong> ha sido verificado con éxito.</p>
-                  <p style="font-size: 1.1rem; color: #333333; line-height: 1.5; margin-bottom: 30px;">A continuación encontrarás tus entradas. Por favor, muéstralas desde tu teléfono el día del evento.</p>
+                  <p style="font-size: 1.1rem; color: #333333; line-height: 1.5; margin-bottom: 30px;">${isVirtual ? 'A continuación encontrarás el acceso a tu curso virtual.' : 'A continuación encontrarás tus entradas. Por favor, muéstralas desde tu teléfono el día del evento.'}</p>
                   
                   ${ticketsHtml}
                   

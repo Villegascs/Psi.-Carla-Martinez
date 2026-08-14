@@ -1,6 +1,21 @@
 import { NextResponse } from 'next/server';
 import { getAdminDb } from '@/lib/firebase/admin';
 
+export async function GET(request: Request) {
+  try {
+    const adminDb = getAdminDb();
+    const snapshot = await adminDb.collection('workshops')
+      .where('status', '==', 'Publicado')
+      .orderBy('createdAt', 'desc')
+      .get();
+      
+    const workshops = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return NextResponse.json({ success: true, workshops });
+  } catch (error: any) {
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  }
+}
+
 export async function POST(request: Request) {
   let debugStep = "INIT";
   try {
