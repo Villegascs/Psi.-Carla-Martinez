@@ -113,14 +113,22 @@ export default function TalleresPage() {
     setParticipants(newParticipants);
   };
 
-  const handleParticipantChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleParticipantChange = (index: number, e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const newParticipants = [...participants];
-    newParticipants[index] = { ...newParticipants[index], [e.target.name]: e.target.value };
+    let val = e.target.value;
+    if (e.target.name === "idNumber") {
+      val = val.replace(/\D/g, ''); // Sólo números
+    }
+    newParticipants[index] = { ...newParticipants[index], [e.target.name]: val };
     setParticipants(newParticipants);
   };
 
   const handlePaymentChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setPaymentData({ ...paymentData, [e.target.name]: e.target.value });
+    let val = e.target.value;
+    if (e.target.name === "paymentId" || e.target.name === "paymentPhone") {
+      val = val.replace(/\D/g, ''); // Sólo números
+    }
+    setPaymentData({ ...paymentData, [e.target.name]: val });
   };
 
   const handleOpenDetail = (workshop: any) => {
@@ -380,7 +388,7 @@ export default function TalleresPage() {
                           <option value="G">G</option>
                           <option value="P">P</option>
                         </select>
-                        <input required type="text" name="idNumber" value={participant.idNumber} onChange={(e) => handleParticipantChange(index, e)} className="input-field" placeholder="12345678" style={{ flexGrow: 1 }} />
+                        <input required type="text" inputMode="numeric" pattern="[0-9]*" name="idNumber" value={participant.idNumber} onChange={(e) => handleParticipantChange(index, e)} className="input-field" placeholder="12345678" style={{ flexGrow: 1 }} />
                       </div>
                     </div>
                   </div>
@@ -449,7 +457,7 @@ export default function TalleresPage() {
                       </div>
                       <div className="form-group" style={{ marginBottom: 0 }}>
                         <label className="form-label">Teléfono Emisor</label>
-                        <input required type="text" name="paymentPhone" value={paymentData.paymentPhone} onChange={handlePaymentChange} className="input-field" placeholder="0414..." />
+                        <input required type="text" inputMode="numeric" pattern="[0-9]*" name="paymentPhone" value={paymentData.paymentPhone} onChange={handlePaymentChange} className="input-field" placeholder="0414..." />
                       </div>
                     </div>
                     <div className="form-group" style={{ marginBottom: "16px" }}>
@@ -462,7 +470,7 @@ export default function TalleresPage() {
                           <option value="G">G</option>
                           <option value="P">P</option>
                         </select>
-                        <input required type="text" name="paymentId" value={paymentData.paymentId} onChange={handlePaymentChange} className="input-field" placeholder="12345678" style={{ flexGrow: 1 }} />
+                        <input required type="text" inputMode="numeric" pattern="[0-9]*" name="paymentId" value={paymentData.paymentId} onChange={handlePaymentChange} className="input-field" placeholder="12345678" style={{ flexGrow: 1 }} />
                       </div>
                     </div>
                   </>
