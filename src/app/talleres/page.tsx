@@ -439,8 +439,8 @@ export default function TalleresPage() {
                     <h4 style={{ fontSize: "0.9rem", color: "var(--color-text-secondary)", marginBottom: "4px" }}>Total a Pagar</h4>
                     <div style={{ display: "flex", alignItems: "baseline", flexWrap: "wrap", justifyContent: "flex-end" }}>
                       <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "var(--color-text)" }}>{quantity * parseInt(selectedWorkshop.price.replace('$', '').replace('€', ''))}€</span>
-                      <span style={{ fontSize: "1.2rem", fontWeight: 700, color: "var(--color-text-secondary)", margin: "0 8px" }}>|</span>
-                      <span style={{ fontSize: "1.2rem", fontWeight: 700, color: "var(--color-accent)" }}>
+                      <span style={{ fontSize: "1.5rem", fontWeight: 700, color: "var(--color-text-secondary)", margin: "0 8px" }}>|</span>
+                      <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "var(--color-accent)" }}>
                         {exchangeRates.eur > 0 ? (quantity * parseInt(selectedWorkshop.price.replace('$', '').replace('€', '')) * exchangeRates.eur).toFixed(2) : "..."} Bs
                       </span>
                     </div>
@@ -469,8 +469,8 @@ export default function TalleresPage() {
                       <span style={{ fontSize: "1.8rem", fontWeight: 800, color: "var(--color-text)" }}>
                         {quantity * parseInt(selectedWorkshop.price.replace('$', '').replace('€', ''))}€
                       </span>
-                      <span style={{ fontSize: "1.5rem", fontWeight: 700, color: "var(--color-text-secondary)", margin: "0 10px" }}>|</span>
-                      <span style={{ fontSize: "1.5rem", fontWeight: 700, color: "var(--color-accent)" }}>
+                      <span style={{ fontSize: "1.8rem", fontWeight: 700, color: "var(--color-text-secondary)", margin: "0 10px" }}>|</span>
+                      <span style={{ fontSize: "1.8rem", fontWeight: 800, color: "var(--color-accent)" }}>
                         {exchangeRates.eur > 0 ? (quantity * parseInt(selectedWorkshop.price.replace('$', '').replace('€', '')) * exchangeRates.eur).toFixed(2) : "..."} Bs
                       </span>
                     </div>
