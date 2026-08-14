@@ -78,7 +78,7 @@ export async function POST(req: Request) {
           }
         });
 
-        await transporter.sendMail({
+        const info = await transporter.sendMail({
           from: `"Carla Martinez" <${process.env.EMAIL_USER}>`,
           to: orderData.buyerEmail,
           subject: '🎟️ Tus entradas para el Taller',
@@ -91,6 +91,14 @@ export async function POST(req: Request) {
           `,
           attachments: attachments
         });
+
+        if (botToken && chatId) {
+          await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: chatId, text: `✅ Servidor: Correo enviado con éxito a ${orderData.buyerEmail}. Res: ${info.response}` })
+          });
+        }
       } catch (emailError: any) {
         console.error("Error sending email:", emailError);
         if (botToken && chatId) {
