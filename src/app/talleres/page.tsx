@@ -272,9 +272,9 @@ export default function TalleresPage() {
                   </p>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <span style={{ fontSize: "0.9rem", fontWeight: 600, color: "var(--color-text)" }}>{workshop.date}</span>
-                    <span style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--color-accent)" }}>{workshop.price}</span>
-                  </div>
-                </div>
+                    <span style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--color-accent)", padding: "4px 12px", backgroundColor: "var(--color-surface)", borderRadius: "20px" }}>
+                  {workshop.price.replace('$', '€')}
+                </span>
               </div>
             ))}
           </div>
@@ -300,7 +300,7 @@ export default function TalleresPage() {
               </div>
               <div style={{ backgroundColor: "var(--color-surface)", padding: "12px 20px", borderRadius: "8px", border: "1px solid var(--color-border)" }}>
                 <strong style={{ display: "block", fontSize: "0.8rem", color: "var(--color-text-secondary)" }}>PRECIO</strong>
-                <span style={{ color: "var(--color-accent)", fontWeight: 700 }}>{selectedWorkshop.price}</span>
+                <span style={{ color: "var(--color-accent)", fontWeight: 700 }}>{selectedWorkshop.price.replace('$', '€')}</span>
               </div>
               <div style={{ backgroundColor: "var(--color-surface)", padding: "12px 20px", borderRadius: "8px", border: "1px solid var(--color-border)" }}>
                 <strong style={{ display: "block", fontSize: "0.8rem", color: "var(--color-text-secondary)" }}>CUPOS</strong>
@@ -378,20 +378,15 @@ export default function TalleresPage() {
                   </div>
                   <div style={{ textAlign: "right" }}>
                     <span style={{ fontSize: "0.9rem", color: "var(--color-text-secondary)", display: "block", marginBottom: "8px" }}>Total a pagar:</span>
-                    <div style={{ display: "flex", alignItems: "flex-end", gap: "16px", flexWrap: "wrap" }}>
+                    <div style={{ display: "flex", alignItems: "flex-end", gap: "16px", flexWrap: "wrap", justifyContent: "flex-end" }}>
                       <div style={{ fontSize: "1.8rem", fontWeight: 800, color: "var(--color-text)", lineHeight: 1 }}>
-                        ${quantity * parseInt(selectedWorkshop.price.replace('$', ''))}
+                        €{quantity * parseInt(selectedWorkshop.price.replace('$', '').replace('€', ''))}
                       </div>
                       
-                      {exchangeRates.usd > 0 && exchangeRates.eur > 0 && (
-                        <>
-                          <div style={{ fontSize: "1.2rem", fontWeight: 600, color: "var(--color-text-secondary)", lineHeight: 1.2 }}>
-                            ~ €{((quantity * parseInt(selectedWorkshop.price.replace('$', '')) * exchangeRates.usd) / exchangeRates.eur).toFixed(2)}
-                          </div>
-                          <div style={{ fontSize: "1rem", fontWeight: 500, color: "var(--color-accent)", backgroundColor: "#fdf8f6", padding: "4px 10px", borderRadius: "12px", border: "1px solid #f9dad0", lineHeight: 1.2 }}>
-                            Bs {(quantity * parseInt(selectedWorkshop.price.replace('$', '')) * exchangeRates.usd).toFixed(2)} <span style={{ fontSize: "0.75rem", color: "#888" }}>(Tasa BCV)</span>
-                          </div>
-                        </>
+                      {exchangeRates.eur > 0 && (
+                        <div style={{ fontSize: "1rem", fontWeight: 500, color: "var(--color-accent)", backgroundColor: "#fdf8f6", padding: "4px 10px", borderRadius: "12px", border: "1px solid #f9dad0", lineHeight: 1.2 }}>
+                          Bs {(quantity * parseInt(selectedWorkshop.price.replace('$', '').replace('€', '')) * exchangeRates.eur).toFixed(2)} <span style={{ fontSize: "0.75rem", color: "#888" }}>(Tasa Euro BCV)</span>
+                        </div>
                       )}
                     </div>
                   </div>
@@ -446,11 +441,10 @@ export default function TalleresPage() {
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", backgroundColor: "var(--color-surface)", padding: "16px", borderRadius: "8px", border: "1px solid var(--color-border)", marginBottom: "24px" }}>
                   <div>
                     <h4 style={{ fontSize: "0.9rem", color: "var(--color-text-secondary)", marginBottom: "4px" }}>Total a Pagar</h4>
-                    <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "var(--color-accent)" }}>${quantity * parseInt(selectedWorkshop.price.replace('$', ''))}</span>
+                    <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "var(--color-accent)" }}>€{quantity * parseInt(selectedWorkshop.price.replace('$', '').replace('€', ''))}</span>
                   </div>
                   <div style={{ textAlign: "right" }}>
-                    {exchangeRates.usd > 0 && <p style={{ fontSize: "0.85rem", color: "var(--color-text)", fontWeight: 500, marginBottom: "4px" }}>Bs: {(quantity * parseInt(selectedWorkshop.price.replace('$', '')) * exchangeRates.usd).toFixed(2)} (Tasa BCV)</p>}
-                    {exchangeRates.eur > 0 && <p style={{ fontSize: "0.85rem", color: "var(--color-text-secondary)" }}>€: {((quantity * parseInt(selectedWorkshop.price.replace('$', '')) * exchangeRates.usd) / exchangeRates.eur).toFixed(2)}</p>}
+                    {exchangeRates.eur > 0 && <p style={{ fontSize: "0.85rem", color: "var(--color-text)", fontWeight: 500, marginBottom: "4px" }}>Bs: {(quantity * parseInt(selectedWorkshop.price.replace('$', '').replace('€', '')) * exchangeRates.eur).toFixed(2)} (Tasa Euro BCV)</p>}
                   </div>
                 </div>
 
@@ -464,14 +458,15 @@ export default function TalleresPage() {
                   <select required className="input-field" value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
                     <option value="">Selecciona un método</option>
                     <option value="pago_movil">Pago Móvil (Bs)</option>
-                    <option value="zelle">Zelle ($)</option>
-                    <option value="binance">Binance USDT ($)</option>
+                    <option value="zelle">Zelle (€)</option>
+                    <option value="binance">Binance USDT (€)</option>
                     <option value="efectivo">Efectivo (Presencial)</option>
                   </select>
                 </div>
 
                 {paymentMethod && paymentMethod !== "efectivo" && (
                   <div style={{ backgroundColor: "#fdf8f6", padding: "20px", borderRadius: "8px", marginBottom: "24px", border: "1px solid #f9dad0" }}>
+                    <div style={{ fontSize: "1.5rem", fontWeight: 700, color: "var(--color-accent)", marginBottom: "24px" }}>{selectedWorkshop.price.replace('$', '€')}</div>
                     <h4 style={{ fontSize: "1rem", fontWeight: 700, color: "var(--color-text)", marginBottom: "16px" }}>Datos para realizar el pago:</h4>
                     
                     {paymentMethod === "pago_movil" && (
