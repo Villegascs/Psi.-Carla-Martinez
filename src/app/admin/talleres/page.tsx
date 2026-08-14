@@ -17,6 +17,7 @@ type Workshop = {
   image: string;
   date: string;
   description: string;
+  points?: string;
 };
 
 type Participant = {
@@ -91,7 +92,8 @@ export default function AdminTalleres() {
         status: "Publicado",
         image: "",
         date: "",
-        description: ""
+        description: "",
+        points: ""
       });
     }
     setImageFile(null);
@@ -271,6 +273,11 @@ export default function AdminTalleres() {
               <div>
                 <label style={{ display: "block", marginBottom: "8px", fontWeight: 600, fontSize: "0.9rem" }}>Descripción Larga</label>
                 <textarea required value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} style={{ width: "100%", padding: "10px", border: "1px solid #d1d5db", borderRadius: "6px", minHeight: "100px" }} />
+              </div>
+
+              <div>
+                <label style={{ display: "block", marginBottom: "8px", fontWeight: 600, fontSize: "0.9rem" }}>Puntos Clave (Un punto por línea)</label>
+                <textarea value={formData.points || ""} placeholder="Ejemplo:&#10;12 Horas al Aire Libre&#10;Certificado de Finalización" onChange={e => setFormData({...formData, points: e.target.value})} style={{ width: "100%", padding: "10px", border: "1px solid #d1d5db", borderRadius: "6px", minHeight: "80px" }} />
               </div>
               
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>

@@ -268,11 +268,14 @@ export default function TalleresPage() {
                 <div 
                   key={workshop.id} 
                   className="card" 
-                  style={{ padding: 0, overflow: "hidden", display: "flex", flexDirection: "column", cursor: "pointer", transition: "transform 0.2s" }}
+                  style={{ position: "relative", padding: 0, overflow: "hidden", display: "flex", flexDirection: "column", cursor: "pointer", transition: "transform 0.2s" }}
                   onClick={() => handleOpenDetail(workshop)}
                   onMouseOver={(e) => e.currentTarget.style.transform = "scale(1.02)"}
                   onMouseOut={(e) => e.currentTarget.style.transform = "scale(1)"}
                 >
+                  <div style={{ position: "absolute", top: "16px", left: "16px", backgroundColor: "rgba(255,255,255,0.9)", padding: "6px 12px", borderRadius: "20px", fontSize: "0.8rem", fontWeight: 700, color: "var(--color-accent)", boxShadow: "0 2px 4px rgba(0,0,0,0.1)", backdropFilter: "blur(4px)" }}>
+                    {workshop.type || 'Presencial'}
+                  </div>
                   <img src={workshop.image} alt={workshop.title} style={{ width: "100%", height: "200px", objectFit: "cover" }} />
                   <div style={{ padding: "20px", display: "flex", flexDirection: "column", flexGrow: 1 }}>
                     <h3 style={{ fontSize: "1.2rem", fontWeight: 700, marginBottom: "8px", color: "var(--color-text)" }}>{workshop.title}</h3>
@@ -303,7 +306,12 @@ export default function TalleresPage() {
             >
               ← Volver a todos los talleres
             </button>
-            <h1 className="heading-1" style={{ marginBottom: "16px" }}>{selectedWorkshop.title}</h1>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px", flexWrap: "wrap" }}>
+              <h1 className="heading-1" style={{ margin: 0 }}>{selectedWorkshop.title}</h1>
+              <span style={{ backgroundColor: "#fef2f2", color: "var(--color-accent)", padding: "4px 12px", borderRadius: "20px", fontSize: "0.9rem", fontWeight: 700, border: "1px solid #f9dad0" }}>
+                {selectedWorkshop.type || 'Presencial'}
+              </span>
+            </div>
             
             <div style={{ display: "flex", gap: "24px", marginBottom: "24px", flexWrap: "wrap" }}>
               <div style={{ backgroundColor: "var(--color-surface)", padding: "12px 20px", borderRadius: "8px", border: "1px solid var(--color-border)" }}>
@@ -326,6 +334,17 @@ export default function TalleresPage() {
 
             <h3 className="heading-2" style={{ fontSize: "1.2rem", marginBottom: "8px" }}>Descripción</h3>
             <p className="text-muted" style={{ marginBottom: "24px", lineHeight: "1.6" }}>{selectedWorkshop.description}</p>
+
+            {selectedWorkshop.points && (
+              <div style={{ marginBottom: "24px" }}>
+                <h3 className="heading-2" style={{ fontSize: "1.2rem", marginBottom: "12px" }}>Lo que incluye:</h3>
+                <ul style={{ paddingLeft: "24px", color: "var(--color-text-secondary)", display: "flex", flexDirection: "column", gap: "8px" }}>
+                  {selectedWorkshop.points.split('\n').filter((p: string) => p.trim()).map((point: string, i: number) => (
+                    <li key={i}>{point.trim()}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             <button className="btn-primary" style={{ width: "100%", padding: "16px", fontSize: "1.1rem" }} onClick={handleOpenForm}>
               Reservar mi Cupo Ahora
