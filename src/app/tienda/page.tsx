@@ -117,77 +117,105 @@ export default function TiendaPage() {
 
       {/* Modal Detalles del Producto */}
       {selectedProduct && (
-        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, padding: "16px" }}>
-          <div style={{ backgroundColor: "var(--color-surface)", padding: "32px", borderRadius: "12px", width: "100%", maxWidth: "500px", maxHeight: "90vh", overflowY: "auto", position: "relative" }}>
-            <button onClick={() => setSelectedProduct(null)} style={{ position: "absolute", top: "16px", right: "16px", background: "none", border: "none", fontSize: "1.5rem", cursor: "pointer", color: "var(--color-text)" }}>&times;</button>
+        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, padding: "20px", animation: "fadeIn 0.3s" }}>
+          <div style={{ backgroundColor: "var(--color-surface)", borderRadius: "16px", width: "100%", maxWidth: "850px", maxHeight: "90vh", overflow: "hidden", position: "relative", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", boxShadow: "0 20px 40px rgba(0,0,0,0.2)" }}>
+            <button onClick={() => setSelectedProduct(null)} style={{ position: "absolute", top: "16px", right: "16px", background: "rgba(255,255,255,0.8)", border: "none", width: "36px", height: "36px", borderRadius: "50%", fontSize: "1.5rem", cursor: "pointer", color: "#000", zIndex: 10, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}>&times;</button>
             
-            <img src={selectedProduct.image} alt={selectedProduct.name} style={{ width: "100%", height: "250px", objectFit: "cover", borderRadius: "8px", marginBottom: "16px" }} />
+            {/* Columna Izquierda: Imagen */}
+            <div style={{ backgroundColor: "#f9fafb", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", minHeight: "300px" }}>
+              <img src={selectedProduct.image} alt={selectedProduct.name} style={{ width: "100%", height: "100%", objectFit: "cover", maxHeight: "500px" }} />
+            </div>
             
-            <h2 style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: "8px" }}>{selectedProduct.name}</h2>
-            <p style={{ fontSize: "1.25rem", fontWeight: 700, color: "var(--color-accent)", marginBottom: "16px" }}>{selectedProduct.price}</p>
-            <p style={{ color: "var(--color-text-secondary)", marginBottom: "24px", lineHeight: "1.5" }}>{selectedProduct.description}</p>
+            {/* Columna Derecha: Detalles */}
+            <div style={{ padding: "40px 32px", overflowY: "auto", display: "flex", flexDirection: "column" }}>
+              <span style={{ fontSize: "0.85rem", textTransform: "uppercase", letterSpacing: "1px", color: "var(--color-text-secondary)", fontWeight: 600, marginBottom: "8px" }}>Tienda Oficial</span>
+              <h2 style={{ fontSize: "2rem", fontWeight: 800, marginBottom: "12px", lineHeight: 1.1 }}>{selectedProduct.name}</h2>
+              <p style={{ fontSize: "1.5rem", fontWeight: 700, color: "var(--color-accent)", marginBottom: "24px" }}>{selectedProduct.price}</p>
+              
+              <div style={{ marginBottom: "32px", paddingBottom: "24px", borderBottom: "1px solid var(--color-border)" }}>
+                <p style={{ color: "var(--color-text-secondary)", lineHeight: "1.6", fontSize: "1rem" }}>{selectedProduct.description}</p>
+              </div>
 
-            {(() => {
-              const sizesArr = selectedProduct.sizes ? selectedProduct.sizes.split(',').map(s => s.trim()).filter(Boolean) : [];
-              return sizesArr.length > 0 ? (
-                <div style={{ marginBottom: "16px" }}>
-                  <p style={{ fontWeight: 600, marginBottom: "8px" }}>Talla:</p>
-                  <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                    {sizesArr.map(s => (
-                      <button 
-                        key={s} 
-                        onClick={() => setSelectedSize(s)}
-                        style={{ 
-                          padding: "8px 16px", 
-                          border: `2px solid ${selectedSize === s ? "var(--color-accent)" : "var(--color-border)"}`,
-                          backgroundColor: selectedSize === s ? "#fef2f2" : "var(--color-surface)",
-                          color: selectedSize === s ? "var(--color-accent)" : "var(--color-text)",
-                          borderRadius: "8px",
-                          fontWeight: 600,
-                          cursor: "pointer",
-                          transition: "0.2s"
-                        }}
-                      >
-                        {s}
-                      </button>
-                    ))}
+              {(() => {
+                const sizesArr = selectedProduct.sizes ? selectedProduct.sizes.split(',').map(s => s.trim()).filter(Boolean) : [];
+                return sizesArr.length > 0 ? (
+                  <div style={{ marginBottom: "24px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+                      <p style={{ fontWeight: 700, fontSize: "0.95rem" }}>Selecciona tu talla:</p>
+                      <span style={{ fontSize: "0.85rem", color: "var(--color-text-secondary)" }}>{selectedSize || "Ninguna seleccionada"}</span>
+                    </div>
+                    <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+                      {sizesArr.map(s => (
+                        <button 
+                          key={s} 
+                          onClick={() => setSelectedSize(s)}
+                          style={{ 
+                            width: "48px",
+                            height: "48px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            border: `2px solid ${selectedSize === s ? "var(--color-text)" : "var(--color-border)"}`,
+                            backgroundColor: selectedSize === s ? "var(--color-text)" : "transparent",
+                            color: selectedSize === s ? "var(--color-bg-primary)" : "var(--color-text)",
+                            borderRadius: "8px",
+                            fontWeight: 600,
+                            cursor: "pointer",
+                            transition: "all 0.2s ease"
+                          }}
+                        >
+                          {s}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ) : null;
-            })()}
+                ) : null;
+              })()}
 
-            {(() => {
-              const colorsArr = selectedProduct.colors ? selectedProduct.colors.split(',').map(c => c.trim()).filter(Boolean) : [];
-              return colorsArr.length > 0 ? (
-                <div style={{ marginBottom: "24px" }}>
-                  <p style={{ fontWeight: 600, marginBottom: "8px" }}>Color:</p>
-                  <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                    {colorsArr.map(c => (
-                      <button 
-                        key={c} 
-                        onClick={() => setSelectedColor(c)}
-                        style={{ 
-                          padding: "8px 16px", 
-                          border: `2px solid ${selectedColor === c ? "var(--color-accent)" : "var(--color-border)"}`,
-                          backgroundColor: selectedColor === c ? "#fef2f2" : "var(--color-surface)",
-                          color: selectedColor === c ? "var(--color-accent)" : "var(--color-text)",
-                          borderRadius: "8px",
-                          fontWeight: 600,
-                          cursor: "pointer",
-                          transition: "0.2s"
-                        }}
-                      >
-                        {c}
-                      </button>
-                    ))}
+              {(() => {
+                const colorsArr = selectedProduct.colors ? selectedProduct.colors.split(',').map(c => c.trim()).filter(Boolean) : [];
+                return colorsArr.length > 0 ? (
+                  <div style={{ marginBottom: "32px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+                      <p style={{ fontWeight: 700, fontSize: "0.95rem" }}>Color:</p>
+                      <span style={{ fontSize: "0.85rem", color: "var(--color-text-secondary)" }}>{selectedColor || "Ninguno seleccionado"}</span>
+                    </div>
+                    <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+                      {colorsArr.map(c => (
+                        <button 
+                          key={c} 
+                          onClick={() => setSelectedColor(c)}
+                          style={{ 
+                            padding: "10px 20px", 
+                            border: `2px solid ${selectedColor === c ? "var(--color-text)" : "var(--color-border)"}`,
+                            backgroundColor: selectedColor === c ? "var(--color-text)" : "transparent",
+                            color: selectedColor === c ? "var(--color-bg-primary)" : "var(--color-text)",
+                            borderRadius: "30px",
+                            fontWeight: 600,
+                            fontSize: "0.9rem",
+                            cursor: "pointer",
+                            transition: "all 0.2s ease"
+                          }}
+                        >
+                          {c}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ) : null;
-            })()}
+                ) : null;
+              })()}
 
-            <button className="btn-primary" style={{ width: "100%", padding: "16px", fontSize: "1.1rem" }} onClick={handleAddToCart}>
-              Añadir al Carrito
-            </button>
+              <button 
+                className="btn-primary" 
+                style={{ width: "100%", padding: "18px", fontSize: "1.1rem", marginTop: "auto", display: "flex", justifyContent: "center", alignItems: "center", gap: "8px", borderRadius: "12px", boxShadow: "0 8px 16px rgba(0,0,0,0.1)" }} 
+                onClick={handleAddToCart}
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M16 11V7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7V11M5 9H19L20 21H4L5 9Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                Añadir al Carrito
+              </button>
+            </div>
           </div>
         </div>
       )}
