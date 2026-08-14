@@ -55,6 +55,26 @@ const VENEZUELAN_BANKS = [
   "Bancaribe", "Banco Exterior", "Banco del Tesoro", "Banco Bicentenario", "Banplus", "Banco Plaza"
 ];
 
+const CopyableText = ({ label, text }: { label: string, text: string }) => {
+  const [copied, setCopied] = useState(false);
+  const handleCopy = () => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+  return (
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px", backgroundColor: "white", padding: "8px 12px", borderRadius: "6px", border: "1px solid #f9dad0" }}>
+      <div>
+        <span style={{ fontSize: "0.8rem", color: "var(--color-text-secondary)", display: "block" }}>{label}</span>
+        <span style={{ fontWeight: 600, color: "var(--color-text)", userSelect: "all" }}>{text}</span>
+      </div>
+      <button type="button" onClick={handleCopy} style={{ background: copied ? "#fef2f2" : "var(--color-surface)", border: "1px solid #f9dad0", borderRadius: "4px", padding: "6px 10px", fontSize: "0.8rem", cursor: "pointer", color: copied ? "var(--color-accent)" : "var(--color-text-secondary)", fontWeight: copied ? 600 : 400, transition: "0.2s" }}>
+        {copied ? "¡Copiado!" : "Copiar"}
+      </button>
+    </div>
+  );
+};
+
 export default function TalleresPage() {
   const [viewState, setViewState] = useState<"list" | "detail" | "form" | "success">("list");
   const [selectedWorkshop, setSelectedWorkshop] = useState<any>(null);
@@ -438,10 +458,29 @@ export default function TalleresPage() {
                 </div>
 
                 {paymentMethod && paymentMethod !== "efectivo" && (
-                  <div style={{ backgroundColor: "#fdf8f6", padding: "16px", borderRadius: "8px", marginBottom: "20px", fontSize: "0.9rem", color: "var(--color-text-secondary)", border: "1px solid #f9dad0" }}>
-                    {paymentMethod === "pago_movil" && <p><strong>Datos para Pago Móvil:</strong><br/>Banco Banesco (0134)<br/>C.I: V-25417859<br/>Tel: 0414-4083780</p>}
-                    {paymentMethod === "zelle" && <p><strong>Datos Zelle:</strong><br/>carlamartinez@email.com<br/>A nombre de: Carla Martinez</p>}
-                    {paymentMethod === "binance" && <p><strong>Datos Binance (Pay ID):</strong><br/>254897125</p>}
+                  <div style={{ backgroundColor: "#fdf8f6", padding: "20px", borderRadius: "8px", marginBottom: "24px", border: "1px solid #f9dad0" }}>
+                    <h4 style={{ fontSize: "1rem", fontWeight: 700, color: "var(--color-text)", marginBottom: "16px" }}>Datos para realizar el pago:</h4>
+                    
+                    {paymentMethod === "pago_movil" && (
+                      <>
+                        <CopyableText label="Banco" text="Banesco (0134)" />
+                        <CopyableText label="Cédula de Identidad" text="V-25417859" />
+                        <CopyableText label="Teléfono" text="04144083780" />
+                      </>
+                    )}
+                    
+                    {paymentMethod === "zelle" && (
+                      <>
+                        <CopyableText label="Correo Zelle" text="carlamartinez@email.com" />
+                        <CopyableText label="Titular" text="Carla Martinez" />
+                      </>
+                    )}
+                    
+                    {paymentMethod === "binance" && (
+                      <>
+                        <CopyableText label="Binance Pay ID" text="254897125" />
+                      </>
+                    )}
                   </div>
                 )}
 
