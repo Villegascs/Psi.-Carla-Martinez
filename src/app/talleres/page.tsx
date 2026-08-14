@@ -59,6 +59,10 @@ export default function TalleresPage() {
   const [viewState, setViewState] = useState<"list" | "detail" | "form" | "success">("list");
   const [selectedWorkshop, setSelectedWorkshop] = useState<any>(null);
   
+  const [currentStep, setCurrentStep] = useState(1);
+  const [exchangeRates, setExchangeRates] = useState({ usd: 0, eur: 0 });
+  const [buyerEmail, setBuyerEmail] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -75,6 +79,22 @@ export default function TalleresPage() {
     billDenomination: ""
   });
   const [file, setFile] = useState<File | null>(null);
+
+  // Fetch exchange rates on load
+  import("react").then((ReactModule) => {
+    ReactModule.useEffect(() => {
+      if (viewState === "form") {
+        Promise.all([
+          fetch("https://ve.dolarapi.com/v1/dolares/oficial").then(r => r.json()),
+          fetch("https://ve.dolarapi.com/v1/euros/oficial").then(r => r.json())
+        ])
+        .then(([usdData, eurData]) => {
+          setExchangeRates({ usd: usdData.promedio, eur: eurData.promedio });
+        })
+        .catch(e => console.error("Error fetching rates:", e));
+      }
+    }, [viewState]);
+  });
 
   const handleQuantityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const qty = parseInt(e.target.value);
@@ -109,6 +129,8 @@ export default function TalleresPage() {
 
   const handleOpenForm = () => {
     setErrorMsg("");
+    setCurrentStep(1);
+    setBuyerEmail("");
     setQuantity(1);
     setParticipants([{ firstName: "", lastName: "", idNumber: "" }]);
     setPaymentMethod("");
@@ -116,10 +138,29 @@ export default function TalleresPage() {
     setViewState("form");
   };
 
+  const handleNextStep = () => {
+    // Validate Step 1
+    if (currentStep === 1) {
+      const isValid = participants.every(p => p.firstName && p.lastName && p.idNumber);
+      if (!isValid) {
+        setErrorMsg("Por favor, completa los datos de todos los participantes.");
+        return;
+      }
+      setErrorMsg("");
+      setCurrentStep(2);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (currentStep === 1) return; // Managed by Next Step
+
     if (!paymentMethod) {
       setErrorMsg("Debes seleccionar un método de pago.");
+      return;
+    }
+    if (!buyerEmail) {
+      setErrorMsg("Debes ingresar un correo electrónico.");
       return;
     }
     if (paymentMethod !== "efectivo" && !file) {
@@ -136,6 +177,7 @@ export default function TalleresPage() {
     data.append("participants", JSON.stringify(participants));
     data.append("paymentMethod", paymentMethod);
     data.append("paymentData", JSON.stringify(paymentData));
+    data.append("buyerEmail", buyerEmail);
     
     if (file) {
       data.append("paymentProof", file);
@@ -255,7 +297,7 @@ export default function TalleresPage() {
       )}
 
       {viewState === "form" && selectedWorkshop && (
-        <div className="card" style={{ maxWidth: "600px", margin: "0 auto", padding: "32px" }}>
+        <div className="card" style={{ maxWidth: "700px", margin: "0 auto", padding: "32px", position: "relative" }}>
           <button 
             onClick={() => setViewState("detail")}
             style={{ background: "none", border: "none", color: "var(--color-accent)", fontWeight: 600, cursor: "pointer", marginBottom: "16px", padding: 0 }}
@@ -263,8 +305,21 @@ export default function TalleresPage() {
             ← Volver a detalles
           </button>
           
-          <h2 className="heading-2" style={{ marginBottom: "8px" }}>Formulario de Inscripción</h2>
-          <p className="text-muted" style={{ marginBottom: "24px" }}>Estás reservando para: <strong>{selectedWorkshop.title}</strong></p>
+          {/* Stepper Header */}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "32px", position: "relative" }}>
+            <div style={{ position: "absolute", top: "15px", left: "10%", right: "10%", height: "2px", background: "var(--color-border)", zIndex: 0 }}></div>
+            <div style={{ position: "absolute", top: "15px", left: "10%", right: "50%", height: "2px", background: currentStep === 2 ? "var(--color-accent)" : "transparent", transition: "0.3s", zIndex: 0 }}></div>
+            
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", zIndex: 1 }}>
+              <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "var(--color-accent)", color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", marginBottom: "8px" }}>1</div>
+              <span style={{ fontSize: "0.8rem", fontWeight: 600 }}>Selección</span>
+            </div>
+            
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", zIndex: 1 }}>
+              <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: currentStep === 2 ? "var(--color-accent)" : "var(--color-surface)", border: currentStep === 2 ? "none" : "2px solid var(--color-border)", color: currentStep === 2 ? "white" : "var(--color-text-secondary)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", marginBottom: "8px", transition: "0.3s" }}>2</div>
+              <span style={{ fontSize: "0.8rem", fontWeight: 600, color: currentStep === 2 ? "var(--color-text)" : "var(--color-text-secondary)" }}>Pago</span>
+            </div>
+          </div>
 
           <form onSubmit={handleSubmit}>
             {errorMsg && (
@@ -273,131 +328,160 @@ export default function TalleresPage() {
               </div>
             )}
 
-            {/* Cantidad de Cupos */}
-            <h3 style={{ fontSize: "1.1rem", fontWeight: 700, borderBottom: "1px solid var(--color-border)", paddingBottom: "8px", marginBottom: "16px" }}>1. Cantidad de Cupos</h3>
-            <div className="form-group" style={{ marginBottom: "24px" }}>
-              <label className="form-label">¿Cuántas entradas deseas comprar?</label>
-              <select required className="input-field" value={quantity} onChange={handleQuantityChange}>
-                {[1, 2, 3, 4, 5].map(q => (
-                  <option key={q} value={q}>{q} {q === 1 ? 'Cupo' : 'Cupos'} - Total: ${q * parseInt(selectedWorkshop.price.replace('$', ''))}</option>
+            {currentStep === 1 && (
+              <div className="fade-in">
+                <h3 style={{ fontSize: "1.2rem", fontWeight: 700, marginBottom: "16px" }}>¿Cuántas entradas deseas?</h3>
+                <div className="form-group" style={{ marginBottom: "24px" }}>
+                  <select required className="input-field" value={quantity} onChange={handleQuantityChange}>
+                    {[1, 2, 3, 4, 5].map(q => (
+                      <option key={q} value={q}>{q} {q === 1 ? 'Cupo' : 'Cupos'} - Total: ${q * parseInt(selectedWorkshop.price.replace('$', ''))}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <h3 style={{ fontSize: "1.2rem", fontWeight: 700, marginBottom: "16px" }}>Datos de los Participantes</h3>
+                {participants.map((participant, index) => (
+                  <div key={index} style={{ marginBottom: "24px", padding: "20px", backgroundColor: "var(--color-surface)", borderRadius: "8px", border: "1px solid var(--color-border)" }}>
+                    <h4 style={{ fontSize: "0.95rem", fontWeight: 600, marginBottom: "16px", color: "var(--color-accent)" }}>Participante {index + 1}</h4>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "12px" }}>
+                      <div className="form-group" style={{ marginBottom: 0 }}>
+                        <label className="form-label" style={{ fontSize: "0.8rem" }}>Nombre</label>
+                        <input required type="text" name="firstName" value={participant.firstName} onChange={(e) => handleParticipantChange(index, e)} className="input-field" placeholder="Ej. Ana" />
+                      </div>
+                      <div className="form-group" style={{ marginBottom: 0 }}>
+                        <label className="form-label" style={{ fontSize: "0.8rem" }}>Apellido</label>
+                        <input required type="text" name="lastName" value={participant.lastName} onChange={(e) => handleParticipantChange(index, e)} className="input-field" placeholder="Ej. Gómez" />
+                      </div>
+                    </div>
+                    <div className="form-group" style={{ marginBottom: 0 }}>
+                      <label className="form-label" style={{ fontSize: "0.8rem" }}>Cédula de Identidad</label>
+                      <input required type="text" name="idNumber" value={participant.idNumber} onChange={(e) => handleParticipantChange(index, e)} className="input-field" placeholder="V-12345678" />
+                    </div>
+                  </div>
                 ))}
-              </select>
-            </div>
-
-            {/* Datos Personales Dinámicos */}
-            <h3 style={{ fontSize: "1.1rem", fontWeight: 700, borderBottom: "1px solid var(--color-border)", paddingBottom: "8px", marginBottom: "16px" }}>2. Datos de los Participantes</h3>
-            {participants.map((participant, index) => (
-              <div key={index} style={{ marginBottom: "24px", padding: "16px", backgroundColor: "var(--color-surface)", borderRadius: "8px", border: "1px solid var(--color-border)" }}>
-                <h4 style={{ fontSize: "0.9rem", fontWeight: 600, marginBottom: "12px", color: "var(--color-accent)" }}>Participante {index + 1}</h4>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "12px" }}>
-                  <div className="form-group" style={{ marginBottom: 0 }}>
-                    <label className="form-label" style={{ fontSize: "0.8rem" }}>Nombre</label>
-                    <input required type="text" name="firstName" value={participant.firstName} onChange={(e) => handleParticipantChange(index, e)} className="input-field" placeholder="Ej. Ana" />
-                  </div>
-                  <div className="form-group" style={{ marginBottom: 0 }}>
-                    <label className="form-label" style={{ fontSize: "0.8rem" }}>Apellido</label>
-                    <input required type="text" name="lastName" value={participant.lastName} onChange={(e) => handleParticipantChange(index, e)} className="input-field" placeholder="Ej. Gómez" />
-                  </div>
-                </div>
-                <div className="form-group" style={{ marginBottom: 0 }}>
-                  <label className="form-label" style={{ fontSize: "0.8rem" }}>Cédula de Identidad</label>
-                  <input required type="text" name="idNumber" value={participant.idNumber} onChange={(e) => handleParticipantChange(index, e)} className="input-field" placeholder="V-12345678" />
-                </div>
-              </div>
-            ))}
-
-            {/* Método de Pago */}
-            <h3 style={{ fontSize: "1.1rem", fontWeight: 700, borderBottom: "1px solid var(--color-border)", paddingBottom: "8px", marginBottom: "16px" }}>3. Reporte de Pago</h3>
-            <div className="form-group">
-              <label className="form-label">Método de Pago Utilizado</label>
-              <select required className="input-field" value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
-                <option value="">Selecciona un método</option>
-                <option value="pago_movil">Pago Móvil (Bs)</option>
-                <option value="zelle">Zelle ($)</option>
-                <option value="binance">Binance USDT ($)</option>
-                <option value="efectivo">Efectivo (Presencial)</option>
-              </select>
-            </div>
-
-            {/* Info Generica del Metodo */}
-            {paymentMethod && paymentMethod !== "efectivo" && (
-              <div style={{ backgroundColor: "#fdf8f6", padding: "16px", borderRadius: "8px", marginBottom: "20px", fontSize: "0.9rem", color: "var(--color-text-secondary)", border: "1px solid #f9dad0" }}>
-                {paymentMethod === "pago_movil" && <p><strong>Datos para Pago Móvil:</strong><br/>Banco Banesco (0134)<br/>C.I: V-25417859<br/>Tel: 0414-4083780</p>}
-                {paymentMethod === "zelle" && <p><strong>Datos Zelle:</strong><br/>carlamartinez@email.com<br/>A nombre de: Carla Martinez</p>}
-                {paymentMethod === "binance" && <p><strong>Datos Binance (Pay ID):</strong><br/>254897125</p>}
+                
+                <button type="button" onClick={handleNextStep} className="btn-primary" style={{ width: "100%", padding: "16px", marginTop: "16px" }}>
+                  Continuar al Pago →
+                </button>
               </div>
             )}
 
-            {/* Campos Dinamicos de Pago */}
-            {paymentMethod === "pago_movil" && (
-              <>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
-                  <div className="form-group" style={{ marginBottom: 0 }}>
-                    <label className="form-label">Banco Emisor</label>
-                    <select required name="bank" className="input-field" value={paymentData.bank} onChange={handlePaymentChange}>
-                      <option value="">Seleccione Banco</option>
-                      {VENEZUELAN_BANKS.map(b => <option key={b} value={b}>{b}</option>)}
-                    </select>
+            {currentStep === 2 && (
+              <div className="fade-in">
+                <button 
+                  type="button"
+                  onClick={() => setCurrentStep(1)}
+                  style={{ background: "none", border: "none", color: "var(--color-text-secondary)", fontSize: "0.9rem", cursor: "pointer", marginBottom: "16px", padding: 0 }}
+                >
+                  ← Volver a participantes
+                </button>
+
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", backgroundColor: "var(--color-surface)", padding: "16px", borderRadius: "8px", border: "1px solid var(--color-border)", marginBottom: "24px" }}>
+                  <div>
+                    <h4 style={{ fontSize: "0.9rem", color: "var(--color-text-secondary)", marginBottom: "4px" }}>Total a Pagar</h4>
+                    <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "var(--color-accent)" }}>${quantity * parseInt(selectedWorkshop.price.replace('$', ''))}</span>
                   </div>
-                  <div className="form-group" style={{ marginBottom: 0 }}>
-                    <label className="form-label">Teléfono Emisor</label>
-                    <input required type="text" name="paymentPhone" value={paymentData.paymentPhone} onChange={handlePaymentChange} className="input-field" placeholder="0414..." />
+                  <div style={{ textAlign: "right" }}>
+                    {exchangeRates.usd > 0 && <p style={{ fontSize: "0.85rem", color: "var(--color-text)", fontWeight: 500, marginBottom: "4px" }}>Bs: {(quantity * parseInt(selectedWorkshop.price.replace('$', '')) * exchangeRates.usd).toFixed(2)} (Tasa BCV)</p>}
+                    {exchangeRates.eur > 0 && <p style={{ fontSize: "0.85rem", color: "var(--color-text-secondary)" }}>€: {((quantity * parseInt(selectedWorkshop.price.replace('$', '')) * exchangeRates.usd) / exchangeRates.eur).toFixed(2)}</p>}
                   </div>
                 </div>
-                <div className="form-group" style={{ marginBottom: "16px" }}>
-                  <label className="form-label">Cédula del Titular</label>
-                  <input required type="text" name="paymentId" value={paymentData.paymentId} onChange={handlePaymentChange} className="input-field" placeholder="V-" />
+
+                <div className="form-group" style={{ marginBottom: "24px" }}>
+                  <label className="form-label" style={{ fontSize: "1.1rem" }}>Correo Electrónico para recibir Entradas</label>
+                  <input required type="email" value={buyerEmail} onChange={e => setBuyerEmail(e.target.value)} className="input-field" placeholder="tu@correo.com" />
                 </div>
-              </>
-            )}
 
-            {paymentMethod === "binance" && (
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
-                <div className="form-group" style={{ marginBottom: 0 }}>
-                  <label className="form-label">Usuario Binance</label>
-                  <input required type="text" name="binanceUser" value={paymentData.binanceUser} onChange={handlePaymentChange} className="input-field" placeholder="Ej. AnaGomez22" />
+                <h3 style={{ fontSize: "1.1rem", fontWeight: 700, borderBottom: "1px solid var(--color-border)", paddingBottom: "8px", marginBottom: "16px" }}>Método de Pago</h3>
+                <div className="form-group">
+                  <select required className="input-field" value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
+                    <option value="">Selecciona un método</option>
+                    <option value="pago_movil">Pago Móvil (Bs)</option>
+                    <option value="zelle">Zelle ($)</option>
+                    <option value="binance">Binance USDT ($)</option>
+                    <option value="efectivo">Efectivo (Presencial)</option>
+                  </select>
                 </div>
-                <div className="form-group" style={{ marginBottom: 0 }}>
-                  <label className="form-label">Referencia</label>
-                  <input required type="text" name="reference" value={paymentData.reference} onChange={handlePaymentChange} className="input-field" placeholder="Últimos 6 dígitos" />
-                </div>
+
+                {paymentMethod && paymentMethod !== "efectivo" && (
+                  <div style={{ backgroundColor: "#fdf8f6", padding: "16px", borderRadius: "8px", marginBottom: "20px", fontSize: "0.9rem", color: "var(--color-text-secondary)", border: "1px solid #f9dad0" }}>
+                    {paymentMethod === "pago_movil" && <p><strong>Datos para Pago Móvil:</strong><br/>Banco Banesco (0134)<br/>C.I: V-25417859<br/>Tel: 0414-4083780</p>}
+                    {paymentMethod === "zelle" && <p><strong>Datos Zelle:</strong><br/>carlamartinez@email.com<br/>A nombre de: Carla Martinez</p>}
+                    {paymentMethod === "binance" && <p><strong>Datos Binance (Pay ID):</strong><br/>254897125</p>}
+                  </div>
+                )}
+
+                {paymentMethod === "pago_movil" && (
+                  <>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
+                      <div className="form-group" style={{ marginBottom: 0 }}>
+                        <label className="form-label">Banco Emisor</label>
+                        <select required name="bank" className="input-field" value={paymentData.bank} onChange={handlePaymentChange}>
+                          <option value="">Seleccione Banco</option>
+                          {VENEZUELAN_BANKS.map(b => <option key={b} value={b}>{b}</option>)}
+                        </select>
+                      </div>
+                      <div className="form-group" style={{ marginBottom: 0 }}>
+                        <label className="form-label">Teléfono Emisor</label>
+                        <input required type="text" name="paymentPhone" value={paymentData.paymentPhone} onChange={handlePaymentChange} className="input-field" placeholder="0414..." />
+                      </div>
+                    </div>
+                    <div className="form-group" style={{ marginBottom: "16px" }}>
+                      <label className="form-label">Cédula del Titular</label>
+                      <input required type="text" name="paymentId" value={paymentData.paymentId} onChange={handlePaymentChange} className="input-field" placeholder="V-" />
+                    </div>
+                  </>
+                )}
+
+                {paymentMethod === "binance" && (
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
+                    <div className="form-group" style={{ marginBottom: 0 }}>
+                      <label className="form-label">Usuario Binance</label>
+                      <input required type="text" name="binanceUser" value={paymentData.binanceUser} onChange={handlePaymentChange} className="input-field" placeholder="Ej. AnaGomez22" />
+                    </div>
+                    <div className="form-group" style={{ marginBottom: 0 }}>
+                      <label className="form-label">Referencia</label>
+                      <input required type="text" name="reference" value={paymentData.reference} onChange={handlePaymentChange} className="input-field" placeholder="Últimos 6 dígitos" />
+                    </div>
+                  </div>
+                )}
+
+                {paymentMethod === "zelle" && (
+                  <div className="form-group" style={{ marginBottom: "16px" }}>
+                    <label className="form-label">Número de Referencia Zelle</label>
+                    <input required type="text" name="reference" value={paymentData.reference} onChange={handlePaymentChange} className="input-field" placeholder="Referencia completa" />
+                  </div>
+                )}
+
+                {paymentMethod === "efectivo" && (
+                  <div className="form-group" style={{ marginBottom: "16px" }}>
+                    <label className="form-label">Denominación del Billete</label>
+                    <input required type="text" name="billDenomination" value={paymentData.billDenomination} onChange={handlePaymentChange} className="input-field" placeholder="Ej. Un billete de $20, dos de $10" />
+                    <p style={{ fontSize: "0.8rem", color: "var(--color-text-secondary)", marginTop: "4px" }}>Nota: Pagarás el día del evento en la entrada.</p>
+                  </div>
+                )}
+
+                {paymentMethod && paymentMethod !== "efectivo" && (
+                  <div className="form-group" style={{ marginBottom: "32px" }}>
+                    <label className="form-label">Capture de Pago</label>
+                    <input required type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} className="input-field" style={{ padding: "8px" }} />
+                  </div>
+                )}
+
+                <button type="submit" className="btn-primary" style={{ width: "100%", padding: "16px", marginTop: "16px" }} disabled={loading}>
+                  {loading ? "Procesando Inscripción..." : "Completar Inscripción"}
+                </button>
               </div>
             )}
-
-            {paymentMethod === "zelle" && (
-              <div className="form-group" style={{ marginBottom: "16px" }}>
-                <label className="form-label">Número de Referencia Zelle</label>
-                <input required type="text" name="reference" value={paymentData.reference} onChange={handlePaymentChange} className="input-field" placeholder="Referencia completa" />
-              </div>
-            )}
-
-            {paymentMethod === "efectivo" && (
-              <div className="form-group" style={{ marginBottom: "16px" }}>
-                <label className="form-label">Denominación del Billete</label>
-                <input required type="text" name="billDenomination" value={paymentData.billDenomination} onChange={handlePaymentChange} className="input-field" placeholder="Ej. Un billete de $20, dos de $10" />
-                <p style={{ fontSize: "0.8rem", color: "var(--color-text-secondary)", marginTop: "4px" }}>Nota: Pagarás el día del evento en la entrada.</p>
-              </div>
-            )}
-
-            {paymentMethod && paymentMethod !== "efectivo" && (
-              <div className="form-group" style={{ marginBottom: "32px" }}>
-                <label className="form-label">Capture de Pago</label>
-                <input required type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} className="input-field" style={{ padding: "8px" }} />
-              </div>
-            )}
-
-            <button type="submit" className="btn-primary" style={{ width: "100%", padding: "16px", marginTop: "16px" }} disabled={loading}>
-              {loading ? "Procesando Inscripción..." : "Completar Inscripción"}
-            </button>
           </form>
         </div>
       )}
 
       {viewState === "success" && (
         <div style={{ textAlign: "center", padding: "60px 20px", maxWidth: "600px", margin: "0 auto", backgroundColor: "var(--color-surface)", borderRadius: "12px", border: "1px solid var(--color-border)" }}>
-          <h2 className="heading-2" style={{ color: "var(--color-accent)", marginBottom: "16px" }}>¡Inscripción Recibida! 🎉</h2>
+          <h2 className="heading-2" style={{ color: "var(--color-accent)", marginBottom: "16px" }}>¡Gracias por tu compra! 🎉</h2>
           <p className="text-muted" style={{ marginBottom: "32px", fontSize: "1.1rem" }}>
-            Tu reporte de pago ha sido enviado con éxito al equipo para ser verificado. Una vez confirmado, recibirás tus <strong>Entradas QR</strong> en tu correo electrónico.
+            Una vez aprobada, recibirás tus <strong>entradas</strong> en el correo electrónico proporcionado.
           </p>
           <button className="btn-primary" onClick={() => setViewState("list")}>Volver a Talleres</button>
         </div>

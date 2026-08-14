@@ -16,6 +16,7 @@ export async function POST(request: Request) {
     } catch(e) {}
 
     const workshopName = formData.get("workshopName") as string;
+    const buyerEmail = formData.get("buyerEmail") as string || "";
     const paymentMethod = formData.get("paymentMethod") as string;
     const paymentDataRaw = formData.get("paymentData") as string;
     
@@ -42,6 +43,7 @@ export async function POST(request: Request) {
       quantity,
       participants,
       workshopName,
+      buyerEmail,
       paymentMethod,
       paymentDetails: paymentData,
       status: "PENDING_APPROVAL",
@@ -66,7 +68,7 @@ export async function POST(request: Request) {
     }
 
     let participantsText = participants.map((p, i) => `👤 *Participante ${i+1}:* ${p.firstName} ${p.lastName} (C.I: ${p.idNumber})`).join("\n");
-    const tgCaption = `🎟️ *Nueva Inscripción a Taller (${quantity} Cupos)*\n\n*Taller:* ${workshopName}\n\n${participantsText}\n\n${paymentDetailsText}\n\nRevisa el panel de admin para aprobar esta inscripción y enviar los QRs.`;
+    const tgCaption = `🎟️ *Nueva Inscripción a Taller (${quantity} Cupos)*\n\n*Taller:* ${workshopName}\n*Correo:* ${buyerEmail}\n\n${participantsText}\n\n${paymentDetailsText}\n\nRevisa el panel de admin o usa los botones para aprobar esta inscripción y enviar los QRs.`;
 
     const botToken = process.env.TELEGRAM_BOT_TOKEN;
     const chatId = process.env.TELEGRAM_CHAT_ID;
@@ -76,6 +78,15 @@ export async function POST(request: Request) {
       try {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 6000);
+        
+        const replyMarkup = JSON.stringify({
+          inline_keyboard: [
+            [
+              { text: "✅ Aprobar y Enviar QRs", callback_data: `approve_${orderRef.id}` },
+              { text: "❌ Rechazar", callback_data: `reject_${orderRef.id}` }
+            ]
+          ]
+        });
 
         if (paymentMethod !== "efectivo" && paymentProof) {
           const tgFormData = new FormData();
@@ -83,6 +94,7 @@ export async function POST(request: Request) {
           tgFormData.append("photo", paymentProof, paymentProof.name || "capture.jpg");
           tgFormData.append("caption", tgCaption);
           tgFormData.append("parse_mode", "Markdown");
+          tgFormData.append("reply_markup", replyMarkup);
 
           const tgRes = await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
             method: "POST",
@@ -97,13 +109,14 @@ export async function POST(request: Request) {
              fallbackFormData.append("chat_id", chatId);
              fallbackFormData.append("text", `${tgCaption}\n\n⚠️ *(El capture tenía un formato no soportado, pero está registrado en Firebase)*`);
              fallbackFormData.append("parse_mode", "Markdown");
+             fallbackFormData.append("reply_markup", replyMarkup);
              await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, { method: "POST", body: fallbackFormData });
           }
         } else {
           await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, { 
             method: "POST", 
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ chat_id: chatId, text: tgCaption, parse_mode: "Markdown" }),
+            body: JSON.stringify({ chat_id: chatId, text: tgCaption, parse_mode: "Markdown", reply_markup: JSON.parse(replyMarkup) }),
             signal: controller.signal 
           });
           clearTimeout(timeoutId);
