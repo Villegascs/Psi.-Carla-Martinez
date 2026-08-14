@@ -244,6 +244,7 @@ export default function CartDrawer() {
                 <button className="btn-primary" style={{ width: "100%" }} onClick={handleCheckout} disabled={loading}>
                   {loading ? "Procesando..." : "Confirmar Pedido"}
                 </button>
+              )}
             </div>
           )}
         </div>
