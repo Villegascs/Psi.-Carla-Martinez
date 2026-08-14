@@ -122,7 +122,7 @@ export async function POST(req: Request) {
           await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: chatId, text: `✅ Servidor: Correo enviado con éxito a ${orderData.buyerEmail}. Res: ${info.response}` })
+            body: JSON.stringify({ chat_id: chatId, text: `✅ Correo enviado con éxito a ${orderData.buyerEmail}` })
           });
         }
       } catch (emailError: any) {
