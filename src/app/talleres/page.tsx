@@ -96,8 +96,8 @@ export default function TalleresPage() {
     }, [viewState]);
   });
 
-  const handleQuantityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const qty = parseInt(e.target.value);
+  const handleQuantityChange = (qty: number) => {
+    if (qty < 1 || qty > 10) return; // Límites entre 1 y 10
     setQuantity(qty);
     
     // Adjust participants array size
@@ -331,12 +331,28 @@ export default function TalleresPage() {
             {currentStep === 1 && (
               <div className="fade-in">
                 <h3 style={{ fontSize: "1.2rem", fontWeight: 700, marginBottom: "16px" }}>¿Cuántas entradas deseas?</h3>
-                <div className="form-group" style={{ marginBottom: "24px" }}>
-                  <select required className="input-field" value={quantity} onChange={handleQuantityChange}>
-                    {[1, 2, 3, 4, 5].map(q => (
-                      <option key={q} value={q}>{q} {q === 1 ? 'Cupo' : 'Cupos'} - Total: ${q * parseInt(selectedWorkshop.price.replace('$', ''))}</option>
-                    ))}
-                  </select>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", backgroundColor: "var(--color-surface)", border: "1px solid var(--color-border)", padding: "16px", borderRadius: "8px", marginBottom: "24px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                    <button 
+                      type="button" 
+                      onClick={() => handleQuantityChange(quantity - 1)}
+                      disabled={quantity <= 1}
+                      style={{ width: "40px", height: "40px", borderRadius: "8px", border: "1px solid var(--color-border)", backgroundColor: "white", fontSize: "1.5rem", display: "flex", alignItems: "center", justifyContent: "center", cursor: quantity <= 1 ? "not-allowed" : "pointer", color: quantity <= 1 ? "#ccc" : "var(--color-text)", paddingBottom: "4px" }}
+                    >-</button>
+                    <span style={{ fontSize: "1.2rem", fontWeight: "bold", width: "30px", textAlign: "center" }}>{quantity}</span>
+                    <button 
+                      type="button" 
+                      onClick={() => handleQuantityChange(quantity + 1)}
+                      disabled={quantity >= 10}
+                      style={{ width: "40px", height: "40px", borderRadius: "8px", border: "1px solid var(--color-border)", backgroundColor: "white", fontSize: "1.2rem", display: "flex", alignItems: "center", justifyContent: "center", cursor: quantity >= 10 ? "not-allowed" : "pointer", color: quantity >= 10 ? "#ccc" : "var(--color-text)" }}
+                    >+</button>
+                  </div>
+                  <div style={{ textAlign: "right" }}>
+                    <span style={{ fontSize: "0.9rem", color: "var(--color-text-secondary)" }}>Total a pagar:</span>
+                    <div style={{ fontSize: "1.4rem", fontWeight: 800, color: "var(--color-accent)" }}>
+                      ${quantity * parseInt(selectedWorkshop.price.replace('$', ''))}
+                    </div>
+                  </div>
                 </div>
 
                 <h3 style={{ fontSize: "1.2rem", fontWeight: 700, marginBottom: "16px" }}>Datos de los Participantes</h3>
