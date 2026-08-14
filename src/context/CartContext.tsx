@@ -12,12 +12,13 @@ export interface Product {
 export interface CartItem extends Product {
   quantity: number;
   size?: string;
+  color?: string;
 }
 
 interface CartContextType {
   items: CartItem[];
-  addToCart: (product: Product, size?: string) => void;
-  removeFromCart: (id: string, size?: string) => void;
+  addToCart: (product: Product, size?: string, color?: string) => void;
+  removeFromCart: (id: string, size?: string, color?: string) => void;
   clearCart: () => void;
   total: number;
   isCartOpen: boolean;
@@ -30,23 +31,23 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
-  const addToCart = (product: Product, size?: string) => {
+  const addToCart = (product: Product, size?: string, color?: string) => {
     setItems((prev) => {
-      const existing = prev.find((item) => item.id === product.id && item.size === size);
+      const existing = prev.find((item) => item.id === product.id && item.size === size && item.color === color);
       if (existing) {
         return prev.map((item) =>
-          item.id === product.id && item.size === size
+          item.id === product.id && item.size === size && item.color === color
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       }
-      return [...prev, { ...product, quantity: 1, size }];
+      return [...prev, { ...product, quantity: 1, size, color }];
     });
     setIsCartOpen(true);
   };
 
-  const removeFromCart = (id: string, size?: string) => {
-    setItems((prev) => prev.filter((item) => !(item.id === id && item.size === size)));
+  const removeFromCart = (id: string, size?: string, color?: string) => {
+    setItems((prev) => prev.filter((item) => !(item.id === id && item.size === size && item.color === color)));
   };
 
   const clearCart = () => setItems([]);
