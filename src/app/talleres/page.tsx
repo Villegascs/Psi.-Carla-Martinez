@@ -61,7 +61,18 @@ export default function TalleresPage() {
     fetch("/api/workshops")
       .then(res => res.json())
       .then(data => {
-        if (data.success) setWorkshops(data.workshops);
+        if (data.success) {
+          setWorkshops(data.workshops);
+          
+          // Actualizar el taller seleccionado si estaba cacheado en sessionStorage
+          setSelectedWorkshop((current: any) => {
+            if (current && current.id) {
+              const updated = data.workshops.find((w: any) => w.id === current.id);
+              return updated || current;
+            }
+            return current;
+          });
+        }
         setLoadingWorkshops(false);
       })
       .catch(e => {
