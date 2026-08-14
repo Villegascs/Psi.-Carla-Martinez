@@ -377,13 +377,12 @@ export default function TalleresPage() {
                   </div>
                   <div style={{ textAlign: "right" }}>
                     <span style={{ fontSize: "0.9rem", color: "var(--color-text-secondary)", display: "block", marginBottom: "8px" }}>Total a pagar:</span>
-                    <div style={{ display: "flex", alignItems: "baseline", gap: "12px", flexWrap: "wrap", justifyContent: "flex-end" }}>
-                      <span style={{ fontSize: "1.8rem", fontWeight: 800, color: "var(--color-text)" }}>
-                        €{quantity * parseInt(selectedWorkshop.price.replace('$', '').replace('€', ''))}
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "8px" }}>
+                      <span style={{ fontSize: "1.8rem", fontWeight: 800, color: "var(--color-text)", lineHeight: 1 }}>
+                        {quantity * parseInt(selectedWorkshop.price.replace('$', '').replace('€', ''))}€
                       </span>
-                      <span style={{ fontSize: "1.5rem", fontWeight: 700, color: "var(--color-text)", margin: "0 5px" }}>|</span>
-                      <span style={{ fontSize: "1.4rem", fontWeight: 600, color: "var(--color-accent)" }}>
-                        Bs {exchangeRates.eur > 0 ? (quantity * parseInt(selectedWorkshop.price.replace('$', '').replace('€', '')) * exchangeRates.eur).toFixed(2) : "..."}
+                      <span style={{ fontSize: "1.8rem", fontWeight: 800, color: "var(--color-accent)", lineHeight: 1 }}>
+                        {exchangeRates.eur > 0 ? (quantity * parseInt(selectedWorkshop.price.replace('$', '').replace('€', '')) * exchangeRates.eur).toFixed(2) : "..."} Bs
                       </span>
                     </div>
                   </div>
@@ -438,11 +437,10 @@ export default function TalleresPage() {
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", backgroundColor: "var(--color-surface)", padding: "16px", borderRadius: "8px", border: "1px solid var(--color-border)", marginBottom: "24px" }}>
                   <div>
                     <h4 style={{ fontSize: "0.9rem", color: "var(--color-text-secondary)", marginBottom: "4px" }}>Total a Pagar</h4>
-                    <div style={{ display: "flex", alignItems: "baseline" }}>
-                      <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "var(--color-accent)" }}>€{quantity * parseInt(selectedWorkshop.price.replace('$', '').replace('€', ''))}</span>
-                      <span style={{ fontSize: "1.2rem", fontWeight: 700, color: "var(--color-text-secondary)", margin: "0 8px" }}>|</span>
-                      <span style={{ fontSize: "1.2rem", fontWeight: 700, color: "var(--color-text)" }}>
-                        Bs {exchangeRates.eur > 0 ? (quantity * parseInt(selectedWorkshop.price.replace('$', '').replace('€', '')) * exchangeRates.eur).toFixed(2) : "..."}
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "8px" }}>
+                      <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "var(--color-text)", lineHeight: 1 }}>{quantity * parseInt(selectedWorkshop.price.replace('$', '').replace('€', ''))}€</span>
+                      <span style={{ fontSize: "1.5rem", fontWeight: 800, color: "var(--color-accent)", lineHeight: 1 }}>
+                        {exchangeRates.eur > 0 ? (quantity * parseInt(selectedWorkshop.price.replace('$', '').replace('€', '')) * exchangeRates.eur).toFixed(2) : "..."} Bs
                       </span>
                     </div>
                   </div>
@@ -466,13 +464,12 @@ export default function TalleresPage() {
 
                 {paymentMethod && paymentMethod !== "efectivo" && (
                   <div style={{ backgroundColor: "#fdf8f6", padding: "20px", borderRadius: "8px", marginBottom: "24px", border: "1px solid #f9dad0" }}>
-                    <div style={{ marginBottom: "24px" }}>
-                      <span style={{ fontSize: "1.8rem", fontWeight: 800, color: "var(--color-accent)" }}>
-                        €{quantity * parseInt(selectedWorkshop.price.replace('$', '').replace('€', ''))}
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "8px", marginBottom: "24px" }}>
+                      <span style={{ fontSize: "1.8rem", fontWeight: 800, color: "var(--color-text)", lineHeight: 1 }}>
+                        {quantity * parseInt(selectedWorkshop.price.replace('$', '').replace('€', ''))}€
                       </span>
-                      <span style={{ fontSize: "1.5rem", fontWeight: 700, color: "var(--color-text)", margin: "0 10px" }}>|</span>
-                      <span style={{ fontSize: "1.4rem", fontWeight: 600, color: "var(--color-text)" }}>
-                        Bs {exchangeRates.eur > 0 ? (quantity * parseInt(selectedWorkshop.price.replace('$', '').replace('€', '')) * exchangeRates.eur).toFixed(2) : "..."}
+                      <span style={{ fontSize: "1.8rem", fontWeight: 800, color: "var(--color-accent)", lineHeight: 1 }}>
+                        {exchangeRates.eur > 0 ? (quantity * parseInt(selectedWorkshop.price.replace('$', '').replace('€', '')) * exchangeRates.eur).toFixed(2) : "..."} Bs
                       </span>
                     </div>
                     <h4 style={{ fontSize: "1rem", fontWeight: 700, color: "var(--color-text)", marginBottom: "16px" }}>Datos para realizar el pago:</h4>
