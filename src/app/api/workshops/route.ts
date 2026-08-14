@@ -4,18 +4,22 @@ import { adminDb } from '@/lib/firebase/admin';
 export async function POST(request: Request) {
   try {
     const formData = await request.formData();
-    const firstName = formData.get("firstName") as string;
-    const lastName = formData.get("lastName") as string;
-    const idNumber = formData.get("idNumber") as string;
+    
+    // Parse quantity and participants
+    const quantity = parseInt(formData.get("quantity") as string) || 1;
+    const participantsRaw = formData.get("participants") as string;
+    let participants: any[] = [];
+    try {
+      if (participantsRaw) participants = JSON.parse(participantsRaw);
+    } catch(e) {}
+
     const workshopName = formData.get("workshopName") as string;
     const paymentMethod = formData.get("paymentMethod") as string;
     const paymentDataRaw = formData.get("paymentData") as string;
     
     let paymentData: any = {};
     try {
-      if (paymentDataRaw) {
-        paymentData = JSON.parse(paymentDataRaw);
-      }
+      if (paymentDataRaw) paymentData = JSON.parse(paymentDataRaw);
     } catch(e) {}
 
     const paymentProof = formData.get("paymentProof") as File | null;
@@ -24,7 +28,26 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "Falta el comprobante de pago." }, { status: 400 });
     }
 
-    // Prepare Telegram Details
+    // 1. Save to Firebase FIRST (to ensure we don't lose the data if Telegram times out)
+    const orderRef = adminDb.collection('tickets').doc();
+    const orderDataObj = {
+      id: orderRef.id,
+      quantity,
+      participants,
+      workshopName,
+      paymentMethod,
+      paymentDetails: paymentData,
+      status: "PENDING_APPROVAL",
+      used: false, // legacy single-use, now we'll track inside participants array but keep for backwards compatibility if needed
+      createdAt: new Date().toISOString()
+    };
+
+    // Initialize all participants as not used
+    orderDataObj.participants = orderDataObj.participants.map((p: any) => ({ ...p, used: false }));
+
+    await orderRef.set(orderDataObj);
+
+    // 2. Prepare Telegram Details
     let paymentDetailsText = "";
     if (paymentMethod === "pago_movil") {
       paymentDetailsText = `*Método:* Pago Móvil\n*Banco:* ${paymentData.bank}\n*Cédula:* ${paymentData.paymentId}\n*Teléfono:* ${paymentData.paymentPhone}`;
@@ -36,14 +59,19 @@ export async function POST(request: Request) {
       paymentDetailsText = `*Método:* Efectivo (Presencial)\n*Billetes:* ${paymentData.billDenomination}`;
     }
 
-    const tgCaption = `🎟️ *Nueva Inscripción a Taller*\n\n*Participante:* ${firstName} ${lastName}\n*Cédula:* ${idNumber}\n*Taller:* ${workshopName}\n\n${paymentDetailsText}\n\nRevisa el panel de admin para aprobar esta inscripción y enviarle el QR.`;
+    let participantsText = participants.map((p, i) => `👤 *Participante ${i+1}:* ${p.firstName} ${p.lastName} (C.I: ${p.idNumber})`).join("\n");
+    
+    const tgCaption = `🎟️ *Nueva Inscripción a Taller (${quantity} Cupos)*\n\n*Taller:* ${workshopName}\n\n${participantsText}\n\n${paymentDetailsText}\n\nRevisa el panel de admin para aprobar esta inscripción y enviar los QRs.`;
 
     const botToken = process.env.TELEGRAM_BOT_TOKEN;
     const chatId = process.env.TELEGRAM_CHAT_ID;
 
-    // Send to Telegram
+    // 3. Send to Telegram with Timeout (Vercel has 10s max execution for hobby)
     if (botToken && chatId) {
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 6000); // 6 seconds timeout for Telegram
+
         if (paymentMethod !== "efectivo" && paymentProof) {
           const tgFormData = new FormData();
           tgFormData.append("chat_id", chatId);
@@ -53,8 +81,10 @@ export async function POST(request: Request) {
 
           const tgRes = await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
             method: "POST",
-            body: tgFormData
+            body: tgFormData,
+            signal: controller.signal
           });
+          clearTimeout(timeoutId);
           
           const tgData = await tgRes.json();
           if (!tgData.ok && tgData.error_code === 400) {
@@ -71,31 +101,16 @@ export async function POST(request: Request) {
           tgFormData.append("chat_id", chatId);
           tgFormData.append("text", tgCaption);
           tgFormData.append("parse_mode", "Markdown");
-          await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, { method: "POST", body: tgFormData });
+          await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, { method: "POST", body: tgFormData, signal: controller.signal });
+          clearTimeout(timeoutId);
         }
       } catch (tgError) {
-        console.error("Failed to fetch Telegram API:", tgError);
+        console.error("Telegram Request failed or timed out:", tgError);
+        // We do NOT fail the request because Firebase already saved it!
       }
     }
 
-    // Save to Firebase Admin
-    const ticketRef = adminDb.collection('tickets').doc();
-    const ticketDataObj = {
-      id: ticketRef.id,
-      firstName,
-      lastName,
-      idNumber,
-      workshopName,
-      paymentMethod,
-      paymentDetails: paymentData,
-      status: "PENDING_APPROVAL",
-      used: false,
-      createdAt: new Date().toISOString()
-    };
-
-    await ticketRef.set(ticketDataObj);
-
-    return NextResponse.json({ success: true, ticketId: ticketRef.id });
+    return NextResponse.json({ success: true, orderId: orderRef.id });
   } catch (error: any) {
     console.error("Workshop Registration Error:", error);
     return NextResponse.json({ success: false, error: error.message || "Error interno del servidor al procesar la inscripción." }, { status: 500 });

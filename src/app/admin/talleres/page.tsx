@@ -3,21 +3,19 @@
 import { useState, useEffect } from "react";
 
 export default function AdminTalleresPage() {
-  const [tickets, setTickets] = useState<any[]>([]);
+  const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchTickets();
+    fetchOrders();
   }, []);
 
-  const fetchTickets = async () => {
+  const fetchOrders = async () => {
     try {
-      // Reusing the approve route with GET just for simplicity or create a new one.
-      // Wait, let's create a GET handler in /api/workshops/approve/route.ts to fetch them.
       const res = await fetch("/api/workshops/approve");
       const data = await res.json();
       if (data.success) {
-        setTickets(data.tickets);
+        setOrders(data.tickets);
       }
     } catch (err) {
       console.error(err);
@@ -28,7 +26,7 @@ export default function AdminTalleresPage() {
 
   const handleApprove = async (id: string, email: string) => {
     if (!email) {
-      alert("Para aprobar y enviar el QR, necesitas ingresar el correo del participante.");
+      alert("Para aprobar y enviar los QRs, necesitas ingresar el correo del comprador.");
       return;
     }
     
@@ -36,13 +34,13 @@ export default function AdminTalleresPage() {
       const res = await fetch("/api/workshops/approve", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ticketId: id, email })
+        body: JSON.stringify({ orderId: id, email })
       });
       const data = await res.json();
       
       if (data.success) {
-        alert("¡Entrada aprobada y enviada por correo exitosamente!");
-        fetchTickets();
+        alert("¡Entradas aprobadas y enviadas por correo exitosamente!");
+        fetchOrders();
       } else {
         alert("Error al enviar el correo: " + data.error);
       }
@@ -51,8 +49,8 @@ export default function AdminTalleresPage() {
     }
   };
 
-  const pendingList = tickets.filter(t => t.status === "PENDING_APPROVAL");
-  const approvedList = tickets.filter(t => t.status === "APPROVED");
+  const pendingList = orders.filter(o => o.status === "PENDING_APPROVAL");
+  const approvedList = orders.filter(o => o.status === "APPROVED");
 
   return (
     <div className="card">
@@ -63,21 +61,32 @@ export default function AdminTalleresPage() {
         {/* Columna Pendientes */}
         <div>
           <h3 style={{ fontSize: "1.2rem", fontWeight: 600, marginBottom: "16px", color: "#f59e0b" }}>
-            Inscripciones Pendientes ({pendingList.length})
+            Órdenes Pendientes ({pendingList.length})
           </h3>
           <p className="text-muted" style={{ fontSize: "0.85rem", marginBottom: "16px" }}>Revisa el capture en Telegram antes de aprobar.</p>
           
-          {loading ? <p>Cargando...</p> : pendingList.map(ticket => (
-            <div key={ticket.id} style={{ border: "1px solid var(--color-border)", padding: "16px", borderRadius: "8px", marginBottom: "16px" }}>
-              <h4 style={{ fontWeight: 600 }}>{ticket.firstName} {ticket.lastName}</h4>
-              <p className="text-muted" style={{ fontSize: "0.9rem" }}>C.I: {ticket.idNumber}</p>
-              <p className="text-muted" style={{ fontSize: "0.9rem" }}>Taller: {ticket.workshopName}</p>
+          {loading ? <p>Cargando...</p> : pendingList.map(order => (
+            <div key={order.id} style={{ border: "1px solid var(--color-border)", padding: "16px", borderRadius: "8px", marginBottom: "16px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
+                <span style={{ fontWeight: 700, color: "var(--color-accent)" }}>{order.quantity} Cupos</span>
+                <span style={{ fontSize: "0.8rem", color: "var(--color-text-secondary)" }}>{order.paymentMethod}</span>
+              </div>
+              <p className="text-muted" style={{ fontSize: "0.9rem", fontWeight: 600, marginBottom: "8px" }}>Taller: {order.workshopName}</p>
+              
+              <div style={{ marginBottom: "12px", padding: "8px", backgroundColor: "var(--color-surface)", borderRadius: "4px" }}>
+                <strong style={{ fontSize: "0.8rem", display: "block" }}>Participantes:</strong>
+                <ul style={{ margin: 0, paddingLeft: "16px", fontSize: "0.85rem" }}>
+                  {order.participants?.map((p: any, i: number) => (
+                    <li key={i}>{p.firstName} {p.lastName} (V-{p.idNumber})</li>
+                  ))}
+                </ul>
+              </div>
               
               <div style={{ marginTop: "12px" }}>
                 <input 
                   type="email" 
-                  id={`email-${ticket.id}`} 
-                  placeholder="Correo electrónico para enviar QR" 
+                  id={`email-${order.id}`} 
+                  placeholder="Correo del comprador" 
                   className="input-field" 
                   style={{ marginBottom: "8px", padding: "8px", fontSize: "0.9rem" }}
                 />
@@ -85,11 +94,11 @@ export default function AdminTalleresPage() {
                   className="btn-primary" 
                   style={{ width: "100%", padding: "8px", fontSize: "0.9rem" }}
                   onClick={() => {
-                    const emailInput = document.getElementById(`email-${ticket.id}`) as HTMLInputElement;
-                    handleApprove(ticket.id, emailInput.value);
+                    const emailInput = document.getElementById(`email-${order.id}`) as HTMLInputElement;
+                    handleApprove(order.id, emailInput.value);
                   }}
                 >
-                  Aprobar y Enviar QR
+                  Aprobar y Enviar QRs
                 </button>
               </div>
             </div>
@@ -99,16 +108,27 @@ export default function AdminTalleresPage() {
         {/* Columna Aprobados */}
         <div>
           <h3 style={{ fontSize: "1.2rem", fontWeight: 600, marginBottom: "16px", color: "#10b981" }}>
-            Entradas Enviadas ({approvedList.length})
+            Órdenes Aprobadas ({approvedList.length})
           </h3>
           
-          {loading ? <p>Cargando...</p> : approvedList.map(ticket => (
-            <div key={ticket.id} style={{ border: "1px solid var(--color-border)", padding: "16px", borderRadius: "8px", marginBottom: "16px" }}>
-              <h4 style={{ fontWeight: 600 }}>{ticket.firstName} {ticket.lastName}</h4>
-              <p className="text-muted" style={{ fontSize: "0.9rem" }}>C.I: {ticket.idNumber}</p>
-              <div style={{ marginTop: "8px", display: "inline-block", padding: "4px 8px", backgroundColor: ticket.used ? "#fee2e2" : "#d1fae5", color: ticket.used ? "#b91c1c" : "#047857", borderRadius: "4px", fontSize: "0.8rem", fontWeight: 600 }}>
-                {ticket.used ? "QR UTILIZADO" : "QR VÁLIDO (Aún no asiste)"}
+          {loading ? <p>Cargando...</p> : approvedList.map(order => (
+            <div key={order.id} style={{ border: "1px solid var(--color-border)", padding: "16px", borderRadius: "8px", marginBottom: "16px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
+                <span style={{ fontWeight: 700, color: "var(--color-accent)" }}>{order.quantity} Cupos</span>
+                <span style={{ fontSize: "0.8rem", color: "var(--color-text-secondary)" }}>Enviado a: {order.emailSentTo}</span>
               </div>
+              
+              <ul style={{ margin: 0, paddingLeft: "16px", fontSize: "0.85rem", marginTop: "8px" }}>
+                  {order.participants?.map((p: any, i: number) => (
+                    <li key={i} style={{ marginBottom: "4px" }}>
+                      {p.firstName} {p.lastName}
+                      {p.used ? 
+                        <span style={{ marginLeft: "8px", color: "#b91c1c", fontWeight: 600, fontSize: "0.7rem", backgroundColor: "#fee2e2", padding: "2px 4px", borderRadius: "4px" }}>USADO</span> : 
+                        <span style={{ marginLeft: "8px", color: "#047857", fontWeight: 600, fontSize: "0.7rem", backgroundColor: "#d1fae5", padding: "2px 4px", borderRadius: "4px" }}>VÁLIDO</span>
+                      }
+                    </li>
+                  ))}
+              </ul>
             </div>
           ))}
         </div>

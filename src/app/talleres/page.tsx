@@ -62,11 +62,8 @@ export default function TalleresPage() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    idNumber: "",
-  });
+  const [quantity, setQuantity] = useState(1);
+  const [participants, setParticipants] = useState([{ firstName: "", lastName: "", idNumber: "" }]);
   
   const [paymentMethod, setPaymentMethod] = useState("");
   const [paymentData, setPaymentData] = useState({
@@ -79,9 +76,28 @@ export default function TalleresPage() {
   });
   const [file, setFile] = useState<File | null>(null);
 
-  const handlePersonalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleQuantityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const qty = parseInt(e.target.value);
+    setQuantity(qty);
+    
+    // Adjust participants array size
+    const newParticipants = [...participants];
+    if (qty > newParticipants.length) {
+      for (let i = newParticipants.length; i < qty; i++) {
+        newParticipants.push({ firstName: "", lastName: "", idNumber: "" });
+      }
+    } else {
+      newParticipants.splice(qty);
+    }
+    setParticipants(newParticipants);
   };
+
+  const handleParticipantChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const newParticipants = [...participants];
+    newParticipants[index] = { ...newParticipants[index], [e.target.name]: e.target.value };
+    setParticipants(newParticipants);
+  };
+
   const handlePaymentChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setPaymentData({ ...paymentData, [e.target.name]: e.target.value });
   };
@@ -93,6 +109,10 @@ export default function TalleresPage() {
 
   const handleOpenForm = () => {
     setErrorMsg("");
+    setQuantity(1);
+    setParticipants([{ firstName: "", lastName: "", idNumber: "" }]);
+    setPaymentMethod("");
+    setFile(null);
     setViewState("form");
   };
 
@@ -111,10 +131,9 @@ export default function TalleresPage() {
     setErrorMsg("");
 
     const data = new FormData();
-    data.append("firstName", formData.firstName);
-    data.append("lastName", formData.lastName);
-    data.append("idNumber", formData.idNumber);
     data.append("workshopName", selectedWorkshop.title);
+    data.append("quantity", quantity.toString());
+    data.append("participants", JSON.stringify(participants));
     data.append("paymentMethod", paymentMethod);
     data.append("paymentData", JSON.stringify(paymentData));
     
@@ -132,7 +151,7 @@ export default function TalleresPage() {
       try {
         resData = await res.json();
       } catch (parseError) {
-        throw new Error("El servidor no devolvió una respuesta válida. Es posible que haya un error interno.");
+        throw new Error("El servidor devolvió un error interno de conexión. Por favor intenta más tarde o comunícate con soporte.");
       }
 
       if (resData.success) {
@@ -238,7 +257,7 @@ export default function TalleresPage() {
           </button>
           
           <h2 className="heading-2" style={{ marginBottom: "8px" }}>Formulario de Inscripción</h2>
-          <p className="text-muted" style={{ marginBottom: "24px" }}>Estás reservando para: <strong>{selectedWorkshop.title}</strong> ({selectedWorkshop.price})</p>
+          <p className="text-muted" style={{ marginBottom: "24px" }}>Estás reservando para: <strong>{selectedWorkshop.title}</strong></p>
 
           <form onSubmit={handleSubmit}>
             {errorMsg && (
@@ -247,25 +266,41 @@ export default function TalleresPage() {
               </div>
             )}
 
-            {/* Datos Personales */}
-            <h3 style={{ fontSize: "1.1rem", fontWeight: 700, borderBottom: "1px solid var(--color-border)", paddingBottom: "8px", marginBottom: "16px" }}>1. Datos del Participante</h3>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
-              <div className="form-group" style={{ marginBottom: 0 }}>
-                <label className="form-label">Nombre</label>
-                <input required type="text" name="firstName" value={formData.firstName} onChange={handlePersonalChange} className="input-field" placeholder="Ej. Ana" />
-              </div>
-              <div className="form-group" style={{ marginBottom: 0 }}>
-                <label className="form-label">Apellido</label>
-                <input required type="text" name="lastName" value={formData.lastName} onChange={handlePersonalChange} className="input-field" placeholder="Ej. Gómez" />
-              </div>
-            </div>
-            <div className="form-group" style={{ marginBottom: "32px" }}>
-              <label className="form-label">Cédula de Identidad</label>
-              <input required type="text" name="idNumber" value={formData.idNumber} onChange={handlePersonalChange} className="input-field" placeholder="V-12345678" />
+            {/* Cantidad de Cupos */}
+            <h3 style={{ fontSize: "1.1rem", fontWeight: 700, borderBottom: "1px solid var(--color-border)", paddingBottom: "8px", marginBottom: "16px" }}>1. Cantidad de Cupos</h3>
+            <div className="form-group" style={{ marginBottom: "24px" }}>
+              <label className="form-label">¿Cuántas entradas deseas comprar?</label>
+              <select required className="input-field" value={quantity} onChange={handleQuantityChange}>
+                {[1, 2, 3, 4, 5].map(q => (
+                  <option key={q} value={q}>{q} {q === 1 ? 'Cupo' : 'Cupos'} - Total: ${q * parseInt(selectedWorkshop.price.replace('$', ''))}</option>
+                ))}
+              </select>
             </div>
 
+            {/* Datos Personales Dinámicos */}
+            <h3 style={{ fontSize: "1.1rem", fontWeight: 700, borderBottom: "1px solid var(--color-border)", paddingBottom: "8px", marginBottom: "16px" }}>2. Datos de los Participantes</h3>
+            {participants.map((participant, index) => (
+              <div key={index} style={{ marginBottom: "24px", padding: "16px", backgroundColor: "var(--color-surface)", borderRadius: "8px", border: "1px solid var(--color-border)" }}>
+                <h4 style={{ fontSize: "0.9rem", fontWeight: 600, marginBottom: "12px", color: "var(--color-accent)" }}>Participante {index + 1}</h4>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "12px" }}>
+                  <div className="form-group" style={{ marginBottom: 0 }}>
+                    <label className="form-label" style={{ fontSize: "0.8rem" }}>Nombre</label>
+                    <input required type="text" name="firstName" value={participant.firstName} onChange={(e) => handleParticipantChange(index, e)} className="input-field" placeholder="Ej. Ana" />
+                  </div>
+                  <div className="form-group" style={{ marginBottom: 0 }}>
+                    <label className="form-label" style={{ fontSize: "0.8rem" }}>Apellido</label>
+                    <input required type="text" name="lastName" value={participant.lastName} onChange={(e) => handleParticipantChange(index, e)} className="input-field" placeholder="Ej. Gómez" />
+                  </div>
+                </div>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label" style={{ fontSize: "0.8rem" }}>Cédula de Identidad</label>
+                  <input required type="text" name="idNumber" value={participant.idNumber} onChange={(e) => handleParticipantChange(index, e)} className="input-field" placeholder="V-12345678" />
+                </div>
+              </div>
+            ))}
+
             {/* Método de Pago */}
-            <h3 style={{ fontSize: "1.1rem", fontWeight: 700, borderBottom: "1px solid var(--color-border)", paddingBottom: "8px", marginBottom: "16px" }}>2. Reporte de Pago</h3>
+            <h3 style={{ fontSize: "1.1rem", fontWeight: 700, borderBottom: "1px solid var(--color-border)", paddingBottom: "8px", marginBottom: "16px" }}>3. Reporte de Pago</h3>
             <div className="form-group">
               <label className="form-label">Método de Pago Utilizado</label>
               <select required className="input-field" value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
@@ -277,16 +312,16 @@ export default function TalleresPage() {
               </select>
             </div>
 
-            {/* Info Generica del Metodo para que paguen */}
+            {/* Info Generica del Metodo */}
             {paymentMethod && paymentMethod !== "efectivo" && (
-              <div style={{ backgroundColor: "var(--color-surface)", padding: "16px", borderRadius: "8px", marginBottom: "20px", fontSize: "0.9rem", color: "var(--color-text-secondary)", border: "1px solid var(--color-border)" }}>
+              <div style={{ backgroundColor: "#fdf8f6", padding: "16px", borderRadius: "8px", marginBottom: "20px", fontSize: "0.9rem", color: "var(--color-text-secondary)", border: "1px solid #f9dad0" }}>
                 {paymentMethod === "pago_movil" && <p><strong>Datos para Pago Móvil:</strong><br/>Banco Banesco (0134)<br/>C.I: V-25417859<br/>Tel: 0414-4083780</p>}
                 {paymentMethod === "zelle" && <p><strong>Datos Zelle:</strong><br/>carlamartinez@email.com<br/>A nombre de: Carla Martinez</p>}
                 {paymentMethod === "binance" && <p><strong>Datos Binance (Pay ID):</strong><br/>254897125</p>}
               </div>
             )}
 
-            {/* Campos Dinamicos */}
+            {/* Campos Dinamicos de Pago */}
             {paymentMethod === "pago_movil" && (
               <>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
@@ -345,7 +380,7 @@ export default function TalleresPage() {
             )}
 
             <button type="submit" className="btn-primary" style={{ width: "100%", padding: "16px", marginTop: "16px" }} disabled={loading}>
-              {loading ? "Enviando e Inscribiendo..." : "Completar Inscripción"}
+              {loading ? "Procesando Inscripción..." : "Completar Inscripción"}
             </button>
           </form>
         </div>
@@ -355,7 +390,7 @@ export default function TalleresPage() {
         <div style={{ textAlign: "center", padding: "60px 20px", maxWidth: "600px", margin: "0 auto", backgroundColor: "var(--color-surface)", borderRadius: "12px", border: "1px solid var(--color-border)" }}>
           <h2 className="heading-2" style={{ color: "var(--color-accent)", marginBottom: "16px" }}>¡Inscripción Recibida! 🎉</h2>
           <p className="text-muted" style={{ marginBottom: "32px", fontSize: "1.1rem" }}>
-            Tu reporte de pago ha sido enviado con éxito al equipo para ser verificado. Una vez confirmado, recibirás tu <strong>Entrada QR</strong> en tu correo electrónico.
+            Tu reporte de pago ha sido enviado con éxito al equipo para ser verificado. Una vez confirmado, recibirás tus <strong>Entradas QR</strong> en tu correo electrónico.
           </p>
           <button className="btn-primary" onClick={() => setViewState("list")}>Volver a Talleres</button>
         </div>
