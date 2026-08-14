@@ -147,12 +147,18 @@ export default function TalleresPage() {
         body: data,
       });
 
-      let resData;
-      try {
-        resData = await res.json();
-      } catch (parseError) {
-        throw new Error("El servidor devolvió un error interno de conexión. Por favor intenta más tarde o comunícate con soporte.");
+      if (!res.ok) {
+        let errorText = "";
+        try {
+          const errData = await res.json();
+          errorText = errData.error || "Error desconocido en el servidor";
+        } catch (e) {
+          errorText = await res.text();
+        }
+        throw new Error(`Error ${res.status}: ${errorText.substring(0, 100)}...`);
       }
+
+      const resData = await res.json();
 
       if (resData.success) {
         setViewState("success");
