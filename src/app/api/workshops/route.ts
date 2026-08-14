@@ -4,12 +4,15 @@ import { getAdminDb } from '@/lib/firebase/admin';
 export async function GET(request: Request) {
   try {
     const adminDb = getAdminDb();
-    const snapshot = await adminDb.collection('workshops')
-      .where('status', '==', 'Publicado')
-      .orderBy('createdAt', 'desc')
-      .get();
+    const snapshot = await adminDb.collection('workshops').get();
       
-    const workshops = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    let workshops = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() as any }));
+    
+    // Filtrar y ordenar en memoria para evitar requerir índices compuestos en Firebase
+    workshops = workshops
+      .filter(w => w.status === 'Publicado')
+      .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
+
     return NextResponse.json({ success: true, workshops });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
