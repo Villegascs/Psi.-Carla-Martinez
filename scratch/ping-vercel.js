@@ -1,12 +1,18 @@
 async function ping() {
-  const url = "https://psi-carla-martinez.vercel.app/api/workshops";
-  try {
-    const res = await fetch(url, { method: "GET" });
-    console.log(`Status: ${res.status}`);
-    const text = await res.text();
-    console.log(`Body length: ${text.length}`);
-  } catch (e) {
-    console.error(e.message);
+  const urls = [
+    "https://psi-carla-martinez.vercel.app/api/ping",
+    "https://psi-carla-martinez.vercel.app/api/workshops",
+    "https://psi-carla-martinez.vercel.app/api/reservations"
+  ];
+  for (const url of urls) {
+    try {
+      const res = await fetch(url, { method: "GET" });
+      console.log(`Pinging ${url} -> Status: ${res.status}`);
+      const text = await res.text();
+      console.log(`Body length: ${text.length}, Body: ${text.substring(0, 100)}`);
+    } catch (e) {
+      console.error(e.message);
+    }
   }
 }
 ping();
