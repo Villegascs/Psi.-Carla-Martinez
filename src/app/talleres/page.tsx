@@ -67,11 +67,12 @@ export default function TalleresPage() {
   const [errorMsg, setErrorMsg] = useState("");
 
   const [quantity, setQuantity] = useState(1);
-  const [participants, setParticipants] = useState([{ firstName: "", lastName: "", idNumber: "" }]);
+  const [participants, setParticipants] = useState([{ firstName: "", lastName: "", idType: "V", idNumber: "" }]);
   
   const [paymentMethod, setPaymentMethod] = useState("");
   const [paymentData, setPaymentData] = useState({
     bank: "",
+    paymentIdType: "V",
     paymentId: "",
     paymentPhone: "",
     binanceUser: "",
@@ -104,7 +105,7 @@ export default function TalleresPage() {
     const newParticipants = [...participants];
     if (qty > newParticipants.length) {
       for (let i = newParticipants.length; i < qty; i++) {
-        newParticipants.push({ firstName: "", lastName: "", idNumber: "" });
+        newParticipants.push({ firstName: "", lastName: "", idType: "V", idNumber: "" });
       }
     } else {
       newParticipants.splice(qty);
@@ -132,7 +133,7 @@ export default function TalleresPage() {
     setCurrentStep(1);
     setBuyerEmail("");
     setQuantity(1);
-    setParticipants([{ firstName: "", lastName: "", idNumber: "" }]);
+    setParticipants([{ firstName: "", lastName: "", idType: "V", idNumber: "" }]);
     setPaymentMethod("");
     setFile(null);
     setViewState("form");
@@ -371,7 +372,16 @@ export default function TalleresPage() {
                     </div>
                     <div className="form-group" style={{ marginBottom: 0 }}>
                       <label className="form-label" style={{ fontSize: "0.8rem" }}>Cédula de Identidad</label>
-                      <input required type="text" name="idNumber" value={participant.idNumber} onChange={(e) => handleParticipantChange(index, e)} className="input-field" placeholder="V-12345678" />
+                      <div style={{ display: "flex", gap: "8px" }}>
+                        <select name="idType" value={participant.idType} onChange={(e) => handleParticipantChange(index, e)} className="input-field" style={{ width: "70px", padding: "12px 8px" }}>
+                          <option value="V">V</option>
+                          <option value="E">E</option>
+                          <option value="J">J</option>
+                          <option value="G">G</option>
+                          <option value="P">P</option>
+                        </select>
+                        <input required type="text" name="idNumber" value={participant.idNumber} onChange={(e) => handleParticipantChange(index, e)} className="input-field" placeholder="12345678" style={{ flexGrow: 1 }} />
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -444,7 +454,16 @@ export default function TalleresPage() {
                     </div>
                     <div className="form-group" style={{ marginBottom: "16px" }}>
                       <label className="form-label">Cédula del Titular</label>
-                      <input required type="text" name="paymentId" value={paymentData.paymentId} onChange={handlePaymentChange} className="input-field" placeholder="V-" />
+                      <div style={{ display: "flex", gap: "8px" }}>
+                        <select name="paymentIdType" value={paymentData.paymentIdType} onChange={handlePaymentChange} className="input-field" style={{ width: "70px", padding: "12px 8px" }}>
+                          <option value="V">V</option>
+                          <option value="E">E</option>
+                          <option value="J">J</option>
+                          <option value="G">G</option>
+                          <option value="P">P</option>
+                        </select>
+                        <input required type="text" name="paymentId" value={paymentData.paymentId} onChange={handlePaymentChange} className="input-field" placeholder="12345678" style={{ flexGrow: 1 }} />
+                      </div>
                     </div>
                   </>
                 )}

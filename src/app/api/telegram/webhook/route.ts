@@ -58,7 +58,7 @@ export async function POST(req: Request) {
           const qrData = JSON.stringify({
             orderId: orderId,
             participantIndex: i,
-            idNumber: participant.idNumber
+            idNumber: `${participant.idType}-${participant.idNumber}`
           });
           
           const qrBuffer = await QRCode.toBuffer(qrData, { width: 300, margin: 2 });

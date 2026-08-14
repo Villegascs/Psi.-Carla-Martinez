@@ -58,7 +58,7 @@ export async function POST(request: Request) {
     debugStep = "PREPARING_TELEGRAM";
     let paymentDetailsText = "";
     if (paymentMethod === "pago_movil") {
-      paymentDetailsText = `*Método:* Pago Móvil\n*Banco:* ${paymentData.bank}\n*Cédula:* ${paymentData.paymentId}\n*Teléfono:* ${paymentData.paymentPhone}`;
+      paymentDetailsText = `*Método:* Pago Móvil\n*Banco:* ${paymentData.bank}\n*Cédula:* ${paymentData.paymentIdType}-${paymentData.paymentId}\n*Teléfono:* ${paymentData.paymentPhone}`;
     } else if (paymentMethod === "binance") {
       paymentDetailsText = `*Método:* Binance\n*Usuario:* ${paymentData.binanceUser}\n*Referencia:* ${paymentData.reference}`;
     } else if (paymentMethod === "zelle") {
@@ -67,7 +67,7 @@ export async function POST(request: Request) {
       paymentDetailsText = `*Método:* Efectivo (Presencial)\n*Billetes:* ${paymentData.billDenomination || 'No especificado'}`;
     }
 
-    let participantsText = participants.map((p, i) => `👤 *Participante ${i+1}:* ${p.firstName} ${p.lastName} (C.I: ${p.idNumber})`).join("\n");
+    let participantsText = participants.map((p, i) => `👤 *Participante ${i+1}:* ${p.firstName} ${p.lastName} (C.I: ${p.idType}-${p.idNumber})`).join("\n");
     const tgCaption = `🎟️ *Nueva Inscripción a Taller (${quantity} Cupos)*\n\n*Taller:* ${workshopName}\n*Correo:* ${buyerEmail}\n\n${participantsText}\n\n${paymentDetailsText}\n\nRevisa el panel de admin o usa los botones para aprobar esta inscripción y enviar los QRs.`;
 
     const botToken = process.env.TELEGRAM_BOT_TOKEN;
