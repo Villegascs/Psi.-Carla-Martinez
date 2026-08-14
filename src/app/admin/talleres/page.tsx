@@ -99,9 +99,20 @@ export default function AdminTalleres() {
   };
 
   const handleImageUpload = async (file: File) => {
-    const storageRef = ref(storage, `workshops/${Date.now()}_${file.name}`);
-    await uploadBytes(storageRef, file);
-    return await getDownloadURL(storageRef);
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    const res = await fetch('/api/admin/upload', {
+      method: 'POST',
+      body: formData
+    });
+    
+    if (!res.ok) {
+      throw new Error("Error subiendo imagen");
+    }
+    
+    const data = await res.json();
+    return data.url;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
