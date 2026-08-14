@@ -377,9 +377,22 @@ export default function TalleresPage() {
                     >+</button>
                   </div>
                   <div style={{ textAlign: "right" }}>
-                    <span style={{ fontSize: "0.9rem", color: "var(--color-text-secondary)" }}>Total a pagar:</span>
-                    <div style={{ fontSize: "1.4rem", fontWeight: 800, color: "var(--color-accent)" }}>
-                      ${quantity * parseInt(selectedWorkshop.price.replace('$', ''))}
+                    <span style={{ fontSize: "0.9rem", color: "var(--color-text-secondary)", display: "block", marginBottom: "8px" }}>Total a pagar:</span>
+                    <div style={{ display: "flex", alignItems: "flex-end", gap: "16px", flexWrap: "wrap" }}>
+                      <div style={{ fontSize: "1.8rem", fontWeight: 800, color: "var(--color-text)", lineHeight: 1 }}>
+                        ${quantity * parseInt(selectedWorkshop.price.replace('$', ''))}
+                      </div>
+                      
+                      {exchangeRates.usd > 0 && exchangeRates.eur > 0 && (
+                        <>
+                          <div style={{ fontSize: "1.2rem", fontWeight: 600, color: "var(--color-text-secondary)", lineHeight: 1.2 }}>
+                            ~ €{((quantity * parseInt(selectedWorkshop.price.replace('$', '')) * exchangeRates.usd) / exchangeRates.eur).toFixed(2)}
+                          </div>
+                          <div style={{ fontSize: "1rem", fontWeight: 500, color: "var(--color-accent)", backgroundColor: "#fdf8f6", padding: "4px 10px", borderRadius: "12px", border: "1px solid #f9dad0", lineHeight: 1.2 }}>
+                            Bs {(quantity * parseInt(selectedWorkshop.price.replace('$', '')) * exchangeRates.usd).toFixed(2)} <span style={{ fontSize: "0.75rem", color: "#888" }}>(Tasa BCV)</span>
+                          </div>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
