@@ -10,7 +10,8 @@ type Product = {
   sizes: string;
   colors: string;
   status: "Publicado" | "Oculto";
-  image: string;
+  image?: string; // Legacy support
+  images: string[];
 };
 
 export default function AdminTiendaPage() {
@@ -20,10 +21,10 @@ export default function AdminTiendaPage() {
   const [showModal, setShowModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [formData, setFormData] = useState<Product>({
-    name: "", price: "", description: "", sizes: "", colors: "", status: "Publicado", image: ""
+    name: "", price: "", description: "", sizes: "", colors: "", status: "Publicado", images: []
   });
   
-  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [formLoading, setFormLoading] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
 
@@ -37,7 +38,10 @@ export default function AdminTiendaPage() {
       const res = await fetch("/api/admin/products");
       const data = await res.json();
       if (data.success) {
-        setProducts(data.products);
+        setProducts(data.products.map((p: any) => ({
+          ...p,
+          images: p.images || (p.image ? [p.image] : [])
+        })));
       }
     } catch (e) {
       console.error(e);
@@ -48,13 +52,16 @@ export default function AdminTiendaPage() {
   const handleOpenModal = (product: Product | null = null) => {
     setEditingProduct(product);
     if (product) {
-      setFormData(product);
+      setFormData({
+        ...product,
+        images: product.images || (product.image ? [product.image] : [])
+      });
     } else {
       setFormData({
-        name: "", price: "10€", description: "", sizes: "", colors: "", status: "Publicado", image: ""
+        name: "", price: "10€", description: "", sizes: "", colors: "", status: "Publicado", images: []
       });
     }
-    setImageFile(null);
+    setImageFiles([]);
     setShowModal(true);
   };
 
@@ -85,16 +92,17 @@ export default function AdminTiendaPage() {
     e.preventDefault();
     setFormLoading(true);
     try {
-      let finalImageUrl = formData.image;
+      let finalImages = [...formData.images];
 
-      if (imageFile) {
+      if (imageFiles.length > 0) {
         setUploadingImage(true);
-        finalImageUrl = await handleImageUpload(imageFile);
+        const newImagesBase64 = await Promise.all(imageFiles.map(file => handleImageUpload(file)));
+        finalImages = [...finalImages, ...newImagesBase64];
         setUploadingImage(false);
       }
 
       const method = editingProduct ? "PUT" : "POST";
-      const body = JSON.stringify({ ...formData, image: finalImageUrl, id: editingProduct?.id });
+      const body = JSON.stringify({ ...formData, images: finalImages, id: editingProduct?.id });
       
       const res = await fetch("/api/admin/products", {
         method,
@@ -114,6 +122,12 @@ export default function AdminTiendaPage() {
     }
     setFormLoading(false);
     setUploadingImage(false);
+  };
+
+  const removeImage = (index: number) => {
+    const newImages = [...formData.images];
+    newImages.splice(index, 1);
+    setFormData({ ...formData, images: newImages });
   };
 
   return (
@@ -143,7 +157,7 @@ export default function AdminTiendaPage() {
               {products.map(p => (
                 <tr key={p.id} style={{ borderBottom: "1px solid #e5e7eb" }}>
                   <td style={{ padding: "16px", display: "flex", alignItems: "center", gap: "12px" }}>
-                    {p.image && <img src={p.image} alt={p.name} style={{ width: "40px", height: "40px", borderRadius: "4px", objectFit: "cover" }} />}
+                    {p.images && p.images.length > 0 && <img src={p.images[0]} alt={p.name} style={{ width: "40px", height: "40px", borderRadius: "4px", objectFit: "cover" }} />}
                     <span style={{ fontWeight: 600 }}>{p.name}</span>
                   </td>
                   <td style={{ padding: "16px" }}>
@@ -216,11 +230,20 @@ export default function AdminTiendaPage() {
               </div>
 
               <div>
-                <label style={{ display: "block", marginBottom: "8px", fontWeight: 600, fontSize: "0.9rem" }}>Imagen del Producto</label>
-                {formData.image && !imageFile && (
-                  <img src={formData.image} alt="Preview" style={{ width: "100px", height: "100px", objectFit: "cover", borderRadius: "8px", marginBottom: "8px" }} />
+                <label style={{ display: "block", marginBottom: "8px", fontWeight: 600, fontSize: "0.9rem" }}>Imágenes del Producto</label>
+                
+                {formData.images && formData.images.length > 0 && (
+                  <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "12px" }}>
+                    {formData.images.map((img, idx) => (
+                      <div key={idx} style={{ position: "relative" }}>
+                        <img src={img} alt="Preview" style={{ width: "80px", height: "80px", objectFit: "cover", borderRadius: "8px" }} />
+                        <button type="button" onClick={() => removeImage(idx)} style={{ position: "absolute", top: "-5px", right: "-5px", background: "red", color: "white", border: "none", borderRadius: "50%", width: "20px", height: "20px", cursor: "pointer", fontSize: "10px" }}>X</button>
+                      </div>
+                    ))}
+                  </div>
                 )}
-                <input type="file" accept="image/*" onChange={e => setImageFile(e.target.files?.[0] || null)} style={{ display: "block", marginBottom: "8px" }} required={!formData.image && !imageFile} />
+
+                <input type="file" multiple accept="image/*" onChange={e => setImageFiles(Array.from(e.target.files || []))} style={{ display: "block", marginBottom: "8px" }} required={formData.images.length === 0 && imageFiles.length === 0} />
               </div>
 
               <div style={{ display: "flex", justifyContent: "flex-end", gap: "12px", marginTop: "16px" }}>
@@ -228,7 +251,7 @@ export default function AdminTiendaPage() {
                   Cancelar
                 </button>
                 <button type="submit" disabled={formLoading} style={{ padding: "10px 20px", border: "none", backgroundColor: "#000", color: "#fff", borderRadius: "8px", cursor: formLoading ? "not-allowed" : "pointer", fontWeight: 600 }}>
-                  {formLoading ? (uploadingImage ? "Subiendo..." : "Guardando...") : "Guardar Producto"}
+                  {formLoading ? (uploadingImage ? "Procesando imágenes..." : "Guardando...") : "Guardar Producto"}
                 </button>
               </div>
             </form>

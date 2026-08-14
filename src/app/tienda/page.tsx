@@ -10,7 +10,8 @@ type Product = {
   description: string;
   sizes: string;
   colors: string;
-  image: string;
+  image?: string;
+  images?: string[];
 };
 
 export default function TiendaPage() {
@@ -22,12 +23,19 @@ export default function TiendaPage() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     fetch("/api/products")
       .then(res => res.json())
       .then(data => {
-        if (data.success) setProducts(data.products);
+        if (data.success) {
+          const parsedProducts = data.products.map((p: any) => ({
+            ...p,
+            images: p.images || (p.image ? [p.image] : [])
+          }));
+          setProducts(parsedProducts);
+        }
         setLoading(false);
       })
       .catch(e => {
@@ -38,6 +46,7 @@ export default function TiendaPage() {
 
   const openProductModal = (product: Product) => {
     setSelectedProduct(product);
+    setCurrentImageIndex(0);
     const sizesArr = product.sizes ? product.sizes.split(',').map(s => s.trim()).filter(Boolean) : [];
     const colorsArr = product.colors ? product.colors.split(',').map(c => c.trim()).filter(Boolean) : [];
     
@@ -65,7 +74,7 @@ export default function TiendaPage() {
         id: selectedProduct.id,
         name: selectedProduct.name,
         price: parseFloat(selectedProduct.price.replace(/[^\d.]/g, '')),
-        imageUrl: selectedProduct.image
+        imageUrl: selectedProduct.images?.[0] || selectedProduct.image || ""
       }, 
       selectedSize || undefined, 
       selectedColor || undefined
@@ -87,43 +96,77 @@ export default function TiendaPage() {
         <p style={{ textAlign: "center", color: "var(--color-text-secondary)" }}>No hay productos disponibles por ahora.</p>
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "24px" }}>
-          {products.map((product) => (
-            <div key={product.id} className="card" style={{ display: "flex", flexDirection: "column", padding: "16px", cursor: "pointer" }} onClick={() => openProductModal(product)}>
-              <div style={{ backgroundColor: "var(--color-bg-secondary)", height: "240px", borderRadius: "var(--radius-md)", marginBottom: "16px", overflow: "hidden" }}>
-                {product.image ? (
-                  <img src={product.image} alt={product.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                ) : (
-                  <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--color-text-secondary)" }}>Sin imagen</div>
-                )}
+          {products.map((product) => {
+            const firstImg = product.images?.[0] || product.image;
+            return (
+              <div key={product.id} className="card" style={{ display: "flex", flexDirection: "column", padding: "16px", cursor: "pointer" }} onClick={() => openProductModal(product)}>
+                <div style={{ backgroundColor: "var(--color-bg-secondary)", height: "240px", borderRadius: "var(--radius-md)", marginBottom: "16px", overflow: "hidden" }}>
+                  {firstImg ? (
+                    <img src={firstImg} alt={product.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  ) : (
+                    <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--color-text-secondary)" }}>Sin imagen</div>
+                  )}
+                </div>
+                <h3 style={{ fontSize: "1.2rem", fontWeight: 600 }}>{product.name}</h3>
+                <p style={{ fontSize: "1.25rem", fontWeight: 700, margin: "8px 0 16px 0", color: "var(--color-accent)" }}>
+                  {product.price}
+                </p>
+                <button 
+                  className="btn-primary" 
+                  style={{ width: "100%", marginTop: "auto" }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    openProductModal(product);
+                  }}
+                >
+                  Ver Detalles
+                </button>
               </div>
-              <h3 style={{ fontSize: "1.2rem", fontWeight: 600 }}>{product.name}</h3>
-              <p style={{ fontSize: "1.25rem", fontWeight: 700, margin: "8px 0 16px 0", color: "var(--color-accent)" }}>
-                {product.price}
-              </p>
-              <button 
-                className="btn-primary" 
-                style={{ width: "100%", marginTop: "auto" }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  openProductModal(product);
-                }}
-              >
-                Ver Detalles
-              </button>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
       {/* Modal Detalles del Producto */}
       {selectedProduct && (
         <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, padding: "20px", animation: "fadeIn 0.3s" }}>
-          <div style={{ backgroundColor: "var(--color-surface)", borderRadius: "16px", width: "100%", maxWidth: "850px", maxHeight: "90vh", overflow: "hidden", position: "relative", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", boxShadow: "0 20px 40px rgba(0,0,0,0.2)" }}>
+          <div style={{ backgroundColor: "#ffffff", borderRadius: "16px", width: "100%", maxWidth: "850px", maxHeight: "90vh", overflow: "hidden", position: "relative", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", boxShadow: "0 20px 40px rgba(0,0,0,0.2)" }}>
             <button onClick={() => setSelectedProduct(null)} style={{ position: "absolute", top: "16px", right: "16px", background: "rgba(255,255,255,0.8)", border: "none", width: "36px", height: "36px", borderRadius: "50%", fontSize: "1.5rem", cursor: "pointer", color: "#000", zIndex: 10, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}>&times;</button>
             
-            {/* Columna Izquierda: Imagen */}
-            <div style={{ backgroundColor: "#f9fafb", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", minHeight: "300px" }}>
-              <img src={selectedProduct.image} alt={selectedProduct.name} style={{ width: "100%", height: "100%", objectFit: "cover", maxHeight: "500px" }} />
+            {/* Columna Izquierda: Imagen y Galería */}
+            <div style={{ backgroundColor: "#f9fafb", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+              <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px", minHeight: "300px" }}>
+                <img 
+                  src={selectedProduct.images?.[currentImageIndex] || selectedProduct.image} 
+                  alt={selectedProduct.name} 
+                  style={{ width: "100%", height: "100%", objectFit: "contain", maxHeight: "400px", borderRadius: "8px" }} 
+                />
+              </div>
+              
+              {selectedProduct.images && selectedProduct.images.length > 1 && (
+                <div style={{ display: "flex", gap: "8px", padding: "16px", overflowX: "auto", borderTop: "1px solid #e5e7eb", backgroundColor: "#fff" }}>
+                  {selectedProduct.images.map((img, idx) => (
+                    <button 
+                      key={idx}
+                      onClick={() => setCurrentImageIndex(idx)}
+                      style={{ 
+                        width: "60px", 
+                        height: "60px", 
+                        flexShrink: 0,
+                        border: currentImageIndex === idx ? "2px solid #000" : "1px solid #e5e7eb",
+                        borderRadius: "8px",
+                        overflow: "hidden",
+                        padding: 0,
+                        cursor: "pointer",
+                        opacity: currentImageIndex === idx ? 1 : 0.6,
+                        transition: "all 0.2s"
+                      }}
+                    >
+                      <img src={img} alt={`Thumbnail ${idx}`} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
             
             {/* Columna Derecha: Detalles */}
