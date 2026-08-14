@@ -468,7 +468,16 @@ export default function TalleresPage() {
 
                 {paymentMethod && paymentMethod !== "efectivo" && (
                   <div style={{ backgroundColor: "#fdf8f6", padding: "20px", borderRadius: "8px", marginBottom: "24px", border: "1px solid #f9dad0" }}>
-                    <div style={{ fontSize: "1.5rem", fontWeight: 700, color: "var(--color-accent)", marginBottom: "24px" }}>{selectedWorkshop.price.replace('$', '€')}</div>
+                    <div style={{ display: "flex", alignItems: "baseline", gap: "12px", marginBottom: "24px", flexWrap: "wrap" }}>
+                      <span style={{ fontSize: "1.8rem", fontWeight: 800, color: "var(--color-accent)" }}>
+                        €{quantity * parseInt(selectedWorkshop.price.replace('$', '').replace('€', ''))}
+                      </span>
+                      {exchangeRates.eur > 0 && (
+                        <span style={{ fontSize: "1.1rem", fontWeight: 600, color: "var(--color-text)", backgroundColor: "#fff", padding: "4px 12px", borderRadius: "16px", border: "1px solid #f9dad0" }}>
+                          Bs {(quantity * parseInt(selectedWorkshop.price.replace('$', '').replace('€', '')) * exchangeRates.eur).toFixed(2)}
+                        </span>
+                      )}
+                    </div>
                     <h4 style={{ fontSize: "1rem", fontWeight: 700, color: "var(--color-text)", marginBottom: "16px" }}>Datos para realizar el pago:</h4>
                     
                     {paymentMethod === "pago_movil" && (
