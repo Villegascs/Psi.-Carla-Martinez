@@ -102,6 +102,35 @@ export default function TalleresPage() {
   const [file, setFile] = useState<File | null>(null);
 
   useEffect(() => {
+    const savedState = sessionStorage.getItem("talleresFormState");
+    if (savedState) {
+      try {
+        const parsed = JSON.parse(savedState);
+        if (parsed.viewState && parsed.viewState !== "success") setViewState(parsed.viewState);
+        if (parsed.selectedWorkshop) setSelectedWorkshop(parsed.selectedWorkshop);
+        if (parsed.currentStep) setCurrentStep(parsed.currentStep);
+        if (parsed.buyerEmail) setBuyerEmail(parsed.buyerEmail);
+        if (parsed.quantity) setQuantity(parsed.quantity);
+        if (parsed.participants) setParticipants(parsed.participants);
+        if (parsed.paymentMethod) setPaymentMethod(parsed.paymentMethod);
+        if (parsed.paymentData) setPaymentData(parsed.paymentData);
+      } catch (e) {
+        console.error("Error cargando sesión:", e);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (viewState !== "list" && viewState !== "success") {
+      sessionStorage.setItem("talleresFormState", JSON.stringify({
+        viewState, selectedWorkshop, currentStep, buyerEmail, quantity, participants, paymentMethod, paymentData
+      }));
+    } else if (viewState === "success" || viewState === "list") {
+      sessionStorage.removeItem("talleresFormState");
+    }
+  }, [viewState, selectedWorkshop, currentStep, buyerEmail, quantity, participants, paymentMethod, paymentData]);
+
+  useEffect(() => {
     if (viewState === "form") {
       fetch("/api/bcv")
         .then(res => res.json())
