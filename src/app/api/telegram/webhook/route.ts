@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getAdminDb } from '@/lib/firebase/admin';
-import { Resend } from 'resend';
 import QRCode from 'qrcode';
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+import nodemailer from 'nodemailer';
 
 export async function POST(req: Request) {
   try {
@@ -71,9 +69,17 @@ export async function POST(req: Request) {
           });
         }
 
-        // Send Email
-        await resend.emails.send({
-          from: 'Carla Martinez <entradas@resend.dev>', // resend.dev allows testing without custom domain if verified
+        // Send Email with NodeMailer
+        const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
+          }
+        });
+
+        await transporter.sendMail({
+          from: `"Carla Martinez" <${process.env.EMAIL_USER}>`,
           to: orderData.buyerEmail,
           subject: '🎟️ Tus entradas para el Taller',
           html: `
