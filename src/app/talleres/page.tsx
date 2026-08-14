@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const WORKSHOPS = [
   {
@@ -101,21 +101,18 @@ export default function TalleresPage() {
   });
   const [file, setFile] = useState<File | null>(null);
 
-  // Fetch exchange rates on load
-  import("react").then((ReactModule) => {
-    ReactModule.useEffect(() => {
-      if (viewState === "form") {
-        fetch("/api/bcv")
-          .then(res => res.json())
-          .then(data => {
-            if (data.usd && data.eur) {
-              setExchangeRates({ usd: data.usd, eur: data.eur });
-            }
-          })
-          .catch(e => console.error("Error fetching rates:", e));
-      }
-    }, [viewState]);
-  });
+  useEffect(() => {
+    if (viewState === "form") {
+      fetch("/api/bcv")
+        .then(res => res.json())
+        .then(data => {
+          if (data.usd && data.eur) {
+            setExchangeRates({ usd: data.usd, eur: data.eur });
+          }
+        })
+        .catch(e => console.error("Error fetching rates:", e));
+    }
+  }, [viewState]);
 
   const handleQuantityChange = (qty: number) => {
     if (qty < 1 || qty > 10) return; // Límites entre 1 y 10
