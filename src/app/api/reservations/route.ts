@@ -33,6 +33,7 @@ export async function POST(request: Request) {
 
 export async function GET() {
   try {
+    const adminDb = getAdminDb();
     const snapshot = await adminDb.collection('appointments').orderBy('date', 'asc').get();
     const appointments = snapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() }));
     
