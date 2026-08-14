@@ -100,17 +100,15 @@ export default function TalleresPage() {
   }, [viewState, selectedWorkshop, currentStep, buyerEmail, quantity, participants, paymentMethod, paymentData]);
 
   useEffect(() => {
-    if (viewState === "form") {
-      fetch("/api/bcv")
-        .then(res => res.json())
-        .then(data => {
-          if (data.usd && data.eur) {
-            setExchangeRates({ usd: data.usd, eur: data.eur });
-          }
-        })
-        .catch(e => console.error("Error fetching rates:", e));
-    }
-  }, [viewState]);
+    fetch("/api/bcv")
+      .then(res => res.json())
+      .then(data => {
+        if (data.usd && data.eur) {
+          setExchangeRates({ usd: data.usd, eur: data.eur });
+        }
+      })
+      .catch(e => console.error("Error fetching rates:", e));
+  }, []);
 
   const handleQuantityChange = (qty: number) => {
     if (qty < 1 || qty > 10) return; // Límites entre 1 y 10
@@ -303,7 +301,14 @@ export default function TalleresPage() {
               </div>
               <div style={{ backgroundColor: "var(--color-surface)", padding: "12px 20px", borderRadius: "8px", border: "1px solid var(--color-border)" }}>
                 <strong style={{ display: "block", fontSize: "0.8rem", color: "var(--color-text-secondary)" }}>PRECIO</strong>
-                <span style={{ color: "var(--color-accent)", fontWeight: 700 }}>{selectedWorkshop.price.replace('$', '€')}</span>
+                <span style={{ color: "var(--color-accent)", fontWeight: 700 }}>
+                  {selectedWorkshop.price.replace('$', '€')}
+                  {exchangeRates.eur > 0 && (
+                    <span style={{ fontSize: "0.9rem", color: "var(--color-text-secondary)", fontWeight: 500, marginLeft: "8px" }}>
+                      | {(parseFloat(selectedWorkshop.price.replace(/[^\d.]/g, '')) * exchangeRates.eur).toFixed(2)} Bs
+                    </span>
+                  )}
+                </span>
               </div>
 
             </div>
