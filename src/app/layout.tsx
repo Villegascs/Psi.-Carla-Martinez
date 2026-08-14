@@ -28,7 +28,6 @@ export default function RootLayout({
                 <Link href="/talleres" style={{ fontWeight: 500 }}>Talleres</Link>
                 <Link href="/tienda" style={{ fontWeight: 500 }}>Tienda</Link>
                 <Link href="/contacto" style={{ fontWeight: 500 }}>Contacto</Link>
-                <Link href="/admin" className="btn-primary" style={{ padding: "8px 16px", fontSize: "0.9rem" }}>Admin</Link>
               </nav>
             </div>
           </header>
