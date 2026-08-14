@@ -105,14 +105,14 @@ export default function TalleresPage() {
   import("react").then((ReactModule) => {
     ReactModule.useEffect(() => {
       if (viewState === "form") {
-        Promise.all([
-          fetch("https://ve.dolarapi.com/v1/dolares/oficial").then(r => r.json()),
-          fetch("https://ve.dolarapi.com/v1/euros/oficial").then(r => r.json())
-        ])
-        .then(([usdData, eurData]) => {
-          setExchangeRates({ usd: usdData.promedio, eur: eurData.promedio });
-        })
-        .catch(e => console.error("Error fetching rates:", e));
+        fetch("/api/bcv")
+          .then(res => res.json())
+          .then(data => {
+            if (data.usd && data.eur) {
+              setExchangeRates({ usd: data.usd, eur: data.eur });
+            }
+          })
+          .catch(e => console.error("Error fetching rates:", e));
       }
     }, [viewState]);
   });
