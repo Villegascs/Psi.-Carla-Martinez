@@ -273,8 +273,10 @@ export default function TalleresPage() {
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <span style={{ fontSize: "0.9rem", fontWeight: 600, color: "var(--color-text)" }}>{workshop.date}</span>
                     <span style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--color-accent)", padding: "4px 12px", backgroundColor: "var(--color-surface)", borderRadius: "20px" }}>
-                  {workshop.price.replace('$', '€')}
-                </span>
+                      {workshop.price.replace('$', '€')}
+                    </span>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
