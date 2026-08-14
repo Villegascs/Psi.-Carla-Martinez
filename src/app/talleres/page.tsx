@@ -476,11 +476,6 @@ export default function TalleresPage() {
                   </div>
                 </div>
 
-                <div className="form-group" style={{ marginBottom: "24px" }}>
-                  <label className="form-label" style={{ fontSize: "1.1rem" }}>Correo Electrónico para recibir Entradas</label>
-                  <input required type="email" value={buyerEmail} onChange={e => setBuyerEmail(e.target.value)} className="input-field" placeholder="tu@correo.com" />
-                </div>
-
                 <h3 style={{ fontSize: "1.1rem", fontWeight: 700, borderBottom: "1px solid var(--color-border)", paddingBottom: "8px", marginBottom: "16px" }}>Método de Pago</h3>
                 <div className="form-group">
                   <select required className="input-field" value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
@@ -593,6 +588,11 @@ export default function TalleresPage() {
                     <input required type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} className="input-field" style={{ padding: "8px" }} />
                   </div>
                 )}
+                <div className="form-group" style={{ marginBottom: "32px" }}>
+                  <label className="form-label" style={{ fontSize: "1.1rem" }}>Correo Electrónico para recibir Entradas</label>
+                  <input required type="email" value={buyerEmail} onChange={e => setBuyerEmail(e.target.value)} className="input-field" placeholder="tu@correo.com" />
+                </div>
+
 
                 <button type="submit" className="btn-primary" style={{ width: "100%", padding: "16px", marginTop: "16px" }} disabled={loading}>
                   {loading ? "Procesando Inscripción..." : "Completar Inscripción"}
