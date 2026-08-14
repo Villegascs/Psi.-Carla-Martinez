@@ -72,6 +72,15 @@ export default function AdminTiendaPage() {
     }
   };
 
+  const handleImageUpload = async (file: File) => {
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = error => reject(error);
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormLoading(true);
@@ -80,17 +89,7 @@ export default function AdminTiendaPage() {
 
       if (imageFile) {
         setUploadingImage(true);
-        const imageFormData = new FormData();
-        imageFormData.append('file', imageFile);
-        
-        const resUpload = await fetch('/api/admin/upload', {
-          method: 'POST',
-          body: imageFormData
-        });
-        
-        if (!resUpload.ok) throw new Error("Error al subir imagen");
-        const uploadData = await resUpload.json();
-        finalImageUrl = uploadData.url;
+        finalImageUrl = await handleImageUpload(imageFile);
         setUploadingImage(false);
       }
 
