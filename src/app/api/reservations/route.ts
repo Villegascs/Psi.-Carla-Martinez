@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase/admin';
-import * as admin from 'firebase-admin';
+import { FieldValue } from 'firebase-admin/firestore';
 
 export async function POST(request: Request) {
   try {
@@ -18,7 +18,7 @@ export async function POST(request: Request) {
       date: new Date(date).toISOString(),
       price: Number(price) || 0,
       status: "PENDING",
-      createdAt: admin.firestore.FieldValue.serverTimestamp()
+      createdAt: FieldValue.serverTimestamp()
     };
 
     await newAppointmentRef.set(appointmentData);
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
 export async function GET() {
   try {
     const snapshot = await adminDb.collection('appointments').orderBy('date', 'asc').get();
-    const appointments = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const appointments = snapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() }));
     
     return NextResponse.json({ success: true, appointments });
   } catch (error) {
