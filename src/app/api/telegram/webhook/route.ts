@@ -51,6 +51,7 @@ export async function POST(req: Request) {
     if (action === 'approve' && orderData.buyerEmail) {
       try {
         const attachments = [];
+        let ticketsHtml = '';
         
         // Generate a QR for each participant
         for (let i = 0; i < orderData.participants.length; i++) {
@@ -65,8 +66,22 @@ export async function POST(req: Request) {
           
           attachments.push({
             filename: `Entrada_${participant.firstName}_${participant.lastName}.png`,
-            content: qrBuffer
+            content: qrBuffer,
+            cid: `qr_${i}`
           });
+
+          ticketsHtml += `
+            <div style="background-color: #111111; color: #ffffff; padding: 30px 20px; border-radius: 12px; text-align: center; max-width: 350px; margin: 0 auto 20px auto; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; border: 1px solid #333;">
+              <p style="color: #f9dad0; font-size: 1rem; font-weight: 600; margin: 0 0 10px 0;">Entrada ${i + 1} de ${orderData.participants.length}</p>
+              <h3 style="font-size: 1.2rem; font-weight: 400; margin: 0 0 20px 0;"><strong style="font-weight: 700;">Titular:</strong> ${participant.firstName} ${participant.lastName}</h3>
+              
+              <div style="background-color: #ffffff; padding: 15px; border-radius: 8px; display: inline-block; margin-bottom: 20px;">
+                <img src="cid:qr_${i}" alt="QR Code" style="width: 200px; height: 200px; display: block;" />
+              </div>
+              
+              <p style="color: #666666; font-size: 0.85rem; margin: 0;">ID: ${orderId.substring(0, 8)}</p>
+            </div>
+          `;
         }
 
         // Send Email with NodeMailer
@@ -79,15 +94,26 @@ export async function POST(req: Request) {
         });
 
         const info = await transporter.sendMail({
-          from: `"Carla Martinez" <${process.env.EMAIL_USER}>`,
+          from: `"Carla Martinez | Entradas" <${process.env.EMAIL_USER}>`,
           to: orderData.buyerEmail,
-          subject: '🎟️ Tus entradas para el Taller',
+          subject: `🎟️ Entradas Confirmadas - ${orderData.workshopName}`,
           html: `
-            <h2>¡Tu inscripción ha sido aprobada!</h2>
-            <p>Hola,</p>
-            <p>Tu pago para el <strong>${orderData.workshopName}</strong> ha sido verificado con éxito.</p>
-            <p>Adjunto a este correo encontrarás los códigos QR para cada participante. Por favor preséntalos en la entrada el día del evento.</p>
-            <p>¡Te esperamos!</p>
+            <div style="background-color: #f4f4f5; padding: 40px 20px; font-family: sans-serif;">
+              <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                <div style="background-color: #f9dad0; padding: 30px; text-align: center;">
+                  <h1 style="color: #111111; margin: 0; font-size: 1.8rem;">¡Inscripción Aprobada! 🎉</h1>
+                </div>
+                <div style="padding: 30px;">
+                  <p style="font-size: 1.1rem; color: #333333;">Hola,</p>
+                  <p style="font-size: 1.1rem; color: #333333; line-height: 1.5;">Tu pago para el <strong>${orderData.workshopName}</strong> ha sido verificado con éxito.</p>
+                  <p style="font-size: 1.1rem; color: #333333; line-height: 1.5; margin-bottom: 30px;">A continuación encontrarás tus entradas. Por favor, muéstralas desde tu teléfono el día del evento.</p>
+                  
+                  ${ticketsHtml}
+                  
+                  <p style="font-size: 1.1rem; color: #333333; text-align: center; margin-top: 30px;">¡Te esperamos!</p>
+                </div>
+              </div>
+            </div>
           `,
           attachments: attachments
         });
