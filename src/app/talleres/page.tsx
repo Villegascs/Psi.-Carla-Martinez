@@ -305,10 +305,7 @@ export default function TalleresPage() {
                 <strong style={{ display: "block", fontSize: "0.8rem", color: "var(--color-text-secondary)" }}>PRECIO</strong>
                 <span style={{ color: "var(--color-accent)", fontWeight: 700 }}>{selectedWorkshop.price.replace('$', '€')}</span>
               </div>
-              <div style={{ backgroundColor: "var(--color-surface)", padding: "12px 20px", borderRadius: "8px", border: "1px solid var(--color-border)" }}>
-                <strong style={{ display: "block", fontSize: "0.8rem", color: "var(--color-text-secondary)" }}>CUPOS</strong>
-                <span>{selectedWorkshop.capacity} personas máximo</span>
-              </div>
+
             </div>
 
             <h3 className="heading-2" style={{ fontSize: "1.2rem", marginBottom: "8px" }}>Descripción</h3>
