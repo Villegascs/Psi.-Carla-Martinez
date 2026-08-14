@@ -1,13 +1,11 @@
-const admin = require('firebase-admin');
-const { getFirestore } = require('firebase-admin/firestore');
-const { getAuth } = require('firebase-admin/auth');
+import * as admin from 'firebase-admin';
 
 function initFirebase() {
-  if (!admin.apps || !admin.apps.length) {
+  if (!admin.apps.length) {
     const privateKey = (process.env.FIREBASE_PRIVATE_KEY || '').replace(/\\n/g, '\n').replace(/^"|"$/g, '');
     
     admin.initializeApp({
-      credential: admin.cert({
+      credential: admin.credential.cert({
         projectId: process.env.FIREBASE_PROJECT_ID,
         clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
         privateKey: privateKey,
@@ -18,10 +16,10 @@ function initFirebase() {
 
 export const getAdminDb = () => {
   initFirebase();
-  return getFirestore();
+  return admin.firestore();
 };
 
 export const getAdminAuth = () => {
   initFirebase();
-  return getAuth();
+  return admin.auth();
 };
