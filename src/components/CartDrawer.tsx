@@ -1,12 +1,25 @@
 "use client";
 
 import { useCart } from "@/context/CartContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 
 export default function CartDrawer() {
   const { items, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, total, clearCart } = useCart();
   
+  const [bcvRate, setBcvRate] = useState<number | null>(null);
+  const [eurRate, setEurRate] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch("/api/bcv")
+      .then(res => res.json())
+      .then(data => {
+        if (data.usd) setBcvRate(data.usd);
+        if (data.eur) setEurRate(data.eur);
+      })
+      .catch(console.error);
+  }, []);
+
   // Checkout steps: CART -> CONTACT -> PAYMENT -> SUCCESS
   const [checkoutStep, setCheckoutStep] = useState<"CART" | "CONTACT" | "PAYMENT" | "SUCCESS">("CART");
   
@@ -270,12 +283,49 @@ export default function CartDrawer() {
 
                     {paymentMethod === "pago_movil" && (
                       <div style={{ backgroundColor: "#fff", padding: "20px", borderRadius: "12px", border: "1px solid var(--color-border)", marginBottom: "16px" }}>
-                        <p style={{ fontWeight: 700, marginBottom: "12px" }}>Datos Pago Móvil:</p>
-                        <p style={{ fontSize: "0.9rem", marginBottom: "4px" }}>Banco: Banesco (0134)</p>
-                        <p style={{ fontSize: "0.9rem", marginBottom: "4px" }}>Teléfono: 0414-4083780</p>
-                        <p style={{ fontSize: "0.9rem", marginBottom: "16px" }}>Cédula: V-26345678</p>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+                          <p style={{ fontWeight: 700, margin: 0 }}>Datos Pago Móvil:</p>
+                        </div>
                         
-                        <input required type="text" placeholder="Banco de origen" className="input-field" value={paymentData.bank} onChange={e => setPaymentData({...paymentData, bank: e.target.value})} style={{ marginBottom: "8px" }} />
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
+                          <p style={{ fontSize: "0.9rem", margin: 0 }}>Banco: Banesco (0134)</p>
+                          <button onClick={() => navigator.clipboard.writeText("0134")} style={{ background: "none", border: "none", color: "var(--color-accent)", fontSize: "0.8rem", cursor: "pointer", textDecoration: "underline", padding: "4px" }}>Copiar</button>
+                        </div>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
+                          <p style={{ fontSize: "0.9rem", margin: 0 }}>Teléfono: 0414-4083780</p>
+                          <button onClick={() => navigator.clipboard.writeText("04144083780")} style={{ background: "none", border: "none", color: "var(--color-accent)", fontSize: "0.8rem", cursor: "pointer", textDecoration: "underline", padding: "4px" }}>Copiar</button>
+                        </div>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+                          <p style={{ fontSize: "0.9rem", margin: 0 }}>Cédula: V-26345678</p>
+                          <button onClick={() => navigator.clipboard.writeText("26345678")} style={{ background: "none", border: "none", color: "var(--color-accent)", fontSize: "0.8rem", cursor: "pointer", textDecoration: "underline", padding: "4px" }}>Copiar</button>
+                        </div>
+                        
+                        <select required className="input-field" value={paymentData.bank} onChange={e => setPaymentData({...paymentData, bank: e.target.value})} style={{ marginBottom: "8px" }}>
+                          <option value="">Selecciona tu banco de origen</option>
+                          <option value="0102 - Banco de Venezuela">0102 - Banco de Venezuela</option>
+                          <option value="0104 - Venezolano de Crédito">0104 - Venezolano de Crédito</option>
+                          <option value="0105 - Mercantil">0105 - Mercantil</option>
+                          <option value="0108 - Provincial">0108 - Provincial</option>
+                          <option value="0114 - Bancaribe">0114 - Bancaribe</option>
+                          <option value="0115 - Exterior">0115 - Exterior</option>
+                          <option value="0128 - Banco Caroní">0128 - Banco Caroní</option>
+                          <option value="0134 - Banesco">0134 - Banesco</option>
+                          <option value="0137 - Sofitasa">0137 - Sofitasa</option>
+                          <option value="0138 - Plaza">0138 - Plaza</option>
+                          <option value="0151 - Fondo Común (BFC)">0151 - Fondo Común (BFC)</option>
+                          <option value="0156 - 100% Banco">0156 - 100% Banco</option>
+                          <option value="0157 - Del Sur">0157 - Del Sur</option>
+                          <option value="0163 - Tesoro">0163 - Tesoro</option>
+                          <option value="0166 - Agrícola de Venezuela">0166 - Agrícola de Venezuela</option>
+                          <option value="0168 - Bancrecer">0168 - Bancrecer</option>
+                          <option value="0169 - Mi Banco">0169 - Mi Banco</option>
+                          <option value="0171 - Activo">0171 - Activo</option>
+                          <option value="0172 - Bancamiga">0172 - Bancamiga</option>
+                          <option value="0174 - Banplus">0174 - Banplus</option>
+                          <option value="0175 - Bicentenario">0175 - Bicentenario</option>
+                          <option value="0177 - Banfanb">0177 - Banfanb</option>
+                          <option value="0191 - BNC">0191 - BNC</option>
+                        </select>
                         <input required type="tel" placeholder="Teléfono asociado" className="input-field" value={paymentData.paymentPhone} onChange={e => setPaymentData({...paymentData, paymentPhone: e.target.value})} style={{ marginBottom: "8px" }} />
                         <input required type="text" placeholder="Referencia" className="input-field" value={paymentData.reference} onChange={e => setPaymentData({...paymentData, reference: e.target.value})} />
                       </div>
@@ -343,9 +393,26 @@ export default function CartDrawer() {
                      <span>Por calcular</span>
                    </div>
 
-                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "32px", fontSize: "1.25rem", fontWeight: 800, borderTop: "1px solid var(--color-border)", paddingTop: "16px", color: "var(--color-accent)" }}>
-                     <span>Total</span>
-                     <span>${total}</span>
+                   <div style={{ display: "flex", flexDirection: "column", gap: "8px", borderTop: "1px solid var(--color-border)", paddingTop: "16px", marginBottom: "32px" }}>
+                     <div style={{ display: "flex", justifyContent: "space-between", fontSize: "1.25rem", fontWeight: 800, color: "var(--color-accent)" }}>
+                       <span>Total (USD)</span>
+                       <span>${total}</span>
+                     </div>
+                     {bcvRate && eurRate && (
+                       <>
+                         <div style={{ display: "flex", justifyContent: "space-between", fontSize: "1rem", fontWeight: 600, color: "var(--color-text-secondary)" }}>
+                           <span>Total (Bs)</span>
+                           <span>Bs. {(total * bcvRate).toFixed(2)}</span>
+                         </div>
+                         <div style={{ display: "flex", justifyContent: "space-between", fontSize: "1rem", fontWeight: 600, color: "var(--color-text-secondary)" }}>
+                           <span>Total (EUR)</span>
+                           <span>€ {((total * bcvRate) / eurRate).toFixed(2)}</span>
+                         </div>
+                         <div style={{ fontSize: "0.8rem", color: "#888", marginTop: "4px" }}>
+                           Tasa EUR BCV: Bs. {eurRate.toFixed(2)}
+                         </div>
+                       </>
+                     )}
                    </div>
                    
                    {checkoutStep === "CART" ? (
