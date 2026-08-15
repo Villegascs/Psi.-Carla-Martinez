@@ -28,8 +28,11 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
       case "Pendiente": return "#f59e0b"; // Yellow/Orange
       case "En Proceso": return "#3b82f6"; // Blue
       case "Aprobado": return "#10b981"; // Green
+      case "Enviado": return "#8b5cf6"; // Purple
+      case "Entregado": 
+      case "Finalizado": return "#4b5563"; // Dark Gray
       case "Cancelado": return "#ef4444"; // Red
-      default: return "#6b7280"; // Gray
+      default: return "#f59e0b"; 
     }
   };
 
@@ -40,9 +43,12 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
         {/* Header */}
         <div style={{ backgroundColor: getStatusColor(order?.status), padding: "32px 24px", color: "#fff", textAlign: "center" }}>
           <h1 style={{ fontSize: "2rem", margin: "0 0 8px 0" }}>
-            {order?.status === "Aprobado" ? "¡Pago Aprobado!" :
-             order?.status === "Cancelado" ? "Pedido Cancelado" :
-             order?.status === "En Proceso" ? "Orden en Proceso" : "Pago Pendiente de Verificar"}
+            {order?.status === "Cancelado" ? "Pedido Cancelado" :
+             order?.status === "Finalizado" || order?.status === "Entregado" ? "¡Pedido Entregado!" :
+             order?.status === "Enviado" ? "¡Pedido en Camino!" :
+             order?.status === "Aprobado" ? "¡Pago Aprobado!" :
+             order?.status === "En Proceso" ? "Orden en Proceso" :
+             "Pago Pendiente de Verificar"}
           </h1>
           <p style={{ margin: 0, opacity: 0.9, fontSize: "1.1rem" }}>Orden #{id.slice(0, 8).toUpperCase()}</p>
         </div>
