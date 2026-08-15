@@ -210,7 +210,7 @@ export default function CartDrawer() {
                               {item.size && item.color && ` | `}
                               {item.color && `Color: ${item.color}`}
                             </p>
-                            <p style={{ fontWeight: 700, color: "var(--color-accent)" }}>${item.price}</p>
+                            <p style={{ fontWeight: 700, color: "var(--color-accent)" }}>€{item.price}</p>
                           </div>
                           
                           {/* Quantity Controls & Delete */}
@@ -275,8 +275,8 @@ export default function CartDrawer() {
                       <select className="input-field" value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
                         <option value="">Selecciona un método</option>
                         <option value="pago_movil">Pago Móvil (Bs)</option>
-                        <option value="zelle">Zelle ($)</option>
-                        <option value="binance">Binance USDT ($)</option>
+                        <option value="zelle">Zelle</option>
+                        <option value="binance">Binance USDT</option>
                         <option value="efectivo">Efectivo (Presencial)</option>
                       </select>
                     </div>
@@ -386,7 +386,7 @@ export default function CartDrawer() {
                    
                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "16px", color: "var(--color-text-secondary)", fontSize: "0.95rem" }}>
                      <span>Costo de productos</span>
-                     <span>${total}</span>
+                     <span>€{total}</span>
                    </div>
                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "16px", color: "var(--color-text-secondary)", fontSize: "0.95rem" }}>
                      <span>Envío</span>
@@ -395,18 +395,14 @@ export default function CartDrawer() {
 
                    <div style={{ display: "flex", flexDirection: "column", gap: "8px", borderTop: "1px solid var(--color-border)", paddingTop: "16px", marginBottom: "32px" }}>
                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: "1.25rem", fontWeight: 800, color: "var(--color-accent)" }}>
-                       <span>Total (USD)</span>
-                       <span>${total}</span>
+                       <span>Total (EUR)</span>
+                       <span>€{total}</span>
                      </div>
-                     {bcvRate && eurRate && (
+                     {eurRate && (
                        <>
                          <div style={{ display: "flex", justifyContent: "space-between", fontSize: "1rem", fontWeight: 600, color: "var(--color-text-secondary)" }}>
                            <span>Total (Bs)</span>
-                           <span>Bs. {(total * bcvRate).toFixed(2)}</span>
-                         </div>
-                         <div style={{ display: "flex", justifyContent: "space-between", fontSize: "1rem", fontWeight: 600, color: "var(--color-text-secondary)" }}>
-                           <span>Total (EUR)</span>
-                           <span>€ {((total * bcvRate) / eurRate).toFixed(2)}</span>
+                           <span>Bs. {(total * eurRate).toFixed(2)}</span>
                          </div>
                          <div style={{ fontSize: "0.8rem", color: "#888", marginTop: "4px" }}>
                            Tasa EUR BCV: Bs. {eurRate.toFixed(2)}
