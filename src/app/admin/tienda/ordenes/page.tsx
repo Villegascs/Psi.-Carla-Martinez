@@ -13,7 +13,7 @@ type StoreOrder = {
   paymentData: any;
   items: any[];
   total: number;
-  status: "Pendiente" | "En Proceso" | "Enviado" | "Entregado" | "Cancelado";
+  status: "Pendiente" | "En Proceso" | "Enviado" | "Entregado" | "Finalizado" | "Cancelado";
   createdAt: string;
   proofUrl?: string;
 };
@@ -86,7 +86,7 @@ export default function AdminOrdenesPage() {
                     <span style={{ fontWeight: 600, display: "block" }}>{o.customerName}</span>
                     <span style={{ fontSize: "0.85rem", color: "#6b7280" }}>{o.customerPhone}</span>
                   </td>
-                  <td style={{ padding: "16px", fontWeight: 600 }}>${o.total}</td>
+                  <td style={{ padding: "16px", fontWeight: 600 }}>€{o.total}</td>
                   <td style={{ padding: "16px" }}>
                     <select 
                       value={o.status} 
@@ -97,6 +97,7 @@ export default function AdminOrdenesPage() {
                       <option value="En Proceso">En Proceso</option>
                       <option value="Enviado">Enviado</option>
                       <option value="Entregado">Entregado</option>
+                      <option value="Finalizado">Finalizado</option>
                       <option value="Cancelado">Cancelado</option>
                     </select>
                   </td>
@@ -149,12 +150,12 @@ export default function AdminOrdenesPage() {
                         {item.size && `Talla: ${item.size}`} {item.color && `| Color: ${item.color}`}
                       </p>
                     </div>
-                    <p style={{ fontWeight: 600 }}>${item.price * item.quantity}</p>
+                    <p style={{ fontWeight: 600 }}>€{item.price * item.quantity}</p>
                   </div>
                 ))}
                 <div style={{ padding: "12px", backgroundColor: "#f9fafb", display: "flex", justifyContent: "space-between", fontWeight: 700 }}>
                   <span>Total</span>
-                  <span>${selectedOrder.total}</span>
+                  <span>€{selectedOrder.total}</span>
                 </div>
               </div>
             </div>
