@@ -102,6 +102,11 @@ export default function CartDrawer() {
       if (data.success) {
         setCheckoutStep("SUCCESS");
         clearCart();
+        
+        const trackingUrl = `${window.location.origin}/tienda/ordenes/${data.orderId}`;
+        const wpMessage = `Hola Carla, acabo de realizar un pedido en la tienda.\nAquí está mi enlace de seguimiento: ${trackingUrl}`;
+        const wpUrl = `https://wa.me/584144083780?text=${encodeURIComponent(wpMessage)}`;
+        window.open(wpUrl, '_blank');
       } else {
         alert("Error procesando la orden: " + data.error);
       }

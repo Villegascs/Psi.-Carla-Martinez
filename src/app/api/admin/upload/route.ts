@@ -12,7 +12,8 @@ export async function POST(req: Request) {
 
     const buffer = Buffer.from(await file.arrayBuffer());
     const storage = getAdminStorage();
-    const bucket = storage.bucket();
+    const bucketName = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET?.replace('.firebasestorage.app', '.appspot.com');
+    const bucket = storage.bucket(bucketName);
     
     const fileName = `workshops/${Date.now()}_${file.name}`;
     const fileRef = bucket.file(fileName);
