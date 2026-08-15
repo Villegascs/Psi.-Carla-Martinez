@@ -27,6 +27,70 @@ export default function CartDrawer() {
 
   const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
 
+  const handleNextStep = () => {
+    if (checkoutStep === "CART") {
+      if (items.length === 0) return;
+      setCheckoutStep("CONTACT");
+    } else if (checkoutStep === "CONTACT") {
+      if (!contactData.customerName || !contactData.customerEmail || !contactData.customerPhone) {
+        alert("Por favor completa tus datos de contacto.");
+        return;
+      }
+      if (contactData.deliveryMethod === "Delivery" && !contactData.address) {
+        alert("Por favor ingresa tu dirección de entrega.");
+        return;
+      }
+      setCheckoutStep("PAYMENT");
+    }
+  };
+
+  const handleCheckout = async () => {
+    if (!paymentMethod) {
+      alert("Por favor selecciona un método de pago.");
+      return;
+    }
+    if (paymentMethod !== "efectivo" && !paymentData.reference) {
+      alert("Por favor ingresa el número de referencia.");
+      return;
+    }
+    if (paymentMethod !== "efectivo" && !proofFile) {
+      alert("Por favor adjunta el comprobante (capture) de tu pago.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const orderData = {
+        ...contactData,
+        paymentMethod,
+        paymentData: paymentMethod === 'efectivo' ? { denomination: paymentData.billDenomination } : paymentData,
+        items,
+        total
+      };
+
+      const formData = new FormData();
+      formData.append('orderData', JSON.stringify(orderData));
+      if (proofFile) formData.append('file', proofFile);
+
+      const res = await fetch("/api/store_checkout", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        setCheckoutStep("SUCCESS");
+        clearCart();
+      } else {
+        alert("Error procesando la orden: " + data.error);
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Hubo un error al procesar tu pedido.");
+    }
+    setLoading(false);
+  };
+
   return (
     <>
       {/* Botón flotante del carrito */}
