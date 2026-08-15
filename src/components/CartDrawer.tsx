@@ -28,6 +28,7 @@ export default function CartDrawer() {
     customerEmail: "",
     customerPhone: "",
     deliveryMethod: "Pickup", // "Pickup" or "Delivery"
+    deliveryZone: "",
     address: ""
   });
 
@@ -50,9 +51,15 @@ export default function CartDrawer() {
         alert("Por favor completa tus datos de contacto.");
         return;
       }
-      if (contactData.deliveryMethod === "Delivery" && !contactData.address) {
-        alert("Por favor ingresa tu dirección de entrega.");
-        return;
+      if (contactData.deliveryMethod === "Delivery") {
+        if (!contactData.deliveryZone) {
+          alert("Por favor selecciona una zona de envío.");
+          return;
+        }
+        if (!contactData.address) {
+          alert("Por favor ingresa tu dirección de entrega.");
+          return;
+        }
       }
       setCheckoutStep("PAYMENT");
     }
@@ -256,10 +263,25 @@ export default function CartDrawer() {
                       </select>
                     </div>
                     {contactData.deliveryMethod === "Delivery" && (
-                      <div className="form-group" style={{ marginBottom: 0 }}>
-                        <label className="form-label" style={{ fontSize: "0.85rem" }}>Dirección Completa de Envío</label>
-                        <textarea className="input-field" rows={3} value={contactData.address} onChange={e => setContactData({...contactData, address: e.target.value})} />
-                      </div>
+                      <>
+                        <div className="form-group" style={{ marginBottom: 0 }}>
+                          <label className="form-label" style={{ fontSize: "0.85rem" }}>Zona de Envío</label>
+                          <select className="input-field" value={contactData.deliveryZone} onChange={e => setContactData({...contactData, deliveryZone: e.target.value})}>
+                            <option value="">Selecciona tu zona</option>
+                            <option value="Valencia Norte">Valencia Norte</option>
+                            <option value="Valencia Centro">Valencia Centro</option>
+                            <option value="Valencia Sur">Valencia Sur</option>
+                            <option value="San Diego">San Diego</option>
+                            <option value="Naguanagua">Naguanagua</option>
+                            <option value="Los Guayos">Los Guayos</option>
+                            <option value="Otra Ciudad / Envío Nacional">Otra Ciudad / Envío Nacional</option>
+                          </select>
+                        </div>
+                        <div className="form-group" style={{ marginBottom: 0 }}>
+                          <label className="form-label" style={{ fontSize: "0.85rem" }}>Dirección Completa de Envío</label>
+                          <textarea className="input-field" rows={3} value={contactData.address} onChange={e => setContactData({...contactData, address: e.target.value})} placeholder="Especifica calle, urbanización, número de casa, etc..." />
+                        </div>
+                      </>
                     )}
                   </div>
                 )}
