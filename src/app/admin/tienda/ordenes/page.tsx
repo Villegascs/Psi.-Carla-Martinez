@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 type StoreOrder = {
   id: string;
   customerName: string;
+  customerIdType?: string;
+  customerId?: string;
   customerEmail: string;
   customerPhone: string;
   deliveryMethod: string;
@@ -129,6 +131,7 @@ export default function AdminOrdenesPage() {
               <div>
                 <p style={{ fontSize: "0.85rem", color: "#6b7280", marginBottom: "4px" }}>Cliente</p>
                 <p style={{ fontWeight: 600 }}>{selectedOrder.customerName}</p>
+                {selectedOrder.customerId && <p style={{ fontSize: "0.9rem" }}>C.I: {selectedOrder.customerIdType}-{selectedOrder.customerId}</p>}
                 <p style={{ fontSize: "0.9rem" }}>{selectedOrder.customerEmail}</p>
                 <p style={{ fontSize: "0.9rem" }}>{selectedOrder.customerPhone}</p>
               </div>

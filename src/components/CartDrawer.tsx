@@ -25,6 +25,8 @@ export default function CartDrawer() {
   
   const [contactData, setContactData] = useState({
     customerName: "",
+    customerIdType: "V",
+    customerId: "",
     customerEmail: "",
     customerPhone: "",
     deliveryMethod: "Pickup", // "Pickup" or "Delivery"
@@ -47,8 +49,8 @@ export default function CartDrawer() {
       if (items.length === 0) return;
       setCheckoutStep("CONTACT");
     } else if (checkoutStep === "CONTACT") {
-      if (!contactData.customerName || !contactData.customerEmail || !contactData.customerPhone) {
-        alert("Por favor completa tus datos de contacto.");
+      if (!contactData.customerName || !contactData.customerId || !contactData.customerEmail || !contactData.customerPhone) {
+        alert("Por favor completa tus datos personales y de contacto.");
         return;
       }
       if (contactData.deliveryMethod === "Delivery") {
@@ -253,12 +255,37 @@ export default function CartDrawer() {
                       <input type="text" className="input-field" value={contactData.customerName} onChange={e => setContactData({...contactData, customerName: e.target.value})} />
                     </div>
                     <div className="form-group" style={{ marginBottom: 0 }}>
+                      <label className="form-label" style={{ fontSize: "0.85rem" }}>Cédula / Documento de Identidad</label>
+                      <div style={{ display: "flex", gap: "8px" }}>
+                        <select 
+                          className="input-field" 
+                          style={{ width: "80px", padding: "10px" }}
+                          value={contactData.customerIdType}
+                          onChange={e => setContactData({...contactData, customerIdType: e.target.value})}
+                        >
+                          <option value="V">V</option>
+                          <option value="E">E</option>
+                          <option value="J">J</option>
+                          <option value="G">G</option>
+                          <option value="P">P</option>
+                        </select>
+                        <input 
+                          type="text" 
+                          className="input-field" 
+                          style={{ flex: 1 }}
+                          placeholder="Solo números"
+                          value={contactData.customerId} 
+                          onChange={e => setContactData({...contactData, customerId: e.target.value.replace(/\D/g, '')})} 
+                        />
+                      </div>
+                    </div>
+                    <div className="form-group" style={{ marginBottom: 0 }}>
                       <label className="form-label" style={{ fontSize: "0.85rem" }}>Correo Electrónico</label>
                       <input type="email" className="input-field" value={contactData.customerEmail} onChange={e => setContactData({...contactData, customerEmail: e.target.value})} />
                     </div>
                     <div className="form-group" style={{ marginBottom: 0 }}>
                       <label className="form-label" style={{ fontSize: "0.85rem" }}>Teléfono (WhatsApp)</label>
-                      <input type="tel" className="input-field" value={contactData.customerPhone} onChange={e => setContactData({...contactData, customerPhone: e.target.value})} />
+                      <input type="tel" className="input-field" placeholder="Solo números" value={contactData.customerPhone} onChange={e => setContactData({...contactData, customerPhone: e.target.value.replace(/\D/g, '')})} />
                     </div>
                     <div className="form-group" style={{ marginBottom: 0 }}>
                       <label className="form-label" style={{ fontSize: "0.85rem" }}>Método de Entrega</label>

@@ -87,6 +87,7 @@ export default async function OrderPage({ params }: { params: Promise<{ id: stri
           
           <div style={{ fontSize: "0.95rem", color: "var(--color-text-primary)", lineHeight: "1.8" }}>
             <p style={{ margin: 0 }}><strong>Nombre:</strong> {order?.customerName}</p>
+            {order?.customerId && <p style={{ margin: 0 }}><strong>C.I:</strong> {order?.customerIdType}-{order?.customerId}</p>}
             <p style={{ margin: 0 }}><strong>Correo:</strong> {order?.customerEmail}</p>
             <p style={{ margin: 0 }}><strong>Teléfono:</strong> {order?.customerPhone}</p>
             <p style={{ margin: 0 }}>
