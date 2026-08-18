@@ -49,6 +49,41 @@ export default function ReservationForm() {
     }).catch(console.error);
   }, []);
 
+  // Load draft from local storage on mount
+  useEffect(() => {
+    try {
+      const draft = localStorage.getItem("reservationDraft");
+      if (draft) {
+        const parsed = JSON.parse(draft);
+        if (parsed.checkoutStep && parsed.checkoutStep !== "SUCCESS") setCheckoutStep(parsed.checkoutStep);
+        if (parsed.contactData) setContactData(parsed.contactData);
+        if (parsed.selectedPlanId) setSelectedPlanId(parsed.selectedPlanId);
+        if (parsed.hasCoaching !== undefined) setHasCoaching(parsed.hasCoaching);
+        if (parsed.paymentMethod) setPaymentMethod(parsed.paymentMethod);
+        if (parsed.paymentData) setPaymentData(parsed.paymentData);
+      }
+    } catch (e) {
+      console.error("Error loading draft", e);
+    }
+  }, []);
+
+  // Save draft whenever state changes
+  useEffect(() => {
+    if (checkoutStep === "SUCCESS") {
+      localStorage.removeItem("reservationDraft");
+      return;
+    }
+    const draft = {
+      checkoutStep,
+      contactData,
+      selectedPlanId,
+      hasCoaching,
+      paymentMethod,
+      paymentData
+    };
+    localStorage.setItem("reservationDraft", JSON.stringify(draft));
+  }, [checkoutStep, contactData, selectedPlanId, hasCoaching, paymentMethod, paymentData]);
+
   const handleNextStep = () => {
     setErrorMsg("");
     if (checkoutStep === "CONTACT") {
