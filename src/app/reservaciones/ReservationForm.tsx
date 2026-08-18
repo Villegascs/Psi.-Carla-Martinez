@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { format } from "date-fns";
+import { DatePicker } from "@/components/ui/DatePicker";
 import Image from "next/image";
 
 export default function ReservationForm() {
@@ -250,7 +252,10 @@ export default function ReservationForm() {
             </div>
             <div className="form-group" style={{ marginBottom: 0 }}>
               <label className="form-label">Fecha de Nacimiento</label>
-              <input type="date" className="input-field" value={contactData.dateOfBirth} onChange={e => setContactData({...contactData, dateOfBirth: e.target.value})} />
+              <DatePicker 
+                date={contactData.dateOfBirth ? new Date(contactData.dateOfBirth + 'T12:00:00') : undefined} 
+                setDate={(date) => setContactData({...contactData, dateOfBirth: date ? format(date, 'yyyy-MM-dd') : ''})} 
+              />
             </div>
           </div>
 
@@ -307,7 +312,44 @@ export default function ReservationForm() {
 
           <div className="form-group" style={{ marginTop: "24px" }}>
             <label className="form-label">Fecha y Hora Preferida</label>
-            <input type="datetime-local" className="input-field" value={contactData.date} onChange={e => setContactData({...contactData, date: e.target.value})} />
+            <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+              <div style={{ flex: 2 }}>
+                <DatePicker 
+                  date={contactData.date ? new Date(contactData.date) : undefined} 
+                  setDate={(date) => {
+                    if (!date) {
+                      setContactData({...contactData, date: ''});
+                      return;
+                    }
+                    const existingTime = contactData.date ? contactData.date.split('T')[1] || "10:00" : "10:00";
+                    setContactData({...contactData, date: format(date, 'yyyy-MM-dd') + 'T' + existingTime});
+                  }} 
+                  placeholder="Seleccionar Fecha"
+                />
+              </div>
+              <div style={{ flex: 1 }}>
+                <select 
+                  className="input-field" 
+                  value={contactData.date ? (contactData.date.split('T')[1] || "10:00") : "10:00"} 
+                  onChange={e => {
+                    if (contactData.date) {
+                      setContactData({...contactData, date: contactData.date.split('T')[0] + 'T' + e.target.value});
+                    } else {
+                      setContactData({...contactData, date: format(new Date(), 'yyyy-MM-dd') + 'T' + e.target.value});
+                    }
+                  }}
+                  style={{ padding: "10px 12px", border: "1px solid #d1d5db", borderRadius: "6px", backgroundColor: "#fff", cursor: "pointer", height: "42px" }}
+                >
+                  <option value="09:00">09:00 AM</option>
+                  <option value="10:00">10:00 AM</option>
+                  <option value="11:00">11:00 AM</option>
+                  <option value="13:00">01:00 PM</option>
+                  <option value="14:00">02:00 PM</option>
+                  <option value="15:00">03:00 PM</option>
+                  <option value="16:00">04:00 PM</option>
+                </select>
+              </div>
+            </div>
           </div>
         </div>
       )}

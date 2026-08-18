@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import { storage } from "@/lib/firebase/client";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import * as XLSX from "xlsx";
+import { format, parse } from "date-fns";
+import { es } from "date-fns/locale";
+import { DatePicker } from "@/components/ui/DatePicker";
 
 type Workshop = {
   id?: string;
@@ -265,8 +268,12 @@ export default function AdminTalleres() {
                   <input required type="text" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} style={{ width: "100%", padding: "10px", border: "1px solid #d1d5db", borderRadius: "6px" }} />
                 </div>
                 <div>
-                  <label style={{ display: "block", marginBottom: "8px", fontWeight: 600, fontSize: "0.9rem" }}>Fecha (Ej. 25 de Octubre)</label>
-                  <input required type="text" value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})} style={{ width: "100%", padding: "10px", border: "1px solid #d1d5db", borderRadius: "6px" }} />
+                  <label style={{ display: "block", marginBottom: "8px", fontWeight: 600, fontSize: "0.9rem" }}>Fecha</label>
+                  <DatePicker 
+                    date={formData.date ? parse(formData.date, "d 'de' MMMM", new Date(), { locale: es }) : undefined}
+                    setDate={(date) => setFormData({...formData, date: date ? format(date, "d 'de' MMMM", { locale: es }) : ""})}
+                    placeholder="Seleccionar Fecha"
+                  />
                 </div>
               </div>
               

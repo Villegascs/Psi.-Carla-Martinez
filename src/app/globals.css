@@ -282,3 +282,164 @@ button {
     flex-wrap: wrap;
   }
 }
+
+/* -------------------------------------
+   CALENDAR (react-day-picker)
+   Shadcn UI Overrides
+-------------------------------------- */
+.rdp {
+  --rdp-cell-size: 36px;
+  --rdp-accent-color: #000;
+  --rdp-background-color: #f1f5f9;
+  margin: 0;
+  font-family: inherit;
+}
+
+.rdp-vhidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 100%;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+.rdp-button_reset {
+  appearance: none;
+  background: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+}
+
+.rdp-button {
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.rdp-button:hover:not([disabled]):not(.rdp-day_selected) {
+  background-color: #f1f5f9;
+}
+
+.rdp-day {
+  width: 36px;
+  height: 36px;
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.rdp-day_selected, .rdp-day_selected:focus-visible, .rdp-day_selected:hover {
+  background-color: #000;
+  color: #fff;
+  font-weight: 500;
+}
+
+.rdp-day_today:not(.rdp-day_selected) {
+  background-color: #f1f5f9;
+  color: #000;
+  font-weight: 600;
+}
+
+.rdp-day_outside {
+  color: #94a3b8;
+  opacity: 0.5;
+}
+
+.rdp-day_disabled {
+  color: #94a3b8;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.rdp-caption {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 8px;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.rdp-caption_label {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.rdp-nav_button {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+  position: absolute;
+}
+.rdp-nav_button:hover {
+  background-color: #f1f5f9;
+}
+
+.rdp-nav_button_previous {
+  left: 8px;
+}
+
+.rdp-nav_button_next {
+  right: 8px;
+}
+
+.rdp-head_cell {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #64748b;
+  width: 36px;
+  height: 36px;
+  text-align: center;
+}
+
+.rdp-row {
+  display: flex;
+  width: 100%;
+}
+
+.rdp-cell {
+  text-align: center;
+  padding: 0;
+}
+
+.rdp-months {
+  display: flex;
+  flex-direction: row;
+}
+
+.rdp-month {
+  margin: 0;
+}
+
+.rdp-table {
+  max-width: calc(36px * 7);
+  border-collapse: collapse;
+}
+
+/* Popover styles */
+.popover-content {
+  background-color: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  padding: 12px;
+  z-index: 50;
+  position: absolute;
+  margin-top: 4px;
+  animation: fadeIn 0.2s ease-out;
+}
