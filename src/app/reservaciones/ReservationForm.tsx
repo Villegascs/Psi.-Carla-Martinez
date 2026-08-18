@@ -1,109 +1,373 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Image from "next/image";
 
 export default function ReservationForm() {
+  const [checkoutStep, setCheckoutStep] = useState<"CONTACT" | "PLAN" | "PAYMENT" | "SUCCESS">("CONTACT");
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const [formData, setFormData] = useState({
+  const [contactData, setContactData] = useState({
     patientName: "",
     patientLastName: "",
+    patientIdType: "V",
     patientId: "",
+    patientPhone: "",
     dateOfBirth: "",
     reason: "",
     date: ""
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const [plans, setPlans] = useState<any[]>([]);
+  const [addons, setAddons] = useState<any[]>([]);
+  const [selectedPlanId, setSelectedPlanId] = useState<string>("");
+  const [hasCoaching, setHasCoaching] = useState(false);
+
+  const [paymentMethod, setPaymentMethod] = useState("");
+  const [paymentData, setPaymentData] = useState({
+    bank: "", paymentIdType: "V", paymentId: "", paymentPhone: "", binanceUser: "", reference: "", billDenomination: ""
+  });
+  const [proofFile, setProofFile] = useState<File | null>(null);
+
+  const [bcvRate, setBcvRate] = useState<number | null>(null);
+  const [eurRate, setEurRate] = useState<number | null>(null);
+
+  useEffect(() => {
+    // Fetch rates
+    fetch("/api/bcv").then(r => r.json()).then(data => {
+      if (data.usd) setBcvRate(data.usd);
+      if (data.eur) setEurRate(data.eur);
+    }).catch(console.error);
+
+    // Fetch plans
+    fetch("/api/admin/reservation_plans").then(r => r.json()).then(data => {
+      if (data.success && data.plans) {
+        setPlans(data.plans.filter((p: any) => !p.isCoachingAddon));
+        setAddons(data.plans.filter((p: any) => p.isCoachingAddon));
+      }
+    }).catch(console.error);
+  }, []);
+
+  const handleNextStep = () => {
+    setErrorMsg("");
+    if (checkoutStep === "CONTACT") {
+      if (!contactData.patientName || !contactData.patientLastName || !contactData.patientId || !contactData.patientPhone || !contactData.dateOfBirth || !contactData.reason) {
+        setErrorMsg("Por favor completa todos tus datos personales.");
+        return;
+      }
+      setCheckoutStep("PLAN");
+    } else if (checkoutStep === "PLAN") {
+      if (!selectedPlanId) {
+        setErrorMsg("Por favor selecciona un plan de consulta.");
+        return;
+      }
+      if (!contactData.date) {
+        setErrorMsg("Por favor selecciona la fecha y hora de la cita.");
+        return;
+      }
+      setCheckoutStep("PAYMENT");
+    } else if (checkoutStep === "PAYMENT") {
+      if (!paymentMethod) {
+        setErrorMsg("Por favor selecciona un método de pago.");
+        return;
+      }
+      if (paymentMethod === "Zelle" && (!paymentData.reference)) return setErrorMsg("Ingresa la referencia de Zelle");
+      if (paymentMethod === "Pago Movil" && (!paymentData.bank || !paymentData.paymentId || !paymentData.paymentPhone || !paymentData.reference)) return setErrorMsg("Completa los datos del Pago Móvil");
+      if (paymentMethod === "Binance" && (!paymentData.binanceUser || !paymentData.reference)) return setErrorMsg("Completa los datos de Binance");
+      if (paymentMethod === "Efectivo" && (!paymentData.billDenomination)) return setErrorMsg("Indica la denominación de tus billetes");
+      
+      if (paymentMethod !== "Efectivo" && !proofFile) {
+        return setErrorMsg("Debes adjuntar el comprobante de pago");
+      }
+
+      handleCheckout();
+    }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const getSelectedPlan = () => plans.find(p => p.id === selectedPlanId);
+  const getCoachingAddon = () => addons[0]; // Assuming there's one main coaching addon
+  
+  const calculateTotal = () => {
+    const plan = getSelectedPlan();
+    if (!plan) return 0;
+    let t = plan.price;
+    if (hasCoaching) {
+      const addon = getCoachingAddon();
+      if (addon) t += addon.price;
+    }
+    return t;
+  };
+
+  const handleCheckout = async () => {
     setLoading(true);
     setErrorMsg("");
-
     try {
-      const res = await fetch("/api/reservations", {
+      let proofUrl = "";
+      if (proofFile) {
+        const formData = new FormData();
+        formData.append("file", proofFile);
+        const uploadRes = await fetch("/api/admin/upload", { method: "POST", body: formData });
+        const uploadData = await uploadRes.json();
+        if (uploadData.url) {
+          proofUrl = uploadData.url;
+        } else {
+          throw new Error("Error subiendo comprobante");
+        }
+      }
+
+      const plan = getSelectedPlan();
+      const addon = getCoachingAddon();
+
+      const reservationPayload = {
+        ...contactData,
+        planId: plan?.id,
+        planName: plan?.name,
+        planPrice: plan?.price,
+        hasCoaching,
+        coachingPrice: hasCoaching ? addon?.price : 0,
+        total: calculateTotal(),
+        paymentMethod,
+        paymentData,
+        proofUrl
+      };
+
+      const res = await fetch("/api/reservation_checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, price: 50 }) // Default price for now
+        body: JSON.stringify(reservationPayload)
       });
-
       const data = await res.json();
+      
       if (data.success) {
-        setSuccess(true);
+        setCheckoutStep("SUCCESS");
       } else {
-        setErrorMsg(data.error || "Hubo un error al agendar la cita.");
+        setErrorMsg(data.error || "Hubo un error al crear la cita.");
       }
-    } catch (err) {
-      setErrorMsg("Error de conexión al servidor.");
+    } catch (e) {
+      console.error(e);
+      setErrorMsg("Ocurrió un error inesperado al procesar el pago.");
     } finally {
       setLoading(false);
     }
   };
 
-  if (success) {
+  const total = calculateTotal();
+
+  if (checkoutStep === "SUCCESS") {
     return (
       <div style={{ textAlign: "center", padding: "40px 20px" }}>
-        <h2 className="heading-2" style={{ color: "var(--color-accent)" }}>¡Solicitud Enviada!</h2>
-        <p className="text-muted" style={{ marginBottom: "24px" }}>
-          Hemos recibido tu solicitud de cita. Por favor espera a que sea aprobada.
+        <h2 className="heading-2" style={{ color: "var(--color-accent)", fontSize: "2rem", marginBottom: "16px" }}>¡Cita Agendada!</h2>
+        <p className="text-muted" style={{ marginBottom: "24px", fontSize: "1.1rem" }}>
+          Hemos recibido tu solicitud de cita y el pago está en verificación. Serás notificado una vez sea aprobada.
         </p>
-        <button className="btn-primary" onClick={() => { setSuccess(false); setFormData({patientName: "", patientLastName: "", patientId: "", dateOfBirth: "", reason: "", date: ""}); }}>Nueva Reserva</button>
+        <button className="btn-primary" onClick={() => window.location.reload()}>Finalizar</button>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h3 className="heading-2" style={{ fontSize: "1.5rem", marginBottom: "24px", borderBottom: "1px solid var(--color-border)", paddingBottom: "12px" }}>Tus Datos</h3>
-      
+    <div>
+      {/* STEPS INDICATOR */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "32px", fontSize: "0.9rem", fontWeight: 600 }}>
+        <span style={{ color: checkoutStep === "CONTACT" ? "var(--color-accent)" : "inherit" }}>1. Datos</span>
+        <div style={{ flex: 1, height: "2px", backgroundColor: "var(--color-border)", margin: "0 12px" }}></div>
+        <span style={{ color: checkoutStep === "PLAN" ? "var(--color-accent)" : "inherit" }}>2. Plan</span>
+        <div style={{ flex: 1, height: "2px", backgroundColor: "var(--color-border)", margin: "0 12px" }}></div>
+        <span style={{ color: checkoutStep === "PAYMENT" ? "var(--color-accent)" : "inherit" }}>3. Pago</span>
+      </div>
+
       {errorMsg && (
         <div style={{ backgroundColor: "#fee2e2", color: "#b91c1c", padding: "12px", borderRadius: "8px", marginBottom: "20px" }}>
           {errorMsg}
         </div>
       )}
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
-        <div className="form-group">
-          <label className="form-label">Nombre</label>
-          <input required type="text" name="patientName" value={formData.patientName} onChange={handleChange} className="input-field" placeholder="Ej. Pedro" />
-        </div>
-        <div className="form-group">
-          <label className="form-label">Apellido</label>
-          <input required type="text" name="patientLastName" value={formData.patientLastName} onChange={handleChange} className="input-field" placeholder="Ej. Pérez" />
-        </div>
-      </div>
+      {/* CONTACT STEP */}
+      {checkoutStep === "CONTACT" && (
+        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          <h3 className="heading-2" style={{ fontSize: "1.25rem", borderBottom: "1px solid var(--color-border)", paddingBottom: "12px", marginBottom: "8px" }}>Tus Datos</h3>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label className="form-label">Nombre</label>
+              <input type="text" className="input-field" value={contactData.patientName} onChange={e => setContactData({...contactData, patientName: e.target.value})} placeholder="Ej. Pedro" />
+            </div>
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label className="form-label">Apellido</label>
+              <input type="text" className="input-field" value={contactData.patientLastName} onChange={e => setContactData({...contactData, patientLastName: e.target.value})} placeholder="Ej. Pérez" />
+            </div>
+          </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
-        <div className="form-group">
-          <label className="form-label">Cédula de Identidad</label>
-          <input required type="text" name="patientId" value={formData.patientId} onChange={handleChange} className="input-field" placeholder="V-12345678" />
+          <div className="form-group" style={{ marginBottom: 0 }}>
+            <label className="form-label" style={{ fontSize: "0.85rem" }}>Cédula / Documento de Identidad</label>
+            <div style={{ display: "flex", gap: "8px" }}>
+              <select className="input-field" style={{ width: "80px", padding: "10px" }} value={contactData.patientIdType} onChange={e => setContactData({...contactData, patientIdType: e.target.value})}>
+                <option value="V">V</option><option value="E">E</option><option value="J">J</option><option value="G">G</option><option value="P">P</option>
+              </select>
+              <input type="text" className="input-field" style={{ flex: 1 }} placeholder="Solo números" value={contactData.patientId} onChange={e => setContactData({...contactData, patientId: e.target.value.replace(/\D/g, '')})} />
+            </div>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label className="form-label">Teléfono (WhatsApp)</label>
+              <input type="tel" className="input-field" placeholder="Solo números" value={contactData.patientPhone} onChange={e => setContactData({...contactData, patientPhone: e.target.value.replace(/\D/g, '')})} />
+            </div>
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label className="form-label">Fecha de Nacimiento</label>
+              <input type="date" className="input-field" value={contactData.dateOfBirth} onChange={e => setContactData({...contactData, dateOfBirth: e.target.value})} />
+            </div>
+          </div>
+
+          <div className="form-group" style={{ marginBottom: 0 }}>
+            <label className="form-label">Motivo de la Consulta</label>
+            <textarea className="input-field" rows={3} value={contactData.reason} onChange={e => setContactData({...contactData, reason: e.target.value})} placeholder="Breve descripción..." />
+          </div>
         </div>
-        <div className="form-group">
-          <label className="form-label">Fecha de Nacimiento</label>
-          <input required type="date" name="dateOfBirth" value={formData.dateOfBirth} onChange={handleChange} className="input-field" />
+      )}
+
+      {/* PLAN STEP */}
+      {checkoutStep === "PLAN" && (
+        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          <button onClick={() => setCheckoutStep("CONTACT")} style={{ alignSelf: "flex-start", background: "none", border: "none", color: "var(--color-text-secondary)", cursor: "pointer", padding: 0 }}>
+            ← Volver a datos
+          </button>
+          
+          <h3 className="heading-2" style={{ fontSize: "1.25rem", borderBottom: "1px solid var(--color-border)", paddingBottom: "12px", marginBottom: "8px" }}>Selecciona el Plan</h3>
+          
+          {plans.length === 0 ? <p>Cargando planes...</p> : (
+            <div style={{ display: "grid", gap: "12px" }}>
+              {plans.map(p => (
+                <label key={p.id} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "16px", border: selectedPlanId === p.id ? "2px solid var(--color-accent)" : "1px solid var(--color-border)", borderRadius: "8px", cursor: "pointer", backgroundColor: selectedPlanId === p.id ? "var(--color-surface)" : "transparent" }}>
+                  <input type="radio" name="plan" value={p.id} checked={selectedPlanId === p.id} onChange={() => setSelectedPlanId(p.id)} />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: 600 }}>{p.name}</div>
+                    <div style={{ fontSize: "0.85rem", color: "var(--color-text-secondary)" }}>{p.description}</div>
+                  </div>
+                  <div style={{ fontWeight: 700, fontSize: "1.1rem" }}>€{p.price}</div>
+                </label>
+              ))}
+            </div>
+          )}
+
+          {addons.length > 0 && (
+            <div style={{ marginTop: "16px", padding: "16px", backgroundColor: "var(--color-surface)", borderRadius: "8px", border: "1px solid var(--color-border)" }}>
+              <label style={{ display: "flex", alignItems: "center", gap: "12px", cursor: "pointer" }}>
+                <input type="checkbox" checked={hasCoaching} onChange={e => setHasCoaching(e.target.checked)} style={{ width: "20px", height: "20px" }} />
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 600 }}>Añadir {addons[0].name} (+€{addons[0].price})</div>
+                  <div style={{ fontSize: "0.85rem", color: "var(--color-text-secondary)" }}>{addons[0].description}</div>
+                </div>
+              </label>
+            </div>
+          )}
+
+          <div className="form-group" style={{ marginTop: "24px" }}>
+            <label className="form-label">Fecha y Hora Preferida</label>
+            <input type="datetime-local" className="input-field" value={contactData.date} onChange={e => setContactData({...contactData, date: e.target.value})} />
+          </div>
         </div>
-      </div>
+      )}
 
-      <div className="form-group">
-        <label className="form-label">Motivo de la consulta</label>
-        <textarea required name="reason" value={formData.reason} onChange={handleChange} className="input-field" rows={4} placeholder="Describe brevemente el motivo..." style={{ resize: "vertical" }}></textarea>
-      </div>
+      {/* PAYMENT STEP */}
+      {checkoutStep === "PAYMENT" && (
+        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          <button onClick={() => setCheckoutStep("PLAN")} style={{ alignSelf: "flex-start", background: "none", border: "none", color: "var(--color-text-secondary)", cursor: "pointer", padding: 0 }}>
+            ← Volver a planes
+          </button>
+          
+          <div style={{ padding: "16px", backgroundColor: "var(--color-surface)", borderRadius: "8px", border: "1px solid var(--color-border)", marginBottom: "16px" }}>
+            <h3 style={{ margin: "0 0 12px 0", fontSize: "1.1rem" }}>Resumen</h3>
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
+              <span>{getSelectedPlan()?.name}</span>
+              <span>€{getSelectedPlan()?.price}</span>
+            </div>
+            {hasCoaching && (
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
+                <span>{getCoachingAddon()?.name}</span>
+                <span>€{getCoachingAddon()?.price}</span>
+              </div>
+            )}
+            <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 700, borderTop: "1px solid var(--color-border)", paddingTop: "12px", marginTop: "12px" }}>
+              <span>Total a Pagar</span>
+              <span>€{total}</span>
+            </div>
+            {eurRate && bcvRate && (
+              <div style={{ textAlign: "right", fontSize: "0.85rem", color: "var(--color-text-secondary)", marginTop: "8px" }}>
+                Aprox: {(total * eurRate).toFixed(2)} Bs
+              </div>
+            )}
+          </div>
 
-      <h3 className="heading-2" style={{ fontSize: "1.5rem", marginTop: "40px", marginBottom: "24px", borderBottom: "1px solid var(--color-border)", paddingBottom: "12px" }}>Disponibilidad</h3>
-      
-      <div className="form-group" style={{ marginBottom: "40px" }}>
-        <label className="form-label">Fecha y Hora de la Cita</label>
-        <input required type="datetime-local" name="date" value={formData.date} onChange={handleChange} className="input-field" />
-      </div>
+          <div className="form-group">
+            <label className="form-label" style={{ fontSize: "0.9rem" }}>Método de Pago</label>
+            <select className="input-field" value={paymentMethod} onChange={e => setPaymentMethod(e.target.value)}>
+              <option value="">Seleccione un método</option>
+              <option value="Pago Movil">Pago Móvil</option>
+              <option value="Zelle">Zelle</option>
+              <option value="Binance">Binance (USDT)</option>
+              <option value="Efectivo">Efectivo (Solo retiro presencial)</option>
+            </select>
+          </div>
 
-      <button type="submit" className="btn-primary" style={{ width: "100%", padding: "16px" }} disabled={loading}>
-        {loading ? "Procesando..." : "Solicitar Cita"}
-      </button>
-    </form>
+          {paymentMethod === "Pago Movil" && (
+            <div style={{ backgroundColor: "var(--color-bg-primary)", padding: "16px", borderRadius: "8px", border: "1px solid var(--color-border)" }}>
+              <div style={{ marginBottom: "16px", fontSize: "0.9rem" }}>
+                <p style={{ margin: "0 0 4px 0" }}><strong>Banco:</strong> Banesco (0134)</p>
+                <p style={{ margin: "0 0 4px 0" }}><strong>Cédula:</strong> V-12345678</p>
+                <p style={{ margin: 0 }}><strong>Teléfono:</strong> 0414-1234567</p>
+              </div>
+              <div className="form-group" style={{ marginBottom: "12px" }}>
+                <input type="text" className="input-field" placeholder="Banco de Origen" value={paymentData.bank} onChange={e => setPaymentData({...paymentData, bank: e.target.value})} />
+              </div>
+              <div style={{ display: "flex", gap: "8px", marginBottom: "12px" }}>
+                <select className="input-field" style={{ width: "70px" }} value={paymentData.paymentIdType} onChange={e => setPaymentData({...paymentData, paymentIdType: e.target.value})}>
+                  <option value="V">V</option><option value="E">E</option>
+                </select>
+                <input type="text" className="input-field" style={{ flex: 1 }} placeholder="Cédula" value={paymentData.paymentId} onChange={e => setPaymentData({...paymentData, paymentId: e.target.value})} />
+              </div>
+              <input type="tel" className="input-field" style={{ marginBottom: "12px" }} placeholder="Teléfono" value={paymentData.paymentPhone} onChange={e => setPaymentData({...paymentData, paymentPhone: e.target.value})} />
+              <input type="text" className="input-field" placeholder="Referencia" value={paymentData.reference} onChange={e => setPaymentData({...paymentData, reference: e.target.value})} />
+            </div>
+          )}
+
+          {paymentMethod === "Zelle" && (
+            <div style={{ backgroundColor: "var(--color-bg-primary)", padding: "16px", borderRadius: "8px", border: "1px solid var(--color-border)" }}>
+              <p style={{ margin: "0 0 16px 0", fontSize: "0.9rem" }}><strong>Correo:</strong> zelle@ejemplo.com</p>
+              <input type="text" className="input-field" placeholder="Número de Referencia" value={paymentData.reference} onChange={e => setPaymentData({...paymentData, reference: e.target.value})} />
+            </div>
+          )}
+
+          {paymentMethod === "Binance" && (
+            <div style={{ backgroundColor: "var(--color-bg-primary)", padding: "16px", borderRadius: "8px", border: "1px solid var(--color-border)" }}>
+              <p style={{ margin: "0 0 16px 0", fontSize: "0.9rem" }}><strong>Binance Pay ID:</strong> 123456789</p>
+              <input type="text" className="input-field" style={{ marginBottom: "12px" }} placeholder="Tu Usuario de Binance" value={paymentData.binanceUser} onChange={e => setPaymentData({...paymentData, binanceUser: e.target.value})} />
+              <input type="text" className="input-field" placeholder="Referencia" value={paymentData.reference} onChange={e => setPaymentData({...paymentData, reference: e.target.value})} />
+            </div>
+          )}
+
+          {paymentMethod === "Efectivo" && (
+            <div style={{ backgroundColor: "var(--color-bg-primary)", padding: "16px", borderRadius: "8px", border: "1px solid var(--color-border)" }}>
+              <p style={{ margin: "0 0 16px 0", fontSize: "0.9rem" }}>Indica con qué billetes vas a pagar para prever el vuelto.</p>
+              <input type="text" className="input-field" placeholder="Ej. Un billete de 50 y uno de 10" value={paymentData.billDenomination} onChange={e => setPaymentData({...paymentData, billDenomination: e.target.value})} />
+            </div>
+          )}
+
+          {paymentMethod && paymentMethod !== "Efectivo" && (
+            <div className="form-group" style={{ marginTop: "16px" }}>
+              <label className="form-label">Subir Comprobante</label>
+              <input type="file" accept="image/*" onChange={(e) => setProofFile(e.target.files ? e.target.files[0] : null)} className="input-field" style={{ padding: "8px" }} />
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ACTION BUTTON */}
+      <div style={{ marginTop: "32px" }}>
+        <button className="btn-primary" style={{ width: "100%", padding: "16px" }} onClick={handleNextStep} disabled={loading}>
+          {loading ? "Procesando..." : checkoutStep === "PAYMENT" ? "Finalizar Reserva" : "Continuar"}
+        </button>
+      </div>
+    </div>
   );
 }

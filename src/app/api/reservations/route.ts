@@ -43,3 +43,24 @@ export async function GET() {
     return NextResponse.json({ success: false, error: "Failed to fetch appointments" }, { status: 500 });
   }
 }
+
+export async function PUT(request: Request) {
+  try {
+    const body = await request.json();
+    const { id, status } = body;
+    
+    if (!id || !status) {
+      return NextResponse.json({ success: false, error: "Missing parameters" }, { status: 400 });
+    }
+
+    const adminDb = getAdminDb();
+    await adminDb.collection('appointments').doc(id).update({
+      status
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Update Reservation Error:", error);
+    return NextResponse.json({ success: false, error: "Failed to update appointment" }, { status: 500 });
+  }
+}
