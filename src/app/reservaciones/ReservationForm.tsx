@@ -277,7 +277,11 @@ export default function ReservationForm() {
                   <input type="radio" name="plan" value={p.id} checked={selectedPlanId === p.id} onChange={() => setSelectedPlanId(p.id)} />
                   <div style={{ flex: 1 }}>
                     <div style={{ fontWeight: 600 }}>{p.name}</div>
-                    <div style={{ fontSize: "0.85rem", color: "var(--color-text-secondary)" }}>{p.description}</div>
+                    {p.description && (
+                      <div style={{ fontSize: "0.85rem", color: "var(--color-text-secondary)", marginTop: "4px", whiteSpace: "pre-wrap" }}>
+                        {p.description}
+                      </div>
+                    )}
                   </div>
                   <div style={{ fontWeight: 700, fontSize: "1.1rem" }}>€{p.price}</div>
                 </label>
@@ -291,7 +295,11 @@ export default function ReservationForm() {
                 <input type="checkbox" checked={hasCoaching} onChange={e => setHasCoaching(e.target.checked)} style={{ width: "20px", height: "20px" }} />
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 600 }}>Añadir {addons[0].name} (+€{addons[0].price})</div>
-                  <div style={{ fontSize: "0.85rem", color: "var(--color-text-secondary)" }}>{addons[0].description}</div>
+                  {addons[0].description && (
+                    <div style={{ fontSize: "0.85rem", color: "var(--color-text-secondary)", marginTop: "4px", whiteSpace: "pre-wrap" }}>
+                      {addons[0].description}
+                    </div>
+                  )}
                 </div>
               </label>
             </div>
