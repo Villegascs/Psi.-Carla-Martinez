@@ -203,8 +203,8 @@ export default function AdminTalleres() {
       {loading ? (
         <p>Cargando talleres...</p>
       ) : (
-        <div style={{ backgroundColor: "#fff", borderRadius: "12px", boxShadow: "0 4px 6px rgba(0,0,0,0.05)", overflow: "hidden" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
+        <div className="table-container" style={{ backgroundColor: "#fff", borderRadius: "12px", boxShadow: "0 4px 6px rgba(0,0,0,0.05)" }}>
+          <table className="data-table" style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", minWidth: "800px" }}>
             <thead style={{ backgroundColor: "#f9fafb", borderBottom: "1px solid #e5e7eb" }}>
               <tr>
                 <th style={{ padding: "16px", fontWeight: 600, fontSize: "0.9rem", color: "#6b7280" }}>NOMBRE</th>
@@ -259,7 +259,7 @@ export default function AdminTalleres() {
           <div style={{ backgroundColor: "#fff", padding: "32px", borderRadius: "12px", width: "100%", maxWidth: "600px", maxHeight: "90vh", overflowY: "auto" }}>
             <h2 style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: "24px" }}>{editingWorkshop ? "Editar Taller" : "Crear Taller"}</h2>
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+              <div className="responsive-grid" style={{ gap: "16px" }}>
                 <div>
                   <label style={{ display: "block", marginBottom: "8px", fontWeight: 600, fontSize: "0.9rem" }}>Nombre del Taller</label>
                   <input required type="text" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} style={{ width: "100%", padding: "10px", border: "1px solid #d1d5db", borderRadius: "6px" }} />
@@ -280,7 +280,7 @@ export default function AdminTalleres() {
                 <textarea value={formData.points || ""} placeholder="Ejemplo:&#10;12 Horas al Aire Libre&#10;Certificado de Finalización" onChange={e => setFormData({...formData, points: e.target.value})} style={{ width: "100%", padding: "10px", border: "1px solid #d1d5db", borderRadius: "6px", minHeight: "80px" }} />
               </div>
               
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+              <div className="responsive-grid" style={{ gap: "16px" }}>
                 <div>
                   <label style={{ display: "block", marginBottom: "8px", fontWeight: 600, fontSize: "0.9rem" }}>Cupos Disponibles</label>
                   <input required type="number" min="0" value={formData.availableSpots} onChange={e => setFormData({...formData, availableSpots: parseInt(e.target.value)})} style={{ width: "100%", padding: "10px", border: "1px solid #d1d5db", borderRadius: "6px" }} />
@@ -291,7 +291,7 @@ export default function AdminTalleres() {
                 </div>
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+              <div className="responsive-grid" style={{ gap: "16px" }}>
                 <div>
                   <label style={{ display: "block", marginBottom: "8px", fontWeight: 600, fontSize: "0.9rem" }}>Tipo de Taller</label>
                   <select required value={formData.type || "Presencial"} onChange={e => setFormData({...formData, type: e.target.value as any})} style={{ width: "100%", padding: "10px", border: "1px solid #d1d5db", borderRadius: "6px" }}>

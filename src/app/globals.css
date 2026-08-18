@@ -180,3 +180,105 @@ button {
 .animate-fade-in {
   animation: fadeIn var(--transition-normal) forwards;
 }
+
+/* Responsive Utilities */
+.responsive-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.responsive-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.responsive-flex {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  margin: -40px -24px;
+}
+
+.admin-sidebar {
+  width: 250px;
+  background-color: #fff;
+  border-right: 1px solid var(--color-border);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-main {
+  flex: 1;
+  padding: 40px;
+  background-color: #f9fafb;
+  overflow-x: hidden;
+}
+
+.modal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+@media (max-width: 768px) {
+  .responsive-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .responsive-grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .responsive-flex {
+    flex-direction: column;
+  }
+
+  .heading-1 {
+    font-size: 2rem;
+  }
+
+  .heading-2 {
+    font-size: 1.5rem;
+  }
+
+  .container {
+    padding: 0 16px;
+  }
+
+  .admin-layout {
+    flex-direction: column;
+  }
+
+  .admin-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+    padding: 16px;
+  }
+  
+  .admin-main {
+    padding: 20px 16px;
+  }
+  
+  .modal-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  /* Make all flex containers wrap by default on mobile if they are overflowing, but specifically we can target .mobile-wrap */
+  .mobile-wrap {
+    flex-wrap: wrap;
+  }
+}

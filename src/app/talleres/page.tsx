@@ -263,7 +263,7 @@ export default function TalleresPage() {
           ) : workshops.length === 0 ? (
             <p style={{ textAlign: "center", color: "var(--color-text-secondary)" }}>No hay talleres disponibles en este momento.</p>
           ) : (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "24px" }}>
+            <div className="responsive-grid-3">
               {workshops.map((workshop) => (
                 <div 
                   key={workshop.id} 
@@ -421,7 +421,7 @@ export default function TalleresPage() {
                 {participants.map((participant, index) => (
                   <div key={index} style={{ marginBottom: "24px", padding: "20px", backgroundColor: "var(--color-surface)", borderRadius: "8px", border: "1px solid var(--color-border)" }}>
                     <h4 style={{ fontSize: "0.95rem", fontWeight: 600, marginBottom: "16px", color: "var(--color-accent)" }}>Participante {index + 1}</h4>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "12px" }}>
+                    <div className="responsive-grid" style={{ marginBottom: "12px" }}>
                       <div className="form-group" style={{ marginBottom: 0 }}>
                         <label className="form-label" style={{ fontSize: "0.8rem" }}>Nombre</label>
                         <input required type="text" name="firstName" value={participant.firstName} onChange={(e) => handleParticipantChange(index, e)} className="input-field" placeholder="Ej. Ana" />
@@ -525,7 +525,7 @@ export default function TalleresPage() {
 
                 {paymentMethod === "pago_movil" && (
                   <>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
+                    <div className="responsive-grid" style={{ marginBottom: "16px" }}>
                       <div className="form-group" style={{ marginBottom: 0 }}>
                         <label className="form-label">Banco Emisor</label>
                         <select required name="bank" className="input-field" value={paymentData.bank} onChange={handlePaymentChange}>
@@ -555,7 +555,7 @@ export default function TalleresPage() {
                 )}
 
                 {paymentMethod === "binance" && (
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
+                  <div className="responsive-grid" style={{ marginBottom: "16px" }}>
                     <div className="form-group" style={{ marginBottom: 0 }}>
                       <label className="form-label">Usuario Binance</label>
                       <input required type="text" name="binanceUser" value={paymentData.binanceUser} onChange={handlePaymentChange} className="input-field" placeholder="Ej. AnaGomez22" />

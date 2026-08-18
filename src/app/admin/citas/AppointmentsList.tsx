@@ -76,8 +76,8 @@ export default function AppointmentsList() {
       {loading ? (
         <p>Cargando citas...</p>
       ) : (
-        <div style={{ backgroundColor: "#fff", borderRadius: "12px", border: "1px solid #e5e7eb", overflow: "hidden" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
+        <div className="table-container">
+          <table className="data-table" style={{ width: "100%", borderCollapse: "collapse", marginTop: "16px", minWidth: "800px" }}>
             <thead style={{ backgroundColor: "#f9fafb", borderBottom: "1px solid #e5e7eb" }}>
               <tr>
                 <th style={{ padding: "16px", fontWeight: 600, fontSize: "0.85rem", color: "#6b7280" }}>FECHA CITA</th>

@@ -13,18 +13,18 @@ export default function Home() {
         <a href="/talleres" className="btn-secondary">Ver Talleres</a>
       </div>
 
-      <div style={{ display: "flex", gap: "24px", marginTop: "40px", flexWrap: "wrap", justifyContent: "center" }}>
-        <div className="card" style={{ width: "300px", textAlign: "left" }}>
+      <div className="mobile-wrap" style={{ display: "flex", gap: "24px", marginTop: "40px", justifyContent: "center", width: "100%" }}>
+        <div className="card" style={{ flex: "1 1 300px", maxWidth: "350px", textAlign: "left" }}>
           <h3 className="heading-2" style={{ fontSize: "1.25rem", marginBottom: "8px" }}>Reservaciones</h3>
           <p className="text-muted" style={{ fontSize: "0.95rem", marginBottom: "16px" }}>Agenda tu consulta presencial o virtual con facilidad.</p>
           <a href="/reservaciones" style={{ fontWeight: 600, fontSize: "0.9rem" }}>Agendar ahora &rarr;</a>
         </div>
-        <div className="card" style={{ width: "300px", textAlign: "left" }}>
+        <div className="card" style={{ flex: "1 1 300px", maxWidth: "350px", textAlign: "left" }}>
           <h3 className="heading-2" style={{ fontSize: "1.25rem", marginBottom: "8px" }}>Talleres</h3>
           <p className="text-muted" style={{ fontSize: "0.95rem", marginBottom: "16px" }}>Participa en eventos y talleres de bienestar.</p>
           <a href="/talleres" style={{ fontWeight: 600, fontSize: "0.9rem" }}>Explorar talleres &rarr;</a>
         </div>
-        <div className="card" style={{ width: "300px", textAlign: "left" }}>
+        <div className="card" style={{ flex: "1 1 300px", maxWidth: "350px", textAlign: "left" }}>
           <h3 className="heading-2" style={{ fontSize: "1.25rem", marginBottom: "8px" }}>Tienda</h3>
           <p className="text-muted" style={{ fontSize: "0.95rem", marginBottom: "16px" }}>Merch oficial y recursos exclusivos.</p>
           <a href="/tienda" style={{ fontWeight: 600, fontSize: "0.9rem" }}>Ir a la tienda &rarr;</a>

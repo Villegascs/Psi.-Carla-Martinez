@@ -222,7 +222,7 @@ export default function ReservationForm() {
       {checkoutStep === "CONTACT" && (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <h3 className="heading-2" style={{ fontSize: "1.25rem", borderBottom: "1px solid var(--color-border)", paddingBottom: "12px", marginBottom: "8px" }}>Tus Datos</h3>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+          <div className="responsive-grid">
             <div className="form-group" style={{ marginBottom: 0 }}>
               <label className="form-label">Nombre</label>
               <input type="text" className="input-field" value={contactData.patientName} onChange={e => setContactData({...contactData, patientName: e.target.value})} placeholder="Ej. Pedro" />
@@ -243,7 +243,7 @@ export default function ReservationForm() {
             </div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+          <div className="responsive-grid">
             <div className="form-group" style={{ marginBottom: 0 }}>
               <label className="form-label">Teléfono (WhatsApp)</label>
               <input type="tel" className="input-field" placeholder="Solo números" value={contactData.patientPhone} onChange={e => setContactData({...contactData, patientPhone: e.target.value.replace(/\D/g, '')})} />

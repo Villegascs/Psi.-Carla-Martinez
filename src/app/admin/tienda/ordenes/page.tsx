@@ -69,8 +69,8 @@ export default function AdminOrdenesPage() {
       {loading ? (
         <p>Cargando órdenes...</p>
       ) : (
-        <div style={{ backgroundColor: "#fff", borderRadius: "12px", border: "1px solid #e5e7eb", overflow: "hidden" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
+        <div className="table-container" style={{ backgroundColor: "#fff", borderRadius: "12px", border: "1px solid #e5e7eb" }}>
+          <table className="data-table" style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", minWidth: "800px" }}>
             <thead style={{ backgroundColor: "#f9fafb", borderBottom: "1px solid #e5e7eb" }}>
               <tr>
                 <th style={{ padding: "16px", fontWeight: 600, fontSize: "0.85rem", color: "#6b7280" }}>FECHA</th>
@@ -127,7 +127,7 @@ export default function AdminOrdenesPage() {
               <button onClick={() => setSelectedOrder(null)} style={{ padding: "6px 12px", border: "1px solid #e5e7eb", borderRadius: "6px", backgroundColor: "#fff", cursor: "pointer" }}>Cerrar</button>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "24px" }}>
+            <div className="responsive-grid" style={{ gap: "16px", marginBottom: "24px" }}>
               <div>
                 <p style={{ fontSize: "0.85rem", color: "#6b7280", marginBottom: "4px" }}>Cliente</p>
                 <p style={{ fontWeight: 600 }}>{selectedOrder.customerName}</p>

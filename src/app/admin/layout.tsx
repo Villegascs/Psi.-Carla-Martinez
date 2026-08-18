@@ -19,8 +19,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   };
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', margin: '-40px -24px' }}>
-      <aside style={{ width: '250px', backgroundColor: '#fff', borderRight: '1px solid var(--color-border)', padding: '24px', display: 'flex', flexDirection: 'column' }}>
+    <div className="admin-layout">
+      <aside className="admin-sidebar">
         <h2 className="heading-2" style={{ fontSize: '1.2rem', marginBottom: '32px' }}>Panel Admin</h2>
         <nav style={{ display: 'flex', flexDirection: 'column', gap: '16px', flexGrow: 1 }}>
           <Link href="/admin/citas" style={{ fontWeight: 500 }}>Reservaciones</Link>
@@ -49,7 +49,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           Cerrar Sesión
         </button>
       </aside>
-      <main style={{ flex: 1, padding: '40px', backgroundColor: '#f9fafb' }}>
+      <main className="admin-main">
         {children}
       </main>
     </div>

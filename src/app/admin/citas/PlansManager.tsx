@@ -112,7 +112,8 @@ export default function PlansManager() {
       ) : plans.length === 0 ? (
         <p className="text-muted">No hay planes creados todavía.</p>
       ) : (
-        <table className="data-table" style={{ width: "100%", borderCollapse: "collapse", marginTop: "16px" }}>
+        <div className="table-container">
+          <table className="data-table" style={{ width: "100%", borderCollapse: "collapse", marginTop: "16px", minWidth: "600px" }}>
           <thead>
             <tr style={{ backgroundColor: "var(--color-surface)", textAlign: "left" }}>
               <th style={{ padding: "12px", borderBottom: "1px solid var(--color-border)" }}>Nombre</th>
@@ -139,7 +140,8 @@ export default function PlansManager() {
               </tr>
             ))}
           </tbody>
-        </table>
+          </table>
+        </div>
       )}
 
       {showModal && (
