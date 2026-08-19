@@ -194,7 +194,7 @@ export default function ReservationForm() {
 
   if (checkoutStep === "SUCCESS") {
     return (
-      <div style={{ textAlign: "center", padding: "40px 20px" }}>
+      <div className="card" style={{ textAlign: "center", padding: "40px 20px" }}>
         <h2 className="heading-2" style={{ color: "var(--color-accent)", fontSize: "2rem", marginBottom: "16px" }}>¡Cita Agendada!</h2>
         <p className="text-muted" style={{ marginBottom: "24px", fontSize: "1.1rem" }}>
           Hemos recibido tu solicitud de cita y el pago está en verificación. Serás notificado una vez sea aprobada.
@@ -205,7 +205,15 @@ export default function ReservationForm() {
   }
 
   return (
-    <div>
+    <>
+      <div style={{ textAlign: "center", marginBottom: "40px" }}>
+        <h1 className="heading-1" style={{ fontSize: "2.5rem" }}>Reserva tu Cita</h1>
+        <p className="text-muted" style={{ fontSize: "1.1rem" }}>
+          Completa tus datos y selecciona un horario disponible para agendar tu consulta psicológica.
+        </p>
+      </div>
+
+      <div className="card">
       {/* STEPS INDICATOR */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "32px", fontSize: "0.9rem", fontWeight: 600 }}>
         <span style={{ color: checkoutStep === "CONTACT" ? "var(--color-accent)" : "inherit" }}>1. Datos</span>
@@ -499,6 +507,7 @@ export default function ReservationForm() {
           {loading ? "Procesando..." : checkoutStep === "PAYMENT" ? "Finalizar Reserva" : "Continuar"}
         </button>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
