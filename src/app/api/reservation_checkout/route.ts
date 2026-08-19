@@ -3,7 +3,15 @@ import { getAdminDb } from '@/lib/firebase/admin';
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
+    const formData = await request.formData();
+    const dataStr = formData.get("data") as string;
+    const file = formData.get("file") as File | null;
+    
+    if (!dataStr) {
+      return NextResponse.json({ success: false, error: "Faltan datos de la reserva" }, { status: 400 });
+    }
+    
+    const body = JSON.parse(dataStr);
     
     const adminDb = getAdminDb();
     const newDocRef = adminDb.collection('appointments').doc();
@@ -26,7 +34,7 @@ export async function POST(request: Request) {
       total: body.total,
       paymentMethod: body.paymentMethod,
       paymentData: body.paymentData,
-      proofUrl: body.proofUrl || "",
+      proofUrl: "", // Not saving to Firebase Storage anymore
       status: "PENDING",
       createdAt: new Date().toISOString()
     };
@@ -35,7 +43,7 @@ export async function POST(request: Request) {
 
     // Send Telegram Notification to Reservation Bot
     const botToken = process.env.RESERVATIONS_TELEGRAM_BOT_TOKEN;
-    const chatId = process.env.RESERVATIONS_TELEGRAM_CHAT_ID; // This might be empty, but we'll try to send anyway.
+    const chatId = process.env.RESERVATIONS_TELEGRAM_CHAT_ID;
 
     if (botToken && chatId) {
       let message = `🏥 *Nueva Solicitud de Cita*\n\n`;
@@ -43,7 +51,7 @@ export async function POST(request: Request) {
       message += `*C.I:* ${appointmentData.patientIdType}-${appointmentData.patientId}\n`;
       message += `*Teléfono:* ${appointmentData.patientPhone}\n`;
       message += `*Motivo:* ${appointmentData.reason}\n`;
-      message += `*Fecha Solicitada:* ${new Date(appointmentData.date).toLocaleString()}\n\n`;
+      message += `*Fecha Solicitada:* ${new Date(appointmentData.date).toLocaleString('es-ES')}\n\n`;
       message += `*Plan:* ${appointmentData.planName} (€${appointmentData.planPrice})\n`;
       if (appointmentData.hasCoaching) {
         message += `*Extra:* Coaching (+€${appointmentData.coachingPrice})\n`;
@@ -67,17 +75,17 @@ export async function POST(request: Request) {
       };
 
       try {
-        if (appointmentData.proofUrl) {
+        if (file) {
+          const telegramFormData = new FormData();
+          telegramFormData.append("chat_id", chatId);
+          telegramFormData.append("photo", file, "proof.jpg");
+          telegramFormData.append("caption", message);
+          telegramFormData.append("parse_mode", "Markdown");
+          telegramFormData.append("reply_markup", JSON.stringify(keyboard));
+
           await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              chat_id: chatId,
-              photo: appointmentData.proofUrl,
-              caption: message,
-              parse_mode: 'Markdown',
-              reply_markup: keyboard
-            })
+            body: telegramFormData
           });
         } else {
           await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
@@ -97,8 +105,8 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ success: true, appointment: appointmentData });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Reservation checkout error:", error);
-    return NextResponse.json({ success: false, error: "Failed to process reservation" }, { status: 500 });
+    return NextResponse.json({ success: false, error: error.message || "Failed to process reservation" }, { status: 500 });
   }
 }

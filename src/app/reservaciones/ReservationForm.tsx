@@ -142,30 +142,6 @@ export default function ReservationForm() {
     setErrorMsg("");
     try {
       let proofUrl = "";
-      if (proofFile) {
-        if (proofFile.size > 4 * 1024 * 1024) {
-          setErrorMsg("La imagen del comprobante es muy pesada. Por favor, sube una imagen de menos de 4MB.");
-          setLoading(false);
-          return;
-        }
-        const formData = new FormData();
-        formData.append("file", proofFile);
-        const uploadRes = await fetch("/api/admin/upload", { method: "POST", body: formData });
-        
-        if (!uploadRes.ok) {
-          if (uploadRes.status === 413) {
-             throw new Error("El comprobante de pago es muy pesado (máximo 4MB).");
-          }
-          throw new Error("Error del servidor al subir comprobante");
-        }
-        
-        const uploadData = await uploadRes.json();
-        if (uploadData.url) {
-          proofUrl = uploadData.url;
-        } else {
-          throw new Error("Error subiendo comprobante");
-        }
-      }
 
       const plan = getSelectedPlan();
       const addon = getCoachingAddon();
@@ -183,10 +159,21 @@ export default function ReservationForm() {
         proofUrl
       };
 
+      const finalFormData = new FormData();
+      finalFormData.append("data", JSON.stringify(reservationPayload));
+      
+      if (proofFile) {
+        if (proofFile.size > 4 * 1024 * 1024) {
+          setErrorMsg("La imagen del comprobante es muy pesada. Por favor, sube una imagen de menos de 4MB.");
+          setLoading(false);
+          return;
+        }
+        finalFormData.append("file", proofFile);
+      }
+
       const res = await fetch("/api/reservation_checkout", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(reservationPayload)
+        body: finalFormData
       });
       const data = await res.json();
       
