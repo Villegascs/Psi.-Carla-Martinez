@@ -143,9 +143,22 @@ export default function ReservationForm() {
     try {
       let proofUrl = "";
       if (proofFile) {
+        if (proofFile.size > 4 * 1024 * 1024) {
+          setErrorMsg("La imagen del comprobante es muy pesada. Por favor, sube una imagen de menos de 4MB.");
+          setLoading(false);
+          return;
+        }
         const formData = new FormData();
         formData.append("file", proofFile);
         const uploadRes = await fetch("/api/admin/upload", { method: "POST", body: formData });
+        
+        if (!uploadRes.ok) {
+          if (uploadRes.status === 413) {
+             throw new Error("El comprobante de pago es muy pesado (máximo 4MB).");
+          }
+          throw new Error("Error del servidor al subir comprobante");
+        }
+        
         const uploadData = await uploadRes.json();
         if (uploadData.url) {
           proofUrl = uploadData.url;
@@ -182,9 +195,9 @@ export default function ReservationForm() {
       } else {
         setErrorMsg(data.error || "Hubo un error al crear la cita.");
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
-      setErrorMsg("Ocurrió un error inesperado al procesar el pago.");
+      setErrorMsg(e.message || "Ocurrió un error inesperado al procesar el pago.");
     } finally {
       setLoading(false);
     }
