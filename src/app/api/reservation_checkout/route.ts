@@ -78,7 +78,12 @@ export async function POST(request: Request) {
         if (file) {
           const telegramFormData = new FormData();
           telegramFormData.append("chat_id", chatId);
-          telegramFormData.append("photo", file, "proof.jpg");
+          
+          // Convert File to Blob to prevent stream deadlock in Node.js fetch
+          const buffer = await file.arrayBuffer();
+          const photoBlob = new Blob([buffer], { type: file.type });
+          telegramFormData.append("photo", photoBlob, "proof.jpg");
+          
           telegramFormData.append("caption", message);
           telegramFormData.append("parse_mode", "Markdown");
           telegramFormData.append("reply_markup", JSON.stringify(keyboard));
