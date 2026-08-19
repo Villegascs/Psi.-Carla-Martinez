@@ -355,32 +355,43 @@ export default function CartDrawer() {
                         </div>
                         
                         <select required className="input-field" value={paymentData.bank} onChange={e => setPaymentData({...paymentData, bank: e.target.value})} style={{ marginBottom: "8px" }}>
-                          <option value="">Selecciona tu banco de origen</option>
-                          <option value="0102 - Banco de Venezuela">0102 - Banco de Venezuela</option>
-                          <option value="0104 - Venezolano de Crédito">0104 - Venezolano de Crédito</option>
-                          <option value="0105 - Mercantil">0105 - Mercantil</option>
-                          <option value="0108 - Provincial">0108 - Provincial</option>
-                          <option value="0114 - Bancaribe">0114 - Bancaribe</option>
-                          <option value="0115 - Exterior">0115 - Exterior</option>
-                          <option value="0128 - Banco Caroní">0128 - Banco Caroní</option>
-                          <option value="0134 - Banesco">0134 - Banesco</option>
-                          <option value="0137 - Sofitasa">0137 - Sofitasa</option>
-                          <option value="0138 - Plaza">0138 - Plaza</option>
-                          <option value="0151 - Fondo Común (BFC)">0151 - Fondo Común (BFC)</option>
-                          <option value="0156 - 100% Banco">0156 - 100% Banco</option>
-                          <option value="0157 - Del Sur">0157 - Del Sur</option>
-                          <option value="0163 - Tesoro">0163 - Tesoro</option>
-                          <option value="0166 - Agrícola de Venezuela">0166 - Agrícola de Venezuela</option>
-                          <option value="0168 - Bancrecer">0168 - Bancrecer</option>
-                          <option value="0169 - Mi Banco">0169 - Mi Banco</option>
-                          <option value="0171 - Activo">0171 - Activo</option>
-                          <option value="0172 - Bancamiga">0172 - Bancamiga</option>
-                          <option value="0174 - Banplus">0174 - Banplus</option>
-                          <option value="0175 - Bicentenario">0175 - Bicentenario</option>
-                          <option value="0177 - Banfanb">0177 - Banfanb</option>
-                          <option value="0191 - BNC">0191 - BNC</option>
+                          <option value="">Selecciona Banco de Origen</option>
+                          <option value="Banesco (0134)">Banesco (0134)</option>
+                          <option value="Banco de Venezuela (0102)">Banco de Venezuela (0102)</option>
+                          <option value="BBVA Provincial (0108)">BBVA Provincial (0108)</option>
+                          <option value="Banco Mercantil (0105)">Banco Mercantil (0105)</option>
+                          <option value="Banco Nacional de Crédito (0191)">Banco Nacional de Crédito (0191)</option>
+                          <option value="Bancamiga (0172)">Bancamiga (0172)</option>
+                          <option value="Bancaribe (0114)">Bancaribe (0114)</option>
+                          <option value="Banco del Tesoro (0163)">Banco del Tesoro (0163)</option>
+                          <option value="Banco Bicentenario (0175)">Banco Bicentenario (0175)</option>
+                          <option value="Banco Exterior (0115)">Banco Exterior (0115)</option>
+                          <option value="Banplus (0174)">Banplus (0174)</option>
+                          <option value="Banco Sofitasa (0137)">Banco Sofitasa (0137)</option>
+                          <option value="Banco Plaza (0138)">Banco Plaza (0138)</option>
+                          <option value="Banco Caroní (0128)">Banco Caroní (0128)</option>
+                          <option value="Banco Activo (0171)">Banco Activo (0171)</option>
+                          <option value="100% Banco (0156)">100% Banco (0156)</option>
+                          <option value="Mi Banco (0169)">Mi Banco (0169)</option>
+                          <option value="Banco Agrícola (0166)">Banco Agrícola (0166)</option>
                         </select>
-                        <input required type="tel" placeholder="Teléfono asociado" className="input-field" value={paymentData.paymentPhone} onChange={e => setPaymentData({...paymentData, paymentPhone: e.target.value})} style={{ marginBottom: "8px" }} />
+                        <div style={{ display: "flex", gap: "8px", marginBottom: "8px" }}>
+                          <select className="input-field" style={{ width: "70px" }} value={paymentData.paymentIdType} onChange={e => setPaymentData({...paymentData, paymentIdType: e.target.value})}>
+                            <option value="V">V</option><option value="E">E</option>
+                          </select>
+                          <input required type="text" inputMode="numeric" pattern="[0-9]*" placeholder="Cédula" className="input-field" value={paymentData.paymentId} onChange={e => setPaymentData({...paymentData, paymentId: e.target.value.replace(/\D/g, '')})} style={{ flex: 1 }} />
+                        </div>
+                        <div style={{ display: "flex", gap: "8px", marginBottom: "8px" }}>
+                          <select className="input-field" style={{ width: "90px" }} value={(paymentData.paymentPhone || "0414").substring(0,4)} onChange={e => setPaymentData({...paymentData, paymentPhone: e.target.value + (paymentData.paymentPhone || "0414").substring(4)})}>
+                            <option value="0414">0414</option>
+                            <option value="0424">0424</option>
+                            <option value="0412">0412</option>
+                            <option value="0416">0416</option>
+                            <option value="0426">0426</option>
+                            <option value="0212">0212</option>
+                          </select>
+                          <input required type="text" inputMode="numeric" pattern="[0-9]*" placeholder="1234567" className="input-field" value={(paymentData.paymentPhone || "0414").substring(4)} onChange={e => setPaymentData({...paymentData, paymentPhone: (paymentData.paymentPhone || "0414").substring(0,4) + e.target.value.replace(/\D/g, '')})} style={{ flex: 1 }} />
+                        </div>
                         <input required type="text" placeholder="Referencia" className="input-field" value={paymentData.reference} onChange={e => setPaymentData({...paymentData, reference: e.target.value})} />
                       </div>
                     )}

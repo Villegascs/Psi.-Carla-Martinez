@@ -403,15 +403,45 @@ export default function ReservationForm() {
                 <p style={{ margin: 0 }}><strong>Teléfono:</strong> 0414-1234567</p>
               </div>
               <div className="form-group" style={{ marginBottom: "12px" }}>
-                <input type="text" className="input-field" placeholder="Banco de Origen" value={paymentData.bank} onChange={e => setPaymentData({...paymentData, bank: e.target.value})} />
+                <select className="input-field" value={paymentData.bank} onChange={e => setPaymentData({...paymentData, bank: e.target.value})}>
+                  <option value="">Selecciona Banco de Origen</option>
+                  <option value="Banesco (0134)">Banesco (0134)</option>
+                  <option value="Banco de Venezuela (0102)">Banco de Venezuela (0102)</option>
+                  <option value="BBVA Provincial (0108)">BBVA Provincial (0108)</option>
+                  <option value="Banco Mercantil (0105)">Banco Mercantil (0105)</option>
+                  <option value="Banco Nacional de Crédito (0191)">Banco Nacional de Crédito (0191)</option>
+                  <option value="Bancamiga (0172)">Bancamiga (0172)</option>
+                  <option value="Bancaribe (0114)">Bancaribe (0114)</option>
+                  <option value="Banco del Tesoro (0163)">Banco del Tesoro (0163)</option>
+                  <option value="Banco Bicentenario (0175)">Banco Bicentenario (0175)</option>
+                  <option value="Banco Exterior (0115)">Banco Exterior (0115)</option>
+                  <option value="Banplus (0174)">Banplus (0174)</option>
+                  <option value="Banco Sofitasa (0137)">Banco Sofitasa (0137)</option>
+                  <option value="Banco Plaza (0138)">Banco Plaza (0138)</option>
+                  <option value="Banco Caroní (0128)">Banco Caroní (0128)</option>
+                  <option value="Banco Activo (0171)">Banco Activo (0171)</option>
+                  <option value="100% Banco (0156)">100% Banco (0156)</option>
+                  <option value="Mi Banco (0169)">Mi Banco (0169)</option>
+                  <option value="Banco Agrícola (0166)">Banco Agrícola (0166)</option>
+                </select>
               </div>
               <div style={{ display: "flex", gap: "8px", marginBottom: "12px" }}>
                 <select className="input-field" style={{ width: "70px" }} value={paymentData.paymentIdType} onChange={e => setPaymentData({...paymentData, paymentIdType: e.target.value})}>
                   <option value="V">V</option><option value="E">E</option>
                 </select>
-                <input type="text" className="input-field" style={{ flex: 1 }} placeholder="Cédula" value={paymentData.paymentId} onChange={e => setPaymentData({...paymentData, paymentId: e.target.value})} />
+                <input type="text" inputMode="numeric" pattern="[0-9]*" className="input-field" style={{ flex: 1 }} placeholder="Cédula" value={paymentData.paymentId} onChange={e => setPaymentData({...paymentData, paymentId: e.target.value.replace(/\D/g, '')})} />
               </div>
-              <input type="tel" className="input-field" style={{ marginBottom: "12px" }} placeholder="Teléfono" value={paymentData.paymentPhone} onChange={e => setPaymentData({...paymentData, paymentPhone: e.target.value})} />
+              <div style={{ display: "flex", gap: "8px", marginBottom: "12px" }}>
+                <select className="input-field" style={{ width: "90px" }} value={(paymentData.paymentPhone || "0414").substring(0,4)} onChange={e => setPaymentData({...paymentData, paymentPhone: e.target.value + (paymentData.paymentPhone || "0414").substring(4)})}>
+                  <option value="0414">0414</option>
+                  <option value="0424">0424</option>
+                  <option value="0412">0412</option>
+                  <option value="0416">0416</option>
+                  <option value="0426">0426</option>
+                  <option value="0212">0212</option>
+                </select>
+                <input type="text" inputMode="numeric" pattern="[0-9]*" className="input-field" style={{ flex: 1 }} placeholder="1234567" value={(paymentData.paymentPhone || "0414").substring(4)} onChange={e => setPaymentData({...paymentData, paymentPhone: (paymentData.paymentPhone || "0414").substring(0,4) + e.target.value.replace(/\D/g, '')})} />
+              </div>
               <input type="text" className="input-field" placeholder="Referencia" value={paymentData.reference} onChange={e => setPaymentData({...paymentData, reference: e.target.value})} />
             </div>
           )}

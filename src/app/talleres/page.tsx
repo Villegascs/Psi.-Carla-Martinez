@@ -535,7 +535,17 @@ export default function TalleresPage() {
                       </div>
                       <div className="form-group" style={{ marginBottom: 0 }}>
                         <label className="form-label">Teléfono Emisor</label>
-                        <input required type="text" inputMode="numeric" pattern="[0-9]*" name="paymentPhone" value={paymentData.paymentPhone} onChange={handlePaymentChange} className="input-field" placeholder="0414..." />
+                        <div style={{ display: "flex", gap: "8px" }}>
+                          <select className="input-field" style={{ width: "90px" }} value={(paymentData.paymentPhone || "0414").substring(0,4)} onChange={e => setPaymentData({...paymentData, paymentPhone: e.target.value + (paymentData.paymentPhone || "0414").substring(4)})}>
+                            <option value="0414">0414</option>
+                            <option value="0424">0424</option>
+                            <option value="0412">0412</option>
+                            <option value="0416">0416</option>
+                            <option value="0426">0426</option>
+                            <option value="0212">0212</option>
+                          </select>
+                          <input required type="text" inputMode="numeric" pattern="[0-9]*" name="paymentPhone" value={(paymentData.paymentPhone || "0414").substring(4)} onChange={e => setPaymentData({...paymentData, paymentPhone: (paymentData.paymentPhone || "0414").substring(0,4) + e.target.value.replace(/\D/g, '')})} className="input-field" placeholder="1234567" style={{ flexGrow: 1 }} />
+                        </div>
                       </div>
                     </div>
                     <div className="form-group" style={{ marginBottom: "16px" }}>
