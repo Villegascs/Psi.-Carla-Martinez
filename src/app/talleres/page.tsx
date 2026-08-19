@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Copy, Check } from "lucide-react";
 
 
 
@@ -22,7 +23,8 @@ const CopyableText = ({ label, text }: { label: string, text: string }) => {
         <span style={{ fontSize: "0.8rem", color: "var(--color-text-secondary)", display: "block" }}>{label}</span>
         <span style={{ fontWeight: 600, color: "var(--color-text)", userSelect: "all" }}>{text}</span>
       </div>
-      <button type="button" onClick={handleCopy} style={{ background: copied ? "#fef2f2" : "var(--color-surface)", border: "1px solid #f9dad0", borderRadius: "4px", padding: "6px 10px", fontSize: "0.8rem", cursor: "pointer", color: copied ? "var(--color-accent)" : "var(--color-text-secondary)", fontWeight: copied ? 600 : 400, transition: "0.2s" }}>
+      <button type="button" onClick={handleCopy} style={{ display: "flex", alignItems: "center", gap: "6px", background: copied ? "#dcfce7" : "var(--color-surface)", border: "1px solid", borderColor: copied ? "#86efac" : "#f9dad0", borderRadius: "4px", padding: "6px 10px", fontSize: "0.8rem", cursor: "pointer", color: copied ? "#166534" : "var(--color-text-secondary)", fontWeight: copied ? 600 : 400, transition: "0.2s" }}>
+        {copied ? <Check style={{ width: "14px", height: "14px" }} /> : <Copy style={{ width: "14px", height: "14px" }} />}
         {copied ? "¡Copiado!" : "Copiar"}
       </button>
     </div>

@@ -3,6 +3,7 @@
 import { useCart } from "@/context/CartContext";
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { CopyButton } from "@/components/ui/CopyButton";
 
 export default function CartDrawer() {
   const { items, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, total, clearCart } = useCart();
@@ -343,15 +344,15 @@ export default function CartDrawer() {
                         
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
                           <p style={{ fontSize: "0.9rem", margin: 0 }}>Banco: Banesco (0134)</p>
-                          <button onClick={() => navigator.clipboard.writeText("0134")} style={{ background: "none", border: "none", color: "var(--color-accent)", fontSize: "0.8rem", cursor: "pointer", textDecoration: "underline", padding: "4px" }}>Copiar</button>
+                          <CopyButton text="0134" />
                         </div>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
                           <p style={{ fontSize: "0.9rem", margin: 0 }}>Teléfono: 0414-4083780</p>
-                          <button onClick={() => navigator.clipboard.writeText("04144083780")} style={{ background: "none", border: "none", color: "var(--color-accent)", fontSize: "0.8rem", cursor: "pointer", textDecoration: "underline", padding: "4px" }}>Copiar</button>
+                          <CopyButton text="04144083780" />
                         </div>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
                           <p style={{ fontSize: "0.9rem", margin: 0 }}>Cédula: V-26345678</p>
-                          <button onClick={() => navigator.clipboard.writeText("26345678")} style={{ background: "none", border: "none", color: "var(--color-accent)", fontSize: "0.8rem", cursor: "pointer", textDecoration: "underline", padding: "4px" }}>Copiar</button>
+                          <CopyButton text="26345678" />
                         </div>
                         
                         <select required className="input-field" value={paymentData.bank} onChange={e => setPaymentData({...paymentData, bank: e.target.value})} style={{ marginBottom: "8px" }}>
@@ -399,7 +400,10 @@ export default function CartDrawer() {
                     {paymentMethod === "zelle" && (
                       <div style={{ backgroundColor: "#fff", padding: "20px", borderRadius: "12px", border: "1px solid var(--color-border)", marginBottom: "16px" }}>
                         <p style={{ fontWeight: 700, marginBottom: "12px" }}>Datos Zelle:</p>
-                        <p style={{ fontSize: "0.9rem", marginBottom: "16px" }}>Correo: carlamartinez@email.com</p>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+                          <p style={{ fontSize: "0.9rem", margin: 0 }}>Correo: carlamartinez@email.com</p>
+                          <CopyButton text="carlamartinez@email.com" />
+                        </div>
                         
                         <input required type="text" placeholder="Nombre del titular Zelle" className="input-field" value={paymentData.bank} onChange={e => setPaymentData({...paymentData, bank: e.target.value})} style={{ marginBottom: "8px" }} />
                         <input required type="text" placeholder="Referencia" className="input-field" value={paymentData.reference} onChange={e => setPaymentData({...paymentData, reference: e.target.value})} />
@@ -409,7 +413,10 @@ export default function CartDrawer() {
                     {paymentMethod === "binance" && (
                       <div style={{ backgroundColor: "#fff", padding: "20px", borderRadius: "12px", border: "1px solid var(--color-border)", marginBottom: "16px" }}>
                         <p style={{ fontWeight: 700, marginBottom: "12px" }}>Datos Binance:</p>
-                        <p style={{ fontSize: "0.9rem", marginBottom: "16px" }}>Pay ID: 123456789</p>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+                          <p style={{ fontSize: "0.9rem", margin: 0 }}>Binance Pay ID: 123456789</p>
+                          <CopyButton text="123456789" />
+                        </div>
                         
                         <input required type="text" placeholder="Usuario Binance" className="input-field" value={paymentData.binanceUser} onChange={e => setPaymentData({...paymentData, binanceUser: e.target.value})} style={{ marginBottom: "8px" }} />
                         <input required type="text" placeholder="Referencia" className="input-field" value={paymentData.reference} onChange={e => setPaymentData({...paymentData, reference: e.target.value})} />

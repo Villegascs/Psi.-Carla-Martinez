@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { DatePicker } from "@/components/ui/DatePicker";
+import { CopyButton } from "@/components/ui/CopyButton";
 import Image from "next/image";
 
 export default function ReservationForm() {
@@ -397,10 +398,19 @@ export default function ReservationForm() {
 
           {paymentMethod === "Pago Movil" && (
             <div style={{ backgroundColor: "var(--color-bg-primary)", padding: "16px", borderRadius: "8px", border: "1px solid var(--color-border)" }}>
-              <div style={{ marginBottom: "16px", fontSize: "0.9rem" }}>
-                <p style={{ margin: "0 0 4px 0" }}><strong>Banco:</strong> Banesco (0134)</p>
-                <p style={{ margin: "0 0 4px 0" }}><strong>Cédula:</strong> V-12345678</p>
-                <p style={{ margin: 0 }}><strong>Teléfono:</strong> 0414-1234567</p>
+              <div style={{ marginBottom: "16px", fontSize: "0.9rem", display: "flex", flexDirection: "column", gap: "8px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <p style={{ margin: 0 }}><strong>Banco:</strong> Banesco (0134)</p>
+                  <CopyButton text="0134" />
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <p style={{ margin: 0 }}><strong>Cédula:</strong> V-12345678</p>
+                  <CopyButton text="V-12345678" />
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <p style={{ margin: 0 }}><strong>Teléfono:</strong> 0414-1234567</p>
+                  <CopyButton text="04141234567" />
+                </div>
               </div>
               <div className="form-group" style={{ marginBottom: "12px" }}>
                 <select className="input-field" value={paymentData.bank} onChange={e => setPaymentData({...paymentData, bank: e.target.value})}>
@@ -448,14 +458,20 @@ export default function ReservationForm() {
 
           {paymentMethod === "Zelle" && (
             <div style={{ backgroundColor: "var(--color-bg-primary)", padding: "16px", borderRadius: "8px", border: "1px solid var(--color-border)" }}>
-              <p style={{ margin: "0 0 16px 0", fontSize: "0.9rem" }}><strong>Correo:</strong> zelle@ejemplo.com</p>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+                <p style={{ margin: 0, fontSize: "0.9rem" }}><strong>Correo:</strong> zelle@ejemplo.com</p>
+                <CopyButton text="zelle@ejemplo.com" />
+              </div>
               <input type="text" className="input-field" placeholder="Número de Referencia" value={paymentData.reference} onChange={e => setPaymentData({...paymentData, reference: e.target.value})} />
             </div>
           )}
 
           {paymentMethod === "Binance" && (
             <div style={{ backgroundColor: "var(--color-bg-primary)", padding: "16px", borderRadius: "8px", border: "1px solid var(--color-border)" }}>
-              <p style={{ margin: "0 0 16px 0", fontSize: "0.9rem" }}><strong>Binance Pay ID:</strong> 123456789</p>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+                <p style={{ margin: 0, fontSize: "0.9rem" }}><strong>Binance Pay ID:</strong> 123456789</p>
+                <CopyButton text="123456789" />
+              </div>
               <input type="text" className="input-field" style={{ marginBottom: "12px" }} placeholder="Tu Usuario de Binance" value={paymentData.binanceUser} onChange={e => setPaymentData({...paymentData, binanceUser: e.target.value})} />
               <input type="text" className="input-field" placeholder="Referencia" value={paymentData.reference} onChange={e => setPaymentData({...paymentData, reference: e.target.value})} />
             </div>
