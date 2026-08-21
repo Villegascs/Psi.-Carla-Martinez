@@ -189,7 +189,7 @@ export default function EscanerQRPage() {
       <p className="text-muted" style={{ marginBottom: "24px" }}>Hola <strong>{staffName}</strong>. Apunta la cámara al código QR de la entrada del participante.</p>
 
       {isScanning && (
-        <div style={{ backgroundColor: "#000", borderRadius: "12px", overflow: "hidden", marginBottom: "24px" }}>
+        <div style={{ backgroundColor: "#fff", borderRadius: "12px", padding: "16px", border: "1px solid #e5e7eb", marginBottom: "24px", boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)" }}>
           <div id="qr-reader" style={{ width: "100%" }}></div>
         </div>
       )}
