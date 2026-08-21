@@ -13,17 +13,29 @@ export async function POST(request: Request) {
     const adminDb = getAdminDb();
     const doc = await adminDb.collection('settings').doc('general').get();
     
-    if (!doc.exists) {
+    let isSuccess = false;
+
+    if (doc.exists) {
+      const data = doc.data();
+      if (data?.scannerPin === pin) {
+        isSuccess = true;
+      }
+    }
+
+    // Registrar el intento de acceso
+    if (body.staffName) {
+      await adminDb.collection('scannerLogs').add({
+        staffName: body.staffName,
+        success: isSuccess,
+        timestamp: new Date().toISOString(),
+        ip: request.headers.get('x-forwarded-for') || 'unknown'
+      });
+    }
+    
+    if (!isSuccess) {
       return NextResponse.json({ success: false, error: "PIN incorrecto" }, { status: 401 });
     }
     
-    const data = doc.data();
-    if (data?.scannerPin !== pin) {
-      return NextResponse.json({ success: false, error: "PIN incorrecto" }, { status: 401 });
-    }
-    
-    // Si el PIN es correcto, devolvemos success. 
-    // Como es un uso interno sencillo, confiaremos en un localStorage del lado del cliente.
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error validando PIN del escáner:", error);

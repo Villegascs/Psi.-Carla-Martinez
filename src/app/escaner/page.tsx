@@ -111,7 +111,7 @@ export default function EscanerQRPage() {
       const res = await fetch("/api/scanner/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pin })
+        body: JSON.stringify({ pin, staffName })
       });
       const data = await res.json();
       

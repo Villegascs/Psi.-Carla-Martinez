@@ -6,11 +6,20 @@ export async function GET(request: Request) {
     const adminDb = getAdminDb();
     const doc = await adminDb.collection('settings').doc('general').get();
     
-    if (!doc.exists) {
-      return NextResponse.json({ success: true, settings: {} });
+    let settings = {};
+    if (doc.exists) {
+      settings = doc.data() || {};
     }
+
+    // Fetch scanner logs
+    const logsSnapshot = await adminDb.collection('scannerLogs')
+      .orderBy('timestamp', 'desc')
+      .limit(50)
+      .get();
+      
+    const scannerLogs = logsSnapshot.docs.map(log => ({ id: log.id, ...log.data() }));
     
-    return NextResponse.json({ success: true, settings: doc.data() });
+    return NextResponse.json({ success: true, settings, scannerLogs });
   } catch (error) {
     console.error("Error fetching settings:", error);
     return NextResponse.json({ success: false, error: "Failed to fetch settings" }, { status: 500 });
