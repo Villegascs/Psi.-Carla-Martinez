@@ -3,7 +3,7 @@ import { getAdminDb } from '@/lib/firebase/admin';
 
 export async function POST(request: Request) {
   try {
-    const { ticketId } = await request.json();
+    const { ticketId, scannedBy } = await request.json();
 
     if (!ticketId || !ticketId.includes("-")) {
       return NextResponse.json({ success: false, error: "No se proporcionó un ID de ticket válido." }, { status: 400 });
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
     if (participant.used) {
       return NextResponse.json({ 
         success: false, 
-        error: `¡CUIDADO! La entrada de este participante ya fue utilizada el ${new Date(participant.usedAt).toLocaleString()}.`,
+        error: `¡CUIDADO! La entrada de este participante ya fue validada el ${new Date(participant.usedAt).toLocaleString()} por ${participant.scannedBy || 'un miembro del personal'}.`,
         alreadyUsed: true,
         participant: `${participant.firstName} ${participant.lastName}`
       }, { status: 400 });
@@ -48,6 +48,9 @@ export async function POST(request: Request) {
     // Mark specific participant as used
     participants[participantIndex].used = true;
     participants[participantIndex].usedAt = new Date().toISOString();
+    if (scannedBy) {
+      participants[participantIndex].scannedBy = scannedBy;
+    }
 
     await orderRef.update({
       participants: participants

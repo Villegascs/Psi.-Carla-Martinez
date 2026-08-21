@@ -27,7 +27,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Link href="/admin/tienda" style={{ fontWeight: 500 }}>Tienda (Inventario)</Link>
           <Link href="/admin/tienda/ordenes" style={{ fontWeight: 500 }}>Órdenes de Tienda</Link>
           <Link href="/admin/talleres" style={{ fontWeight: 500 }}>Talleres</Link>
-          <Link href="/admin/escaner" style={{ fontWeight: 500 }}>Escaner QR</Link>
+          <Link href="/admin/configuracion" style={{ fontWeight: 500 }}>Configuración</Link>
         </nav>
         
         <button 
