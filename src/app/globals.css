@@ -63,11 +63,9 @@ button {
 }
 
 .glass-nav {
-  background: var(--color-bg-glass);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--color-border);
-  position: sticky;
+  background: transparent;
+  position: absolute;
+  width: 100%;
   top: 0;
   z-index: 100;
 }
