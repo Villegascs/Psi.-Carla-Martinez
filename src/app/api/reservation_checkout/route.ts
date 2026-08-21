@@ -20,6 +20,7 @@ export async function POST(request: Request) {
       id: newDocRef.id,
       patientName: body.patientName,
       patientLastName: body.patientLastName,
+      patientEmail: body.patientEmail,
       patientIdType: body.patientIdType,
       patientId: body.patientId,
       patientPhone: body.patientPhone,
@@ -50,6 +51,9 @@ export async function POST(request: Request) {
       message += `*Paciente:* ${appointmentData.patientName} ${appointmentData.patientLastName}\n`;
       message += `*C.I:* ${appointmentData.patientIdType}-${appointmentData.patientId}\n`;
       message += `*Teléfono:* ${appointmentData.patientPhone}\n`;
+      if (appointmentData.patientEmail) {
+        message += `*Correo:* ${appointmentData.patientEmail}\n`;
+      }
       message += `*Motivo:* ${appointmentData.reason}\n`;
       message += `*Fecha Solicitada:* ${new Date(appointmentData.date).toLocaleString('es-ES')}\n\n`;
       message += `*Plan:* ${appointmentData.planName} (€${appointmentData.planPrice})\n`;

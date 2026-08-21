@@ -10,6 +10,8 @@ export default function ReservationForm() {
   const [checkoutStep, setCheckoutStep] = useState<"CONTACT" | "PLAN" | "PAYMENT" | "SUCCESS">("CONTACT");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [bookedHours, setBookedHours] = useState<string[]>([]);
+  const [loadingHours, setLoadingHours] = useState(false);
 
   const [contactData, setContactData] = useState({
     patientName: "",
@@ -19,7 +21,8 @@ export default function ReservationForm() {
     patientPhone: "",
     dateOfBirth: "",
     reason: "",
-    date: ""
+    date: "",
+    patientEmail: ""
   });
 
   const [plans, setPlans] = useState<any[]>([]);
@@ -51,6 +54,34 @@ export default function ReservationForm() {
       }
     }).catch(console.error);
   }, []);
+
+  useEffect(() => {
+    async function fetchBookedHours() {
+      if (!contactData.date) {
+        setBookedHours([]);
+        return;
+      }
+      
+      const dateOnly = contactData.date.split('T')[0];
+      setLoadingHours(true);
+      try {
+        const res = await fetch(`/api/reservations/booked?date=${dateOnly}`);
+        const data = await res.json();
+        if (data.success) {
+          setBookedHours(data.bookedHours || []);
+        } else {
+          setBookedHours([]);
+        }
+      } catch (error) {
+        console.error("Failed to fetch booked hours", error);
+        setBookedHours([]);
+      } finally {
+        setLoadingHours(false);
+      }
+    }
+    
+    fetchBookedHours();
+  }, [contactData.date ? contactData.date.split('T')[0] : null]);
 
   // Load draft from local storage on mount
   useEffect(() => {
@@ -90,22 +121,31 @@ export default function ReservationForm() {
   const handleNextStep = () => {
     setErrorMsg("");
     if (checkoutStep === "CONTACT") {
-      if (!contactData.patientName || !contactData.patientLastName || !contactData.patientId || !contactData.patientPhone || !contactData.dateOfBirth || !contactData.reason) {
-        setErrorMsg("Por favor completa todos tus datos personales.");
+      if (!contactData.patientName || !contactData.patientLastName || !contactData.patientId || !contactData.patientPhone || !contactData.patientEmail) {
+        setErrorMsg("Por favor, completa todos los datos obligatorios, incluyendo tu correo.");
         return;
       }
       setCheckoutStep("PLAN");
-    } else if (checkoutStep === "PLAN") {
+      return;
+    }
+    if (checkoutStep === "PLAN") {
       if (!selectedPlanId) {
-        setErrorMsg("Por favor selecciona un plan de consulta.");
+        setErrorMsg("Debes seleccionar un plan");
         return;
       }
       if (!contactData.date) {
-        setErrorMsg("Por favor selecciona la fecha y hora de la cita.");
+        setErrorMsg("Debes seleccionar una fecha y hora");
+        return;
+      }
+      const selectedTime = contactData.date.split('T')[1];
+      if (selectedTime && bookedHours.includes(selectedTime)) {
+        setErrorMsg("La hora seleccionada ya está ocupada para este día. Por favor, elige otra.");
         return;
       }
       setCheckoutStep("PAYMENT");
-    } else if (checkoutStep === "PAYMENT") {
+      return;
+    }
+    if (checkoutStep === "PAYMENT") {
       if (!paymentMethod) {
         setErrorMsg("Por favor selecciona un método de pago.");
         return;
@@ -254,6 +294,11 @@ export default function ReservationForm() {
             </div>
           </div>
 
+          <div className="form-group" style={{ marginBottom: 0 }}>
+            <label className="form-label">Correo Electrónico</label>
+            <input type="email" className="input-field" placeholder="Ej. correo@gmail.com" value={contactData.patientEmail || ''} onChange={e => setContactData({...contactData, patientEmail: e.target.value})} />
+          </div>
+
           <div className="responsive-grid">
             <div className="form-group" style={{ marginBottom: 0 }}>
               <label className="form-label">Teléfono (WhatsApp)</label>
@@ -348,14 +393,15 @@ export default function ReservationForm() {
                     }
                   }}
                   style={{ padding: "10px 12px", border: "1px solid #d1d5db", borderRadius: "6px", backgroundColor: "#fff", cursor: "pointer", height: "42px" }}
+                  disabled={loadingHours || !contactData.date}
                 >
-                  <option value="09:00">09:00 AM</option>
-                  <option value="10:00">10:00 AM</option>
-                  <option value="11:00">11:00 AM</option>
-                  <option value="13:00">01:00 PM</option>
-                  <option value="14:00">02:00 PM</option>
-                  <option value="15:00">03:00 PM</option>
-                  <option value="16:00">04:00 PM</option>
+                  <option value="09:00" disabled={bookedHours.includes("09:00")}>09:00 AM {bookedHours.includes("09:00") && "(Ocupado)"}</option>
+                  <option value="10:00" disabled={bookedHours.includes("10:00")}>10:00 AM {bookedHours.includes("10:00") && "(Ocupado)"}</option>
+                  <option value="11:00" disabled={bookedHours.includes("11:00")}>11:00 AM {bookedHours.includes("11:00") && "(Ocupado)"}</option>
+                  <option value="13:00" disabled={bookedHours.includes("13:00")}>01:00 PM {bookedHours.includes("13:00") && "(Ocupado)"}</option>
+                  <option value="14:00" disabled={bookedHours.includes("14:00")}>02:00 PM {bookedHours.includes("14:00") && "(Ocupado)"}</option>
+                  <option value="15:00" disabled={bookedHours.includes("15:00")}>03:00 PM {bookedHours.includes("15:00") && "(Ocupado)"}</option>
+                  <option value="16:00" disabled={bookedHours.includes("16:00")}>04:00 PM {bookedHours.includes("16:00") && "(Ocupado)"}</option>
                 </select>
               </div>
             </div>
