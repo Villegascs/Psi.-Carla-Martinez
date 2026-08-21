@@ -85,7 +85,7 @@ export default function TiendaPage() {
   };
 
   return (
-    <div>
+    <div style={{ paddingTop: "120px" }}>
       <div style={{ textAlign: "center", marginBottom: "40px" }}>
         <h1 className="heading-1">Tienda Oficial</h1>
         <p className="text-muted">Lleva contigo un recordatorio de tu bienestar diario.</p>

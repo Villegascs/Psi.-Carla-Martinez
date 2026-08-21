@@ -251,7 +251,7 @@ export default function TalleresPage() {
   };
 
   return (
-    <div style={{ maxWidth: "1000px", margin: "0 auto", paddingBottom: "60px" }}>
+    <div style={{ maxWidth: "1000px", margin: "0 auto", paddingBottom: "60px", paddingTop: "120px" }}>
       
       {viewState === "list" && (
         <>
