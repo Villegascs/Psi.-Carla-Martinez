@@ -17,11 +17,11 @@ export default function GlobalHeader() {
         <div className="logo" style={{ fontWeight: 700, fontSize: "1.25rem", letterSpacing: "-0.5px", marginBottom: "8px" }}>
           <Link href="/">Carla Martinez.</Link>
         </div>
-        <nav className="mobile-wrap" style={{ display: "flex", gap: "16px", alignItems: "center", overflowX: "auto", paddingBottom: "4px" }}>
-          <Link href="/reservaciones" style={{ fontWeight: 500, whiteSpace: "nowrap" }}>Reservaciones</Link>
-          <Link href="/talleres" style={{ fontWeight: 500, whiteSpace: "nowrap" }}>Talleres</Link>
-          <Link href="/tienda" style={{ fontWeight: 500, whiteSpace: "nowrap" }}>Tienda</Link>
-          <Link href="/contacto" style={{ fontWeight: 500, whiteSpace: "nowrap" }}>Contacto</Link>
+        <nav className="mobile-wrap" style={{ display: "flex", gap: "32px", alignItems: "center", overflowX: "auto", paddingBottom: "4px" }}>
+          <Link href="/reservaciones" className="nav-link">Reservaciones</Link>
+          <Link href="/talleres" className="nav-link">Talleres</Link>
+          <Link href="/tienda" className="nav-link">Tienda</Link>
+          <Link href="/contacto" className="nav-link">Contacto</Link>
         </nav>
       </div>
     </header>
