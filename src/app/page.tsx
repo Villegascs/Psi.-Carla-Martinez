@@ -1,8 +1,9 @@
 import FadeIn from "@/components/FadeIn";
+import { Play } from "lucide-react";
 
 export default function Home() {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "100px", alignItems: "center", paddingTop: "120px", paddingBottom: "100px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "140px", alignItems: "center", paddingTop: "80px", paddingBottom: "100px" }}>
       
       {/* Hero Section */}
       <FadeIn delay={100} direction="up" style={{ textAlign: "center", marginBottom: "20px" }}>
@@ -13,52 +14,85 @@ export default function Home() {
       </FadeIn>
 
       {/* Reservaciones Section */}
-      <FadeIn delay={200} direction="up" style={{ width: "100%", maxWidth: "1000px", padding: "0 24px" }}>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "60px", alignItems: "center" }}>
-          <div style={{ flex: "1 1 400px", borderRadius: "24px", overflow: "hidden", minHeight: "400px", position: "relative" }}>
-            <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=1000&q=80" alt="Consultas Psicológicas" style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute", top: 0, left: 0 }} />
-          </div>
-          <div style={{ flex: "1 1 300px" }}>
-            <span style={{ color: "var(--color-accent)", fontWeight: 700, fontSize: "0.9rem", textTransform: "uppercase", letterSpacing: "1px" }}>Consultas</span>
-            <h2 className="heading-2" style={{ fontSize: "2.5rem", margin: "12px 0 20px 0" }}>Reservaciones</h2>
-            <p className="text-muted" style={{ fontSize: "1.1rem", lineHeight: 1.7, marginBottom: "32px" }}>
-              Agenda tu consulta presencial o virtual. Un espacio confidencial y seguro diseñado para escucharte, orientarte y brindarte las herramientas necesarias para alcanzar tu bienestar emocional y mental.
+      <FadeIn delay={200} direction="up" style={{ width: "100%", maxWidth: "1100px", padding: "0 24px" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "60px", alignItems: "center", justifyContent: "space-between" }}>
+          <div style={{ flex: "1 1 500px" }}>
+            <h2 className="heading-2" style={{ fontSize: "3.5rem", margin: "0 0 32px 0", letterSpacing: "-1px" }}>Reservaciones</h2>
+            <p className="text-muted" style={{ fontSize: "1.15rem", lineHeight: 1.8, marginBottom: "24px", textAlign: "justify" }}>
+              <b>La terapia psicológica</b> es una herramienta fundamental evaluada según tus necesidades personales. Está diseñada para que puedas desarrollar tu inteligencia emocional, manejar la ansiedad y superar obstáculos. <b>Este espacio es confidencial y seguro</b>, ideal para escucharte, orientarte y brindarte las herramientas necesarias para alcanzar tu bienestar emocional y mental.
             </p>
-            <a href="/reservaciones" className="btn-primary" style={{ display: "inline-block", padding: "14px 28px", fontSize: "1rem" }}>Agendar tu cita</a>
+            <p className="text-muted" style={{ fontSize: "1.15rem", lineHeight: 1.8, marginBottom: "40px", textAlign: "justify" }}>
+              Agenda tu consulta presencial o virtual. Te guiaremos paso a paso en tu proceso de sanación y crecimiento personal.
+            </p>
+            <a href="/reservaciones" className="btn-primary" style={{ display: "inline-block", padding: "16px 32px", fontSize: "1.05rem", borderRadius: "8px" }}>Agendar tu cita</a>
+          </div>
+          
+          <div style={{ flex: "0 0 320px", display: "flex", flexDirection: "column", alignItems: "center", margin: "0 auto" }}>
+            <div style={{ width: "100%", aspectRatio: "9/16", borderRadius: "24px", overflow: "hidden", position: "relative", boxShadow: "0 20px 50px rgba(0,0,0,0.15)", border: "4px solid #fff" }}>
+              <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=800&q=80" alt="Consultas Psicológicas" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", backgroundColor: "#ff0050", width: "64px", height: "64px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", cursor: "pointer", boxShadow: "0 10px 20px rgba(255, 0, 80, 0.4)" }}>
+                <Play size={32} fill="currentColor" style={{ marginLeft: "4px" }} />
+              </div>
+            </div>
+            <p style={{ marginTop: "20px", fontSize: "0.95rem", color: "#6b7280", textAlign: "center", maxWidth: "280px" }}>
+              Te guiamos paso a paso desde cero hasta mejorar completamente tu bienestar.
+            </p>
           </div>
         </div>
       </FadeIn>
 
       {/* Talleres Section */}
-      <FadeIn delay={300} direction="up" style={{ width: "100%", maxWidth: "1000px", padding: "0 24px" }}>
-        <div style={{ display: "flex", flexWrap: "wrap-reverse", gap: "60px", alignItems: "center" }}>
-          <div style={{ flex: "1 1 300px" }}>
-            <span style={{ color: "var(--color-accent)", fontWeight: 700, fontSize: "0.9rem", textTransform: "uppercase", letterSpacing: "1px" }}>Eventos</span>
-            <h2 className="heading-2" style={{ fontSize: "2.5rem", margin: "12px 0 20px 0" }}>Talleres</h2>
-            <p className="text-muted" style={{ fontSize: "1.1rem", lineHeight: 1.7, marginBottom: "32px" }}>
-              Participa en eventos y talleres grupales enfocados en el desarrollo personal, manejo de emociones y crecimiento integral. Aprende en comunidad y descubre nuevas perspectivas para tu vida diaria.
+      <FadeIn delay={300} direction="up" style={{ width: "100%", maxWidth: "1100px", padding: "0 24px" }}>
+        <div style={{ display: "flex", flexWrap: "wrap-reverse", gap: "60px", alignItems: "center", justifyContent: "space-between" }}>
+          <div style={{ flex: "0 0 320px", display: "flex", flexDirection: "column", alignItems: "center", margin: "0 auto" }}>
+            <div style={{ width: "100%", aspectRatio: "9/16", borderRadius: "24px", overflow: "hidden", position: "relative", boxShadow: "0 20px 50px rgba(0,0,0,0.15)", border: "4px solid #fff" }}>
+              <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=800&q=80" alt="Talleres de bienestar" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", backgroundColor: "#ff0050", width: "64px", height: "64px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", cursor: "pointer", boxShadow: "0 10px 20px rgba(255, 0, 80, 0.4)" }}>
+                <Play size={32} fill="currentColor" style={{ marginLeft: "4px" }} />
+              </div>
+            </div>
+            <p style={{ marginTop: "20px", fontSize: "0.95rem", color: "#6b7280", textAlign: "center", maxWidth: "280px" }}>
+              Descubre nuevas dinámicas y conecta con personas en tu misma sintonía.
             </p>
-            <a href="/talleres" className="btn-secondary" style={{ display: "inline-block", padding: "14px 28px", fontSize: "1rem" }}>Explorar talleres</a>
           </div>
-          <div style={{ flex: "1 1 400px", borderRadius: "24px", overflow: "hidden", minHeight: "400px", position: "relative" }}>
-            <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=1000&q=80" alt="Talleres de bienestar" style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute", top: 0, left: 0 }} />
+
+          <div style={{ flex: "1 1 500px" }}>
+            <h2 className="heading-2" style={{ fontSize: "3.5rem", margin: "0 0 32px 0", letterSpacing: "-1px" }}>Talleres</h2>
+            <p className="text-muted" style={{ fontSize: "1.15rem", lineHeight: 1.8, marginBottom: "24px", textAlign: "justify" }}>
+              <b>Los talleres grupales</b> son experiencias inmersivas diseñadas para profundizar en temas específicos como autoestima, relaciones interpersonales y manejo del estrés. Aprender en comunidad te permite descubrir nuevas perspectivas y sentirte acompañado en tu crecimiento.
+            </p>
+            <p className="text-muted" style={{ fontSize: "1.15rem", lineHeight: 1.8, marginBottom: "40px", textAlign: "justify" }}>
+              Reserva tu lugar en nuestros próximos eventos y comienza a transformar tu vida diaria con herramientas prácticas.
+            </p>
+            <a href="/talleres" className="btn-secondary" style={{ display: "inline-block", padding: "16px 32px", fontSize: "1.05rem", borderRadius: "8px" }}>Explorar talleres</a>
           </div>
         </div>
       </FadeIn>
 
       {/* Tienda Section */}
-      <FadeIn delay={400} direction="up" style={{ width: "100%", maxWidth: "1000px", padding: "0 24px" }}>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "60px", alignItems: "center" }}>
-          <div style={{ flex: "1 1 400px", borderRadius: "24px", overflow: "hidden", minHeight: "400px", position: "relative" }}>
-            <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1000&q=80" alt="Tienda oficial" style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute", top: 0, left: 0 }} />
-          </div>
-          <div style={{ flex: "1 1 300px" }}>
-            <span style={{ color: "var(--color-accent)", fontWeight: 700, fontSize: "0.9rem", textTransform: "uppercase", letterSpacing: "1px" }}>Mercancía</span>
-            <h2 className="heading-2" style={{ fontSize: "2.5rem", margin: "12px 0 20px 0" }}>Tienda</h2>
-            <p className="text-muted" style={{ fontSize: "1.1rem", lineHeight: 1.7, marginBottom: "32px" }}>
-              Adquiere mercancía oficial, libros recomendados, libretas de apuntes terapéuticos y recursos exclusivos para llevar tu proceso de sanación a todas partes.
+      <FadeIn delay={400} direction="up" style={{ width: "100%", maxWidth: "1100px", padding: "0 24px" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "60px", alignItems: "center", justifyContent: "space-between" }}>
+          <div style={{ flex: "1 1 500px" }}>
+            <h2 className="heading-2" style={{ fontSize: "3.5rem", margin: "0 0 32px 0", letterSpacing: "-1px" }}>Tienda</h2>
+            <p className="text-muted" style={{ fontSize: "1.15rem", lineHeight: 1.8, marginBottom: "24px", textAlign: "justify" }}>
+              <b>Nuestra tienda oficial</b> ofrece recursos terapéuticos cuidadosamente seleccionados. Desde libretas para journaling y apuntes emocionales, hasta libros recomendados y mercancía exclusiva para acompañarte a diario.
             </p>
-            <a href="/tienda" className="btn-primary" style={{ display: "inline-block", padding: "14px 28px", fontSize: "1rem" }}>Ir a la tienda</a>
+            <p className="text-muted" style={{ fontSize: "1.15rem", lineHeight: 1.8, marginBottom: "40px", textAlign: "justify" }}>
+              Lleva tu proceso de sanación a todas partes con herramientas físicas que complementan tu desarrollo personal.
+            </p>
+            <a href="/tienda" className="btn-primary" style={{ display: "inline-block", padding: "16px 32px", fontSize: "1.05rem", borderRadius: "8px" }}>Ir a la tienda</a>
+          </div>
+          
+          <div style={{ flex: "0 0 320px", display: "flex", flexDirection: "column", alignItems: "center", margin: "0 auto" }}>
+            <div style={{ width: "100%", aspectRatio: "9/16", borderRadius: "24px", overflow: "hidden", position: "relative", boxShadow: "0 20px 50px rgba(0,0,0,0.15)", border: "4px solid #fff" }}>
+              <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80" alt="Tienda oficial" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", backgroundColor: "#ff0050", width: "64px", height: "64px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", cursor: "pointer", boxShadow: "0 10px 20px rgba(255, 0, 80, 0.4)" }}>
+                <Play size={32} fill="currentColor" style={{ marginLeft: "4px" }} />
+              </div>
+            </div>
+            <p style={{ marginTop: "20px", fontSize: "0.95rem", color: "#6b7280", textAlign: "center", maxWidth: "280px" }}>
+              Recursos físicos que complementan y potencian tu trabajo interno.
+            </p>
           </div>
         </div>
       </FadeIn>
