@@ -48,6 +48,15 @@ a {
   transition: color var(--transition-fast);
 }
 
+.footer-link {
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+  color: #111827 !important;
+  text-decoration: none !important;
+}
+
 button, input, textarea, select {
   font-family: inherit;
   border: none;
