@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Instagram, Facebook, Youtube } from "lucide-react";
+import { FaInstagram, FaFacebook, FaYoutube } from "react-icons/fa";
 
 export default function GlobalFooter() {
   const pathname = usePathname();
@@ -49,13 +49,13 @@ export default function GlobalFooter() {
             <p>Ubicación: Caracas, Venezuela</p>
             <div style={{ display: "flex", gap: "16px", marginTop: "12px" }}>
               <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" style={{ color: "#fff", backgroundColor: "rgba(255,255,255,0.1)", padding: "8px", borderRadius: "50%" }}>
-                <Instagram size={20} />
+                <FaInstagram size={20} />
               </a>
               <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" style={{ color: "#fff", backgroundColor: "rgba(255,255,255,0.1)", padding: "8px", borderRadius: "50%" }}>
-                <Facebook size={20} />
+                <FaFacebook size={20} />
               </a>
               <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" style={{ color: "#fff", backgroundColor: "rgba(255,255,255,0.1)", padding: "8px", borderRadius: "50%" }}>
-                <Youtube size={20} />
+                <FaYoutube size={20} />
               </a>
             </div>
           </div>
