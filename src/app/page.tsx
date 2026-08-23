@@ -3,7 +3,7 @@ import { Play } from "lucide-react";
 
 export default function Home() {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "140px", alignItems: "center", paddingTop: "80px", paddingBottom: "100px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "240px", alignItems: "center", paddingTop: "140px", paddingBottom: "160px" }}>
       
       {/* Hero Section */}
       <FadeIn delay={100} direction="up" style={{ textAlign: "center", marginBottom: "20px" }}>
