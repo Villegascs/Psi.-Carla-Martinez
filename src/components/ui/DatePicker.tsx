@@ -63,6 +63,9 @@ export function DatePicker({ date, setDate, placeholder = "Seleccionar fecha", c
               setIsOpen(false);
             }}
             locale={es}
+            captionLayout="dropdown"
+            startMonth={new Date(1920, 0)}
+            endMonth={new Date(2030, 11)}
             initialFocus
           />
         </div>
