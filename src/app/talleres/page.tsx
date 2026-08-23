@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, ArrowLeft } from "lucide-react";
 
 
 
@@ -304,9 +304,10 @@ export default function TalleresPage() {
           <div style={{ padding: "32px" }}>
             <button 
               onClick={() => setViewState("list")}
-              style={{ background: "none", border: "none", color: "var(--color-accent)", fontWeight: 600, cursor: "pointer", marginBottom: "16px", padding: 0 }}
+              className="btn-secondary"
+              style={{ marginBottom: "24px", display: "inline-flex", alignItems: "center", gap: "8px", padding: "8px 16px", fontSize: "0.95rem" }}
             >
-              ← Volver a todos los talleres
+              <ArrowLeft size={18} /> Volver a los talleres
             </button>
             <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px", flexWrap: "wrap" }}>
               <h1 className="heading-1" style={{ margin: 0 }}>{selectedWorkshop.title}</h1>
