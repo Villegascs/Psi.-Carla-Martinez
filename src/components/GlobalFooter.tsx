@@ -48,7 +48,7 @@ export default function GlobalFooter() {
             <p>Email: contacto@carlamartinez.com</p>
             <p>Ubicación: Caracas, Venezuela</p>
             <div style={{ display: "flex", gap: "16px", marginTop: "12px" }}>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="social-icon instagram-icon">
+              <a href="https://www.instagram.com/carla___martinez/" target="_blank" rel="noopener noreferrer" className="social-icon instagram-icon">
                 <FaInstagram size={20} />
               </a>
               <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="social-icon facebook-icon">
