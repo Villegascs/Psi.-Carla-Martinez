@@ -20,7 +20,8 @@ admin.initializeApp({
     projectId: process.env.FIREBASE_PROJECT_ID,
     clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
     privateKey: privateKey,
-  })
+  }),
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
 });
 
 async function testBucket(bucketName) {
@@ -34,8 +35,14 @@ async function testBucket(bucketName) {
 }
 
 async function run() {
-  await testBucket('psicarlamartinezz.firebasestorage.app');
-  await testBucket('psicarlamartinezz.appspot.com');
+  const bucket = admin.storage().bucket('psicarlamartinezz.appspot.com');
+  console.log('Appspot bucket name:', bucket.name);
+  try {
+    const [exists] = await bucket.exists();
+    console.log(`Appspot bucket exists: ${exists}`);
+  } catch (error) {
+    console.error(`Appspot bucket error:`, error.message);
+  }
 }
 
 run();
