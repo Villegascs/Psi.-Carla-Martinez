@@ -13,38 +13,38 @@ export default function GlobalFooter() {
   }
 
   return (
-    <footer style={{ backgroundColor: "#0a0a0a", color: "#f3f4f6", padding: "60px 24px 24px 24px", marginTop: "auto" }}>
-      <div className="container" style={{ display: "flex", flexWrap: "wrap", gap: "40px", justifyContent: "space-between", paddingBottom: "40px", borderBottom: "1px solid rgba(255, 255, 255, 0.1)" }}>
+    <footer style={{ backgroundColor: "#ffffff", color: "#111827", padding: "60px 24px 24px 24px", marginTop: "auto", borderTop: "1px solid rgba(0,0,0,0.05)" }}>
+      <div className="container" style={{ display: "flex", flexWrap: "wrap", gap: "40px", justifyContent: "space-between", paddingBottom: "40px", borderBottom: "1px solid rgba(0, 0, 0, 0.1)" }}>
         
         {/* Brand Column */}
         <div style={{ flex: "1 1 250px" }}>
-          <h3 style={{ fontSize: "1.25rem", fontWeight: 700, marginBottom: "16px", letterSpacing: "1px", textTransform: "uppercase" }}>
+          <h3 style={{ fontSize: "1.25rem", fontWeight: 700, marginBottom: "16px", letterSpacing: "1px", textTransform: "uppercase", color: "#111827" }}>
             Carla Martinez
           </h3>
-          <p style={{ color: "#d1d5db", fontSize: "0.95rem", lineHeight: 1.6, maxWidth: "300px" }}>
+          <p style={{ color: "#4b5563", fontSize: "0.95rem", lineHeight: 1.6, maxWidth: "300px" }}>
             Especialista en psicología clínica, comprometida con tu bienestar mental y crecimiento personal.
           </p>
         </div>
 
         {/* Links Column */}
         <div style={{ flex: "1 1 250px" }}>
-          <h3 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "16px", textTransform: "uppercase", letterSpacing: "1px" }}>
+          <h3 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "16px", textTransform: "uppercase", letterSpacing: "1px", color: "#111827" }}>
             Enlaces Rápidos
           </h3>
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-            <Link href="/" style={{ color: "#d1d5db", textDecoration: "none", fontSize: "0.95rem" }} className="footer-link">Inicio</Link>
-            <Link href="/reservaciones" style={{ color: "#d1d5db", textDecoration: "none", fontSize: "0.95rem" }} className="footer-link">Reservaciones</Link>
-            <Link href="/talleres" style={{ color: "#d1d5db", textDecoration: "none", fontSize: "0.95rem" }} className="footer-link">Talleres</Link>
-            <Link href="/tienda" style={{ color: "#d1d5db", textDecoration: "none", fontSize: "0.95rem" }} className="footer-link">Tienda</Link>
+            <Link href="/" style={{ color: "#4b5563", textDecoration: "none", fontSize: "0.95rem" }} className="footer-link">Inicio</Link>
+            <Link href="/reservaciones" style={{ color: "#4b5563", textDecoration: "none", fontSize: "0.95rem" }} className="footer-link">Reservaciones</Link>
+            <Link href="/talleres" style={{ color: "#4b5563", textDecoration: "none", fontSize: "0.95rem" }} className="footer-link">Talleres</Link>
+            <Link href="/tienda" style={{ color: "#4b5563", textDecoration: "none", fontSize: "0.95rem" }} className="footer-link">Tienda</Link>
           </div>
         </div>
 
         {/* Contact Column */}
         <div style={{ flex: "1 1 250px" }}>
-          <h3 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "16px", textTransform: "uppercase", letterSpacing: "1px" }}>
+          <h3 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "16px", textTransform: "uppercase", letterSpacing: "1px", color: "#111827" }}>
             Contacto
           </h3>
-          <div style={{ display: "flex", flexDirection: "column", gap: "12px", color: "#d1d5db", fontSize: "0.95rem" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px", color: "#4b5563", fontSize: "0.95rem" }}>
             <p>Email: contacto@carlamartinez.com</p>
             <p>Ubicación: Caracas, Venezuela</p>
             <div style={{ display: "flex", gap: "16px", marginTop: "12px" }}>
@@ -63,7 +63,7 @@ export default function GlobalFooter() {
       </div>
 
       {/* Bottom Bar */}
-      <div className="container" style={{ display: "flex", justifyContent: "center", alignItems: "center", paddingTop: "24px", color: "#9ca3af", fontSize: "0.85rem" }}>
+      <div className="container" style={{ display: "flex", justifyContent: "center", alignItems: "center", paddingTop: "24px", color: "#6b7280", fontSize: "0.85rem" }}>
         <p>© 2026 Psi Carla Martinez | Todos los derechos reservados.</p>
       </div>
     </footer>
