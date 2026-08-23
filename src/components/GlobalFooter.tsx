@@ -13,7 +13,7 @@ export default function GlobalFooter() {
   }
 
   return (
-    <footer style={{ backgroundColor: "#1e1b4b", color: "#f3f4f6", padding: "60px 24px 24px 24px", marginTop: "auto" }}>
+    <footer style={{ backgroundColor: "#0a0a0a", color: "#f3f4f6", padding: "60px 24px 24px 24px", marginTop: "auto" }}>
       <div className="container" style={{ display: "flex", flexWrap: "wrap", gap: "40px", justifyContent: "space-between", paddingBottom: "40px", borderBottom: "1px solid rgba(255, 255, 255, 0.1)" }}>
         
         {/* Brand Column */}
@@ -48,13 +48,13 @@ export default function GlobalFooter() {
             <p>Email: contacto@carlamartinez.com</p>
             <p>Ubicación: Caracas, Venezuela</p>
             <div style={{ display: "flex", gap: "16px", marginTop: "12px" }}>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" style={{ color: "#fff", backgroundColor: "rgba(255,255,255,0.1)", padding: "8px", borderRadius: "50%" }}>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="social-icon instagram-icon">
                 <FaInstagram size={20} />
               </a>
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" style={{ color: "#fff", backgroundColor: "rgba(255,255,255,0.1)", padding: "8px", borderRadius: "50%" }}>
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="social-icon facebook-icon">
                 <FaFacebook size={20} />
               </a>
-              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" style={{ color: "#fff", backgroundColor: "rgba(255,255,255,0.1)", padding: "8px", borderRadius: "50%" }}>
+              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="social-icon youtube-icon">
                 <FaYoutube size={20} />
               </a>
             </div>
@@ -63,9 +63,8 @@ export default function GlobalFooter() {
       </div>
 
       {/* Bottom Bar */}
-      <div className="container" style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", paddingTop: "24px", color: "#9ca3af", fontSize: "0.85rem" }}>
-        <p>© 2026 Carla Martinez. Todos los derechos reservados.</p>
-        <p>Diseñado por Villegas.</p>
+      <div className="container" style={{ display: "flex", justifyContent: "center", alignItems: "center", paddingTop: "24px", color: "#9ca3af", fontSize: "0.85rem" }}>
+        <p>© 2026 Psi Carla Martinez | Todos los derechos reservados.</p>
       </div>
     </footer>
   );
