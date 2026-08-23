@@ -18,6 +18,7 @@ export default function GlobalHeader() {
           <Link href="/">Carla Martinez.</Link>
         </div>
         <nav className="mobile-wrap" style={{ display: "flex", gap: "32px", alignItems: "center", overflowX: "auto", paddingBottom: "4px" }}>
+          <Link href="/" className="nav-link">Inicio</Link>
           <Link href="/reservaciones" className="nav-link">Reservaciones</Link>
           <Link href="/talleres" className="nav-link">Talleres</Link>
           <Link href="/tienda" className="nav-link">Tienda</Link>
