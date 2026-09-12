@@ -3,22 +3,34 @@ import { Play } from "lucide-react";
 
 export default function Home() {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "240px", alignItems: "center", paddingTop: "140px", paddingBottom: "160px" }}>
-      
+    <div style={{ width: "100%" }}>
       {/* Hero Section */}
-      <FadeIn delay={100} direction="up" style={{ width: "100%", maxWidth: "1100px", padding: "0 24px", marginBottom: "40px" }}>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "60px", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ flex: "0 0 450px", display: "flex", alignItems: "flex-end", justifyContent: "center" }}>
-            <img src="/pagina-de-inicio.jpg" alt="Dra. Carla Martinez" style={{ width: "100%", height: "auto", display: "block", objectFit: "contain" }} />
-          </div>
-          <div style={{ flex: "1 1 500px" }}>
-            <h1 className="heading-1" style={{ textAlign: "left", fontSize: "4rem", marginBottom: "24px", lineHeight: 1.1 }}>Salud mental, <br/>al alcance de tu mano.</h1>
-            <p className="text-muted" style={{ fontSize: "1.15rem", lineHeight: 1.8, maxWidth: "600px", textAlign: "left" }}>
-              Un espacio seguro para tu desarrollo personal, talleres que transforman tu vida y recursos exclusivos para acompañarte en tu proceso.
-            </p>
-          </div>
+      <div style={{ position: "relative", width: "100%", minHeight: "100vh", display: "flex", alignItems: "center", overflow: "hidden", marginTop: "-100px" /* To compensate for navbar height if any, adjust if needed */ }}>
+        {/* Background Image */}
+        <img 
+          src="/pagina-de-inicio.jpg" 
+          alt="Dra. Carla Martinez" 
+          style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "left center", zIndex: -1 }} 
+        />
+        
+        {/* Foreground Content */}
+        <div style={{ width: "100%", maxWidth: "1200px", margin: "0 auto", padding: "0 24px", paddingTop: "100px" }}>
+          <FadeIn delay={100} direction="up">
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <div style={{ maxWidth: "550px" }}>
+                <h1 className="heading-1" style={{ textAlign: "left", fontSize: "4.5rem", marginBottom: "24px", lineHeight: 1.1 }}>
+                  Salud mental, <br/>al alcance de tu mano.
+                </h1>
+                <p className="text-muted" style={{ fontSize: "1.25rem", lineHeight: 1.8, textAlign: "left" }}>
+                  Un espacio seguro para tu desarrollo personal, talleres que transforman tu vida y recursos exclusivos para acompañarte en tu proceso.
+                </p>
+              </div>
+            </div>
+          </FadeIn>
         </div>
-      </FadeIn>
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "240px", alignItems: "center", paddingTop: "140px", paddingBottom: "160px" }}>
 
       {/* Reservaciones Section */}
       <FadeIn delay={200} direction="up" style={{ width: "100%", maxWidth: "1100px", padding: "0 24px" }}>
@@ -104,6 +116,7 @@ export default function Home() {
         </div>
       </FadeIn>
 
+    </div>
     </div>
   );
 }
