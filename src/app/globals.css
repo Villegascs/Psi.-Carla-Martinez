@@ -84,6 +84,21 @@ button {
   z-index: 100;
 }
 
+/* Luzen-style pill nav links */
+.luzen-nav-link {
+  font-weight: 500;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.85);
+  transition: color 0.2s ease;
+  letter-spacing: 0.01em;
+}
+
+.luzen-nav-link:hover {
+  color: #ffffff;
+}
+
 .nav-link {
   font-weight: 500;
   white-space: nowrap;
