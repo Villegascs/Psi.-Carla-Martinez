@@ -23,13 +23,10 @@ export default function GlobalHeader() {
         const diff = currentScrollY - lastScrollY.current;
 
         if (currentScrollY < 80) {
-          // At the top — always show
           header.style.transform = "translateY(0)";
         } else if (diff > 0) {
-          // Scrolling DOWN — hide header
           header.style.transform = "translateY(-100%)";
         } else if (diff < 0) {
-          // Scrolling UP — show header
           header.style.transform = "translateY(0)";
         }
 
@@ -42,7 +39,6 @@ export default function GlobalHeader() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Ocultar el header global en todas las rutas de /admin
   if (pathname && pathname.startsWith("/admin")) {
     return null;
   }
@@ -56,13 +52,11 @@ export default function GlobalHeader() {
         left: 0,
         right: 0,
         zIndex: 1000,
-        /* Directionally-aware slide animation */
         transform: "translateY(0)",
         transition: "transform 0.28s cubic-bezier(0.4, 0, 0.2, 1)",
         willChange: "transform",
       }}
     >
-      {/* Inner container — full width transparent, Nexbet style */}
       <div style={{
         maxWidth: "1400px",
         margin: "0 auto",
@@ -78,7 +72,7 @@ export default function GlobalHeader() {
           fontWeight: 700,
           fontSize: "1.15rem",
           letterSpacing: "-0.3px",
-          color: "#ffffff",
+          color: "#111111",
           whiteSpace: "nowrap",
           flexShrink: 0,
           textDecoration: "none",
@@ -86,7 +80,7 @@ export default function GlobalHeader() {
           Carla Martinez.
         </Link>
 
-        {/* Nav links — UPPERCASE, white, Nexbet style */}
+        {/* Nav links — UPPERCASE dark */}
         <nav style={{
           display: "flex",
           gap: "40px",
@@ -101,18 +95,18 @@ export default function GlobalHeader() {
           <Link href="/contacto" className="nexbet-nav-link">Contacto</Link>
         </nav>
 
-        {/* CTA Button — Outlined white pill, Nexbet style */}
+        {/* CTA Button — Outlined dark pill */}
         <Link
           href="/reservaciones"
           style={{
-            color: "#ffffff",
+            color: "#111111",
             fontWeight: 600,
             fontSize: "0.82rem",
             letterSpacing: "0.08em",
             textTransform: "uppercase",
             padding: "11px 28px",
             borderRadius: "999px",
-            border: "1.5px solid rgba(255,255,255,0.8)",
+            border: "1.5px solid rgba(0,0,0,0.75)",
             background: "transparent",
             whiteSpace: "nowrap",
             flexShrink: 0,
@@ -123,15 +117,15 @@ export default function GlobalHeader() {
           }}
           onMouseEnter={e => {
             const el = e.currentTarget as HTMLElement;
-            el.style.background = "#ffffff";
-            el.style.color = "#111111";
-            el.style.borderColor = "#ffffff";
+            el.style.background = "#111111";
+            el.style.color = "#ffffff";
+            el.style.borderColor = "#111111";
           }}
           onMouseLeave={e => {
             const el = e.currentTarget as HTMLElement;
             el.style.background = "transparent";
-            el.style.color = "#ffffff";
-            el.style.borderColor = "rgba(255,255,255,0.8)";
+            el.style.color = "#111111";
+            el.style.borderColor = "rgba(0,0,0,0.75)";
           }}
         >
           Agendar cita
