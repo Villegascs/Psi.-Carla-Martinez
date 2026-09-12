@@ -4,69 +4,30 @@ import { Play } from "lucide-react";
 export default function Home() {
   return (
     <div style={{ width: "100%" }}>
-      {/* Hero Section */}
+      {/* Hero Section — Full Screen Cover */}
       <div style={{ 
-        position: "relative", 
-        width: "100%", 
-        minHeight: "90vh",
-        display: "flex", 
-        alignItems: "stretch",
-        overflow: "hidden", 
-        marginTop: "-100px",
-        backgroundColor: "#f8f7f5"
+        position: "relative",
+        /* Break out of the main container padding (24px each side) and top padding (40px) */
+        width: "100vw",
+        height: "100vh",
+        marginLeft: "calc(-50vw + 50%)",
+        marginTop: "-40px",
+        overflow: "hidden",
       }}>
-        
-        {/* LEFT: Doctor Image — full, no crop */}
-        <div style={{ 
-          flex: "0 0 50%", 
-          display: "flex", 
-          alignItems: "flex-end", 
-          justifyContent: "flex-start",
-          overflow: "hidden"
-        }}>
-          <img 
-            src="/pagina-de-inicio.jpg" 
-            alt="Dra. Carla Martinez" 
-            style={{ 
-              width: "100%", 
-              height: "auto", 
-              display: "block",
-              objectFit: "contain",
-              objectPosition: "bottom left",
-              maxHeight: "90vh",
-              alignSelf: "flex-end"
-            }} 
-          />
-        </div>
-
-        {/* RIGHT: Text content */}
-        <div style={{ 
-          flex: "0 0 50%", 
-          display: "flex", 
-          alignItems: "center", 
-          padding: "0 6%",
-          paddingTop: "100px"
-        }}>
-          <FadeIn delay={100} direction="up" style={{ width: "100%" }}>
-            <h1 className="heading-1" style={{ 
-              textAlign: "left", 
-              fontSize: "4.5rem", 
-              marginBottom: "28px", 
-              lineHeight: 1.05,
-              letterSpacing: "-2px"
-            }}>
-              Salud mental,<br/>al alcance de<br/>tu mano.
-            </h1>
-            <p className="text-muted" style={{ 
-              fontSize: "1.2rem", 
-              lineHeight: 1.8, 
-              textAlign: "left",
-              maxWidth: "420px"
-            }}>
-              Un espacio seguro para tu desarrollo personal, talleres que transforman tu vida y recursos exclusivos para acompañarte en tu proceso.
-            </p>
-          </FadeIn>
-        </div>
+        {/* Portada image — fills 100% of the hero block */}
+        <img
+          src="/Portada.png"
+          alt="Dra. Carla Martinez — Portada"
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "center top",
+            display: "block",
+          }}
+        />
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "240px", alignItems: "center", paddingTop: "140px", paddingBottom: "160px" }}>
