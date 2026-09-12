@@ -8,10 +8,8 @@ export default function Home() {
       {/* Hero Section */}
       <FadeIn delay={100} direction="up" style={{ width: "100%", maxWidth: "1100px", padding: "0 24px", marginBottom: "40px" }}>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "60px", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ flex: "0 0 380px", display: "flex", flexDirection: "column", alignItems: "center", margin: "0 auto" }}>
-            <div style={{ width: "100%", aspectRatio: "3/4", borderRadius: "24px", overflow: "hidden", position: "relative", boxShadow: "0 20px 50px rgba(0,0,0,0.15)", border: "4px solid #fff" }}>
-              <img src="/pagina-de-inicio.jpg" alt="Dra. Carla Martinez" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-            </div>
+          <div style={{ flex: "0 0 450px", display: "flex", alignItems: "flex-end", justifyContent: "center" }}>
+            <img src="/pagina-de-inicio.jpg" alt="Dra. Carla Martinez" style={{ width: "100%", height: "auto", display: "block", objectFit: "contain" }} />
           </div>
           <div style={{ flex: "1 1 500px" }}>
             <h1 className="heading-1" style={{ textAlign: "left", fontSize: "4rem", marginBottom: "24px", lineHeight: 1.1 }}>Salud mental, <br/>al alcance de tu mano.</h1>
