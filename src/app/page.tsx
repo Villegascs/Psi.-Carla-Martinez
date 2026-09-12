@@ -12,9 +12,9 @@ export default function Home() {
         height: "100vh",
         marginLeft: "calc(-50vw + 50%)",
         marginTop: "-40px",
-        overflow: "hidden",
+        backgroundColor: "#ffffff",
       }}>
-        {/* Portada image — fills 100% of the hero block */}
+        {/* Portada image — full visible, no crop, anchored left */}
         <img
           src="/Portada.png"
           alt="Dra. Carla Martinez — Portada"
@@ -23,8 +23,8 @@ export default function Home() {
             inset: 0,
             width: "100%",
             height: "100%",
-            objectFit: "cover",
-            objectPosition: "center top",
+            objectFit: "contain",
+            objectPosition: "left center",
             display: "block",
           }}
         />
