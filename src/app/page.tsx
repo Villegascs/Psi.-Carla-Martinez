@@ -4,27 +4,22 @@ import { Play } from "lucide-react";
 export default function Home() {
   return (
     <div style={{ width: "100%" }}>
-      {/* Hero Section — Full Screen Cover */}
+      {/* Hero Section — Imagen completa, sin recortes */}
       <div style={{ 
-        position: "relative",
-        /* Break out of the main container padding (24px each side) and top padding (40px) */
+        /* Rompe el padding del container para ancho completo */
         width: "100vw",
-        height: "100vh",
         marginLeft: "calc(-50vw + 50%)",
         marginTop: "-40px",
         backgroundColor: "#ffffff",
+        lineHeight: 0,
       }}>
-        {/* Portada image — full visible, no crop, anchored left */}
+        {/* width: 100% + height: auto = imagen NUNCA se recorta */}
         <img
           src="/Portada.png"
           alt="Dra. Carla Martinez — Portada"
           style={{
-            position: "absolute",
-            inset: 0,
             width: "100%",
-            height: "100%",
-            objectFit: "contain",
-            objectPosition: "left center",
+            height: "auto",
             display: "block",
           }}
         />
