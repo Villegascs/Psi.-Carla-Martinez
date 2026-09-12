@@ -5,27 +5,27 @@ export default function Home() {
   return (
     <div style={{ width: "100%" }}>
       {/* Hero Section */}
-      <div style={{ position: "relative", width: "100%", minHeight: "100vh", display: "flex", flexWrap: "wrap", alignItems: "center", marginTop: "-100px", backgroundColor: "#fff" }}>
+      <div style={{ position: "relative", width: "100%", minHeight: "100vh", display: "flex", alignItems: "center", overflow: "hidden", marginTop: "-100px" }}>
         
-        {/* Image Container */}
-        <div style={{ flex: "1 1 50%", height: "100vh", minHeight: "500px", display: "flex", alignItems: "flex-end", justifyContent: "flex-start", position: "relative" }}>
-          <img 
-            src="/pagina-de-inicio.jpg" 
-            alt="Dra. Carla Martinez" 
-            style={{ position: "absolute", bottom: 0, left: 0, width: "100%", height: "100%", objectFit: "contain", objectPosition: "left bottom" }} 
-          />
-        </div>
-
-        {/* Text Container */}
-        <div style={{ flex: "1 1 50%", display: "flex", alignItems: "center", padding: "0 5%", zIndex: 10 }}>
-          <FadeIn delay={100} direction="up" style={{ width: "100%" }}>
-            <div style={{ maxWidth: "600px", paddingTop: "100px" }}>
-              <h1 className="heading-1" style={{ textAlign: "left", fontSize: "4.5rem", marginBottom: "24px", lineHeight: 1.1 }}>
-                Salud mental, <br/>al alcance de tu mano.
-              </h1>
-              <p className="text-muted" style={{ fontSize: "1.25rem", lineHeight: 1.8, textAlign: "left" }}>
-                Un espacio seguro para tu desarrollo personal, talleres que transforman tu vida y recursos exclusivos para acompañarte en tu proceso.
-              </p>
+        {/* Background Image */}
+        <img 
+          src="/pagina-de-inicio.jpg" 
+          alt="Dra. Carla Martinez" 
+          style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "left bottom", zIndex: -1 }} 
+        />
+        
+        {/* Foreground Content */}
+        <div style={{ width: "100%", maxWidth: "1200px", margin: "0 auto", padding: "0 24px", paddingTop: "100px" }}>
+          <FadeIn delay={100} direction="up">
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <div style={{ maxWidth: "550px" }}>
+                <h1 className="heading-1" style={{ textAlign: "left", fontSize: "4.5rem", marginBottom: "24px", lineHeight: 1.1 }}>
+                  Salud mental, <br/>al alcance de tu mano.
+                </h1>
+                <p className="text-muted" style={{ fontSize: "1.25rem", lineHeight: 1.8, textAlign: "left" }}>
+                  Un espacio seguro para tu desarrollo personal, talleres que transforman tu vida y recursos exclusivos para acompañarte en tu proceso.
+                </p>
+              </div>
             </div>
           </FadeIn>
         </div>
