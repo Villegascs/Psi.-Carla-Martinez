@@ -6,11 +6,20 @@ export default function Home() {
     <div style={{ display: "flex", flexDirection: "column", gap: "240px", alignItems: "center", paddingTop: "140px", paddingBottom: "160px" }}>
       
       {/* Hero Section */}
-      <FadeIn delay={100} direction="up" style={{ textAlign: "center", marginBottom: "20px" }}>
-        <h1 className="heading-1">Salud mental, <br/>al alcance de tu mano.</h1>
-        <p className="text-muted" style={{ maxWidth: "600px", margin: "0 auto", fontSize: "1.1rem" }}>
-          Un espacio seguro para tu desarrollo personal, talleres que transforman tu vida y recursos exclusivos para acompañarte en tu proceso.
-        </p>
+      <FadeIn delay={100} direction="up" style={{ width: "100%", maxWidth: "1100px", padding: "0 24px", marginBottom: "40px" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "60px", alignItems: "center", justifyContent: "space-between" }}>
+          <div style={{ flex: "0 0 380px", display: "flex", flexDirection: "column", alignItems: "center", margin: "0 auto" }}>
+            <div style={{ width: "100%", aspectRatio: "3/4", borderRadius: "24px", overflow: "hidden", position: "relative", boxShadow: "0 20px 50px rgba(0,0,0,0.15)", border: "4px solid #fff" }}>
+              <img src="/pagina-de-inicio.jpg" alt="Dra. Carla Martinez" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            </div>
+          </div>
+          <div style={{ flex: "1 1 500px" }}>
+            <h1 className="heading-1" style={{ textAlign: "left", fontSize: "4rem", marginBottom: "24px", lineHeight: 1.1 }}>Salud mental, <br/>al alcance de tu mano.</h1>
+            <p className="text-muted" style={{ fontSize: "1.15rem", lineHeight: 1.8, maxWidth: "600px", textAlign: "left" }}>
+              Un espacio seguro para tu desarrollo personal, talleres que transforman tu vida y recursos exclusivos para acompañarte en tu proceso.
+            </p>
+          </div>
+        </div>
       </FadeIn>
 
       {/* Reservaciones Section */}
