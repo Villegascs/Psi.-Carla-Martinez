@@ -46,16 +46,14 @@ export default function ProductCarousel() {
       });
   }, []);
 
-  // Make sure we have at least 6 items in the display sequence
-  const displayItems: Product[] = [];
-  while (displayItems.length < 6) {
-    displayItems.push(...products);
+  // Asegura al menos 6 tarjetas para que el carril infinito nunca tenga huecos
+  let baseList = [...products];
+  while (baseList.length < 6) {
+    baseList = [...baseList, ...products];
   }
-  // Trim to 6 if it grew larger
-  const sixItems = displayItems.slice(0, 6);
 
-  // For infinite marquee, duplicate the array so -50% translation is completely seamless
-  const marqueeItems = [...sixItems, ...sixItems];
+  // Se duplica la lista para un desplazamiento infinito 100% continuo y fluido
+  const marqueeItems = [...baseList, ...baseList];
 
   return (
     <div style={{ width: "100%", marginTop: "64px", overflow: "hidden", position: "relative" }}>
