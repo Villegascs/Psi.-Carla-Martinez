@@ -76,12 +76,31 @@ export default function AdminLogin() {
             type="submit" 
             disabled={loading}
             style={{ 
-              width: "100%", padding: "14px", backgroundColor: "var(--color-primary)", color: "white", 
-              border: "none", borderRadius: "8px", fontWeight: 600, fontSize: "1rem", cursor: loading ? "not-allowed" : "pointer",
-              opacity: loading ? 0.7 : 1
+              width: "100%",
+              padding: "14px 24px",
+              backgroundColor: "#b08b6e",
+              color: "#ffffff", 
+              border: "none",
+              borderRadius: "10px",
+              fontWeight: 600,
+              fontSize: "1rem",
+              cursor: loading ? "not-allowed" : "pointer",
+              opacity: loading ? 0.7 : 1,
+              transition: "all 0.2s ease",
+              boxShadow: "0 4px 14px rgba(176, 139, 110, 0.35)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: "12px",
+            }}
+            onMouseOver={(e) => {
+              if (!loading) (e.currentTarget.style.backgroundColor = "#9c785d");
+            }}
+            onMouseOut={(e) => {
+              if (!loading) (e.currentTarget.style.backgroundColor = "#b08b6e");
             }}
           >
-            {loading ? "Iniciando..." : "Ingresar al Panel"}
+            {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
           </button>
         </form>
       </div>

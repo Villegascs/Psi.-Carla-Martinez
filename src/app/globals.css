@@ -1,6 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
+  --color-primary: #b08b6e;
+  --color-primary-hover: #9c785d;
+  --color-text: #111111;
   --color-bg-primary: #ffffff;
   --color-bg-secondary: #f7f7f8;
   --color-bg-glass: rgba(255, 255, 255, 0.7);
