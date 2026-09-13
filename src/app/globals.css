@@ -173,15 +173,13 @@ button {
 }
 
 .hero-cover-img {
-  width: 100% !important;
+  width: 115% !important;
   max-width: none !important;
   height: auto !important;
   display: block !important;
   object-fit: cover !important;
-  margin: 0 !important;
+  margin: 0 0 0 -7.5% !important;
   padding: 0 !important;
-  transform: scale(1.06); /* Oculta bordes blancos nativos de la foto */
-  transform-origin: center center;
 }
 
 @media (max-width: 768px) {
