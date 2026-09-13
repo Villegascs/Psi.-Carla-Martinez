@@ -29,11 +29,9 @@ export default function Home() {
       <div style={{ display: "flex", flexDirection: "column", gap: "clamp(80px, 12vw, 220px)", alignItems: "stretch", paddingTop: "clamp(60px, 8vw, 140px)", paddingBottom: "clamp(80px, 12vw, 160px)" }}>
 
       {/* Reservaciones Section — separado 85px de la izquierda, foto a la derecha a futuro */}
-      <FadeIn delay={200} direction="up" style={{
+      <FadeIn delay={200} direction="up" className="section-reservaciones-padding" style={{
         width: "100vw",
         marginLeft: "calc(-50vw + 50%)",
-        paddingLeft: "clamp(20px, 5.5vw, 85px)",
-        paddingRight: "clamp(16px, 4vw, 24px)",
         boxSizing: "border-box",
       }}>
         <div style={{
@@ -107,11 +105,9 @@ export default function Home() {
 
 
       {/* Talleres Section — foto a la izquierda a futuro, contenido a la derecha con separación de 85px */}
-      <FadeIn delay={300} direction="up" style={{
+      <FadeIn delay={300} direction="up" className="section-talleres-padding" style={{
         width: "100vw",
         marginLeft: "calc(-50vw + 50%)",
-        paddingLeft: "clamp(16px, 4vw, 24px)",
-        paddingRight: "clamp(20px, 5.5vw, 85px)",
         boxSizing: "border-box",
       }}>
         <div style={{
@@ -198,9 +194,7 @@ export default function Home() {
         boxSizing: "border-box",
       }}>
         {/* Top: Intro a la izquierda (referencia TIENDA.png) */}
-        <div style={{
-          paddingLeft: "clamp(20px, 5.5vw, 85px)",
-          paddingRight: "clamp(16px, 4vw, 24px)",
+        <div className="section-tienda-padding" style={{
           boxSizing: "border-box",
           display: "flex",
           alignItems: "center",
