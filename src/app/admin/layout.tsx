@@ -45,8 +45,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             C
           </div>
           <div>
-            <h2 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#111111', letterSpacing: '-0.02em', margin: 0 }}>Panel Admin</h2>
-            <span style={{ fontSize: '0.8rem', color: '#888888', fontWeight: 500 }}>Carla Martinez</span>
+            <h2 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#111111', letterSpacing: '-0.02em', margin: 0, lineHeight: '1.4', paddingTop: '2px' }}>Panel Admin</h2>
+            <span style={{ display: 'block', fontSize: '0.8rem', color: '#888888', fontWeight: 500, lineHeight: '1.4' }}>Carla Martinez</span>
           </div>
         </div>
 
