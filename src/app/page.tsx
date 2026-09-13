@@ -1,5 +1,5 @@
 import FadeIn from "@/components/FadeIn";
-import { Play, Laptop, Users } from "lucide-react";
+import { Play, Laptop, Users, Truck, ShieldCheck, Leaf } from "lucide-react";
 import ProductCarousel from "@/components/ProductCarousel";
 
 export default function Home() {
@@ -231,13 +231,37 @@ export default function Home() {
               </svg>
             </a>
 
-            {/* Logos Tienda: Envíos a todo el país, Pagos seguros, Productos con propósito */}
-            <div style={{ marginTop: "clamp(24px, 5vw, 44px)", maxWidth: "480px", width: "100%" }}>
-              <img
-                src="/tienda/logos.png"
-                alt="Envíos a todo el país - Pagos seguros - Productos con propósito"
-                style={{ width: "100%", height: "auto", display: "block" }}
-              />
+            {/* Beneficios / Garantías Tienda diseñados con alta estética */}
+            <div className="tienda-features-grid">
+              <div className="tienda-feature-card">
+                <div className="tienda-feature-icon">
+                  <Truck size={22} strokeWidth={1.9} />
+                </div>
+                <div className="tienda-feature-info">
+                  <span className="tienda-feature-title">Envíos a todo el país</span>
+                  <span className="tienda-feature-sub">Rápidos y asegurados</span>
+                </div>
+              </div>
+
+              <div className="tienda-feature-card">
+                <div className="tienda-feature-icon">
+                  <ShieldCheck size={22} strokeWidth={1.9} />
+                </div>
+                <div className="tienda-feature-info">
+                  <span className="tienda-feature-title">Pagos seguros</span>
+                  <span className="tienda-feature-sub">100% protegidos</span>
+                </div>
+              </div>
+
+              <div className="tienda-feature-card">
+                <div className="tienda-feature-icon">
+                  <Leaf size={22} strokeWidth={1.9} />
+                </div>
+                <div className="tienda-feature-info">
+                  <span className="tienda-feature-title">Con propósito</span>
+                  <span className="tienda-feature-sub">Para tu bienestar</span>
+                </div>
+              </div>
             </div>
           </div>{/* END LEFT */}
 

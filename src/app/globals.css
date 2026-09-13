@@ -331,6 +331,108 @@ button {
   max-width: 190px;
 }
 
+/* Insignias de Confianza Tienda (Trust Badges) */
+.tienda-features-grid {
+  display: flex;
+  gap: 16px;
+  align-items: stretch;
+  margin-top: clamp(32px, 6vw, 46px);
+  max-width: 580px;
+  width: 100%;
+}
+
+.tienda-feature-card {
+  flex: 1 1 0;
+  min-width: 0;
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.95) 0%, rgba(250, 246, 240, 0.9) 100%);
+  border: 1.5px solid rgba(176, 139, 110, 0.22);
+  border-radius: 20px;
+  padding: 18px 14px 16px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(176, 139, 110, 0.07), 0 1px 3px rgba(0, 0, 0, 0.02);
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+
+.tienda-feature-card:hover {
+  transform: translateY(-4px);
+  border-color: #b08b6e;
+  box-shadow: 0 10px 24px rgba(176, 139, 110, 0.18), 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.tienda-feature-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background-color: #ffffff;
+  border: 1.5px solid rgba(176, 139, 110, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #b08b6e;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 14px rgba(176, 139, 110, 0.12);
+  transition: all 0.28s ease;
+  flex-shrink: 0;
+}
+
+.tienda-feature-card:hover .tienda-feature-icon {
+  transform: scale(1.08) rotate(3deg);
+  background: linear-gradient(135deg, #b08b6e 0%, #9a7659 100%);
+  color: #ffffff;
+  border-color: #b08b6e;
+  box-shadow: 0 6px 18px rgba(176, 139, 110, 0.35);
+}
+
+.tienda-feature-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 100%;
+}
+
+.tienda-feature-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #111111;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.tienda-feature-sub {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #777777;
+  line-height: 1.2;
+}
+
+@media (max-width: 640px) {
+  .tienda-features-grid {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+  .tienda-feature-card {
+    flex-direction: row !important;
+    text-align: left !important;
+    padding: 14px 18px !important;
+    gap: 16px !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+  .tienda-feature-icon {
+    margin-bottom: 0 !important;
+  }
+  .tienda-feature-info {
+    align-items: flex-start !important;
+  }
+}
+
 /* Carrusel Marquee de Productos (Tienda) */
 @keyframes marqueeScrollLeft {
   0% {
