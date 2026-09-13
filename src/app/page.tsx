@@ -5,7 +5,7 @@ import ProductCarousel from "@/components/ProductCarousel";
 export default function Home() {
   return (
     <div style={{ width: "100%" }}>
-      {/* Hero Section — Imagen completa, sin recortes */}
+      {/* Hero Section — Portada Adaptable Desktop / Mobile (sin recortes) */}
       <div style={{ 
         /* Rompe el padding del container para ancho completo */
         width: "100vw",
@@ -14,16 +14,19 @@ export default function Home() {
         backgroundColor: "#ffffff",
         lineHeight: 0,
       }}>
-        {/* width: 100% + height: auto = imagen NUNCA se recorta */}
-        <img
-          src="/Portada.png"
-          alt="Dra. Carla Martinez — Portada"
-          style={{
-            width: "100%",
-            height: "auto",
-            display: "block",
-          }}
-        />
+        {/* En móvil (<= 768px) carga la portada vertical 1080x1920 y en desktop la horizontal */}
+        <picture>
+          <source media="(max-width: 768px)" srcSet="/Portada-telefono.png" />
+          <img
+            src="/Portada.png"
+            alt="Dra. Carla Martinez — Portada"
+            style={{
+              width: "100%",
+              height: "auto",
+              display: "block",
+            }}
+          />
+        </picture>
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "clamp(80px, 12vw, 220px)", alignItems: "stretch", paddingTop: "clamp(60px, 8vw, 140px)", paddingBottom: "clamp(80px, 12vw, 160px)" }}>
