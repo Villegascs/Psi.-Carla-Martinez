@@ -7,14 +7,14 @@ export default function Home() {
     <div style={{ width: "100%" }}>
       {/* Hero Section — Portada Adaptable Desktop / Mobile (sin recortes) */}
       <div className="hero-cover-container" style={{ 
-        /* Rompe el padding del container de forma perfecta */
-        width: "100vw",
-        position: "relative",
-        left: "50%",
-        transform: "translateX(-50%)",
+        /* Rompe el padding de 24px exacto del container */
+        width: "calc(100% + 48px)",
+        marginLeft: "-24px",
+        marginRight: "-24px",
         marginTop: "-40px",
         backgroundColor: "#ffffff",
         lineHeight: 0,
+        overflow: "hidden"
       }}>
         {/* En móvil (<= 768px) carga la portada vertical 1080x1920 y en desktop la horizontal */}
         <picture style={{ display: "block", width: "100%" }}>
