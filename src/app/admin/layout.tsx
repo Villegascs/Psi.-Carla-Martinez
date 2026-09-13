@@ -10,7 +10,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   // Si estamos en la página de login, no mostrar el sidebar
   if (pathname === '/admin/login') {
-    return <div style={{ margin: '-40px -24px' }}>{children}</div>;
+    return <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: '#f9fafb', zIndex: 9999, overflowY: 'auto' }}>{children}</div>;
   }
 
   const handleLogout = async () => {
@@ -28,7 +28,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ];
 
   return (
-    <div className="admin-layout" style={{ display: 'flex', minHeight: '100vh', margin: '-40px -24px', backgroundColor: '#f3f4f6' }}>
+    <div className="admin-layout" style={{ display: 'flex', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: '#f3f4f6', zIndex: 9999 }}>
       {/* Sidebar Prémium */}
       <aside style={{ 
         width: '280px', 
