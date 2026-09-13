@@ -28,7 +28,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ];
 
   return (
-    <div className="admin-layout" style={{ display: 'flex', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: '#f3f4f6', zIndex: 9999 }}>
+    <div style={{ display: 'flex', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: '#f3f4f6', zIndex: 9999 }}>
       {/* Sidebar Prémium */}
       <aside style={{ 
         width: '280px', 
