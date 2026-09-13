@@ -27,9 +27,12 @@ export default function Home() {
 
       <div style={{ display: "flex", flexDirection: "column", gap: "240px", alignItems: "center", paddingTop: "140px", paddingBottom: "160px" }}>
 
-      {/* Reservaciones Section — nuevo diseño de referencia */}
+      {/* Reservaciones Section — dos columnas: contenido izq, foto der */}
       <FadeIn delay={200} direction="up" style={{ width: "100%", maxWidth: "1100px", padding: "0 24px" }}>
-        <div>
+        <div style={{ display: "flex", alignItems: "center", gap: "80px" }}>
+
+          {/* LEFT — contenido */}
+          <div style={{ flex: "1 1 0", minWidth: 0 }}>
           {/* Eyebrow */}
           <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "10px" }}>
             <span style={{
@@ -81,8 +84,36 @@ export default function Home() {
               <path d="M1 8H19M19 8L12 1M19 8L12 15" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </a>
+          </div>{/* END LEFT */}
+
+          {/* RIGHT — placeholder foto */}
+          <div style={{
+            flex: "1 1 0",
+            minWidth: 0,
+            aspectRatio: "4/5",
+            borderRadius: "24px",
+            backgroundColor: "#f0ece7",
+            border: "2px dashed #c9b8a8",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "12px",
+            color: "#b08b6e",
+          }}>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="3"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+            <span style={{ fontSize: "0.9rem", fontWeight: 500, color: "#b08b6e", letterSpacing: "0.04em" }}>
+              Foto próximamente
+            </span>
+          </div>
+
         </div>
       </FadeIn>
+
 
       {/* Talleres Section */}
       <FadeIn delay={300} direction="up" style={{ width: "100%", maxWidth: "1100px", padding: "0 24px" }}>
