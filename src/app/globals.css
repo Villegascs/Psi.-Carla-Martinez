@@ -268,6 +268,129 @@ button {
   max-width: 190px;
 }
 
+/* Carrusel Marquee de Productos (Tienda) */
+@keyframes marqueeScrollLeft {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.carousel-marquee-wrapper {
+  overflow: hidden;
+  width: 100%;
+  display: flex;
+  padding: 16px 0 32px 0;
+}
+
+.carousel-marquee-track {
+  display: flex;
+  gap: 28px;
+  width: max-content;
+  animation: marqueeScrollLeft 26s linear infinite;
+  will-change: transform;
+}
+
+.carousel-marquee-wrapper:hover .carousel-marquee-track {
+  animation-play-state: paused;
+}
+
+.carousel-product-card {
+  width: 250px;
+  flex-shrink: 0;
+  background: #ffffff;
+  border: 1.5px solid rgba(176, 139, 110, 0.2);
+  border-radius: 22px;
+  padding: 16px;
+  text-decoration: none;
+  box-shadow: 0 6px 20px rgba(176, 139, 110, 0.07);
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.carousel-product-card:hover {
+  transform: translateY(-8px);
+  border-color: #b08b6e;
+  box-shadow: 0 16px 36px rgba(176, 139, 110, 0.22);
+}
+
+.carousel-product-img-box {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background-color: #faf7f2;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+}
+
+.carousel-product-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.35s ease;
+}
+
+.carousel-product-card:hover .carousel-product-img {
+  transform: scale(1.08);
+}
+
+.carousel-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(4px);
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #b08b6e;
+  border: 1px solid rgba(176, 139, 110, 0.25);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.carousel-product-info {
+  padding: 14px 4px 4px 4px;
+}
+
+.carousel-product-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #111111;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.carousel-product-price {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #b08b6e;
+}
+
+.carousel-product-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #666666;
+  margin-top: 4px;
+  transition: color 0.2s ease;
+}
+
+.carousel-product-card:hover .carousel-product-cta {
+  color: #b08b6e;
+}
+
 
 .card {
   background-color: var(--color-bg-primary);
