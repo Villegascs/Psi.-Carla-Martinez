@@ -27,31 +27,60 @@ export default function Home() {
 
       <div style={{ display: "flex", flexDirection: "column", gap: "240px", alignItems: "center", paddingTop: "140px", paddingBottom: "160px" }}>
 
-      {/* Reservaciones Section */}
+      {/* Reservaciones Section — nuevo diseño de referencia */}
       <FadeIn delay={200} direction="up" style={{ width: "100%", maxWidth: "1100px", padding: "0 24px" }}>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "60px", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ flex: "1 1 500px" }}>
-            <h2 className="heading-2" style={{ fontSize: "3.5rem", margin: "0 0 32px 0", letterSpacing: "-1px" }}>Reservaciones</h2>
-            <p className="text-muted" style={{ fontSize: "1.15rem", lineHeight: 1.8, marginBottom: "24px", textAlign: "justify" }}>
-              <b>La terapia psicológica</b> es una herramienta fundamental evaluada según tus necesidades personales. Está diseñada para que puedas desarrollar tu inteligencia emocional, manejar la ansiedad y superar obstáculos. <b>Este espacio es confidencial y seguro</b>, ideal para escucharte, orientarte y brindarte las herramientas necesarias para alcanzar tu bienestar emocional y mental.
-            </p>
-            <p className="text-muted" style={{ fontSize: "1.15rem", lineHeight: 1.8, marginBottom: "40px", textAlign: "justify" }}>
-              Agenda tu consulta presencial o virtual. Te guiaremos paso a paso en tu proceso de sanación y crecimiento personal.
-            </p>
-            <a href="/reservaciones" className="btn-primary" style={{ display: "inline-block", padding: "16px 32px", fontSize: "1.05rem", borderRadius: "8px" }}>Agendar tu cita</a>
+        <div>
+          {/* Eyebrow */}
+          <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "10px" }}>
+            <span style={{
+              fontSize: "0.78rem",
+              fontWeight: 700,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              color: "#111111",
+            }}>TU TIEMPO SÍ IMPORTA</span>
+            <div style={{ flex: 1, height: "1px", backgroundColor: "#111111", maxWidth: "80px" }} />
           </div>
-          
-          <div style={{ flex: "0 0 320px", display: "flex", flexDirection: "column", alignItems: "center", margin: "0 auto" }}>
-            <div style={{ width: "100%", aspectRatio: "9/16", borderRadius: "24px", overflow: "hidden", position: "relative", boxShadow: "0 20px 50px rgba(0,0,0,0.15)", border: "4px solid #fff" }}>
-              <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=800&q=80" alt="Consultas Psicológicas" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-              <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", backgroundColor: "#ff0050", width: "64px", height: "64px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", cursor: "pointer", boxShadow: "0 10px 20px rgba(255, 0, 80, 0.4)" }}>
-                <Play size={32} fill="currentColor" style={{ marginLeft: "4px" }} />
-              </div>
+
+          {/* Title + subtitle */}
+          <h2 style={{
+            fontSize: "clamp(2.8rem, 5vw, 4.5rem)",
+            fontWeight: 700,
+            letterSpacing: "-2px",
+            lineHeight: 1.05,
+            margin: "0 0 12px 0",
+            color: "#111111",
+          }}>Reservaciones</h2>
+          <p style={{ fontSize: "1rem", color: "#555", marginBottom: "56px" }}>
+            Agenda tu cita virtual de forma rápida y segura.
+          </p>
+
+          {/* 3 Steps */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "32px", marginBottom: "52px" }}>
+            {/* Step 1 */}
+            <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
+              <img src="/reservaciones/usuario.png" alt="Ingresa tus datos" style={{ width: "64px", height: "64px", flexShrink: 0 }} />
+              <span style={{ fontSize: "1.35rem", fontWeight: 500, color: "#111111" }}>Ingresa tus Datos</span>
             </div>
-            <p style={{ marginTop: "20px", fontSize: "0.95rem", color: "#6b7280", textAlign: "center", maxWidth: "280px" }}>
-              Te guiamos paso a paso desde cero hasta mejorar completamente tu bienestar.
-            </p>
+            {/* Step 2 */}
+            <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
+              <img src="/reservaciones/fecha.png" alt="Elige fecha y plan" style={{ width: "64px", height: "64px", flexShrink: 0 }} />
+              <span style={{ fontSize: "1.35rem", fontWeight: 500, color: "#111111" }}>Elige fecha, hora y Plan</span>
+            </div>
+            {/* Step 3 */}
+            <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
+              <img src="/reservaciones/check.png" alt="Realiza el pago" style={{ width: "64px", height: "64px", flexShrink: 0 }} />
+              <span style={{ fontSize: "1.35rem", fontWeight: 500, color: "#111111" }}>Realiza el pago y te verificamos</span>
+            </div>
           </div>
+
+          {/* CTA Button */}
+          <a href="/reservaciones" className="btn-reserva">
+            RESERVA AHORA
+            <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 8H19M19 8L12 1M19 8L12 15" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </a>
         </div>
       </FadeIn>
 

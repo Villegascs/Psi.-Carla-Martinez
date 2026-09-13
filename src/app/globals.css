@@ -181,6 +181,27 @@ button {
   transform: translateY(-2px);
 }
 
+.btn-reserva {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  background-color: #b08b6e;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 18px 44px;
+  border-radius: 16px;
+  text-decoration: none;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-reserva:hover {
+  background-color: #9a7659;
+  transform: translateY(-2px);
+}
+
 .card {
   background-color: var(--color-bg-primary);
   border-radius: var(--radius-lg);
