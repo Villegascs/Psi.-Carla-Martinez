@@ -27,11 +27,11 @@ export default function Home() {
 
       <div style={{ display: "flex", flexDirection: "column", gap: "240px", alignItems: "stretch", paddingTop: "140px", paddingBottom: "160px" }}>
 
-      {/* Reservaciones Section — separado 45px de la izquierda, foto a la derecha a futuro */}
+      {/* Reservaciones Section — separado 85px de la izquierda, foto a la derecha a futuro */}
       <FadeIn delay={200} direction="up" style={{
         width: "100vw",
         marginLeft: "calc(-50vw + 50%)",
-        paddingLeft: "45px",
+        paddingLeft: "85px",
         paddingRight: "24px",
         boxSizing: "border-box",
       }}>
