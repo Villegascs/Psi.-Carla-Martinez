@@ -251,7 +251,7 @@ export default function TalleresPage() {
   };
 
   return (
-    <div style={{ maxWidth: "1000px", margin: "0 auto", paddingBottom: "60px", paddingTop: "120px" }}>
+    <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "clamp(90px, 12vw, 130px) clamp(16px, 4vw, 24px) 60px", boxSizing: "border-box" }}>
       
       {viewState === "list" && (
         <>
@@ -301,7 +301,7 @@ export default function TalleresPage() {
       {viewState === "detail" && selectedWorkshop && (
         <div className="card" style={{ padding: 0, overflow: "hidden" }}>
           <img src={selectedWorkshop.image} alt={selectedWorkshop.title} style={{ width: "100%", height: "300px", objectFit: "cover" }} />
-          <div style={{ padding: "32px" }}>
+          <div style={{ padding: "clamp(20px, 4vw, 32px)" }}>
             <button 
               onClick={() => setViewState("list")}
               className="btn-secondary"
@@ -357,7 +357,7 @@ export default function TalleresPage() {
       )}
 
       {viewState === "form" && selectedWorkshop && (
-        <div className="card" style={{ maxWidth: "700px", margin: "0 auto", padding: "32px", position: "relative" }}>
+        <div className="card" style={{ maxWidth: "700px", margin: "0 auto", padding: "clamp(20px, 4vw, 32px)", position: "relative" }}>
           <button 
             onClick={() => setViewState("detail")}
             style={{ background: "none", border: "none", color: "var(--color-accent)", fontWeight: 600, cursor: "pointer", marginBottom: "16px", padding: 0 }}

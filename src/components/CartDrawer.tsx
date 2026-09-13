@@ -128,8 +128,8 @@ export default function CartDrawer() {
           onClick={() => setIsCartOpen(true)}
           style={{
             position: "fixed",
-            bottom: "32px",
-            right: "32px",
+            bottom: "clamp(16px, 4vw, 32px)",
+            right: "clamp(16px, 4vw, 32px)",
             backgroundColor: "#000",
             color: "#fff",
             border: "none",
@@ -196,10 +196,10 @@ export default function CartDrawer() {
             </div>
 
             {/* Main Content Area (2 columns) */}
-            <div style={{ display: "flex", flex: 1, overflow: "hidden", flexDirection: "row" }}>
+            <div className="cart-drawer-body" style={{ display: "flex", flex: 1, overflow: "hidden", flexDirection: "row" }}>
               
               {/* Left Column (Forms / Cart Items) */}
-              <div style={{ flex: 1, padding: "32px", overflowY: "auto" }}>
+              <div className="cart-drawer-content" style={{ flex: 1, padding: "32px", overflowY: "auto" }}>
                 
                 {checkoutStep === "CART" && (
                   items.length === 0 ? (
@@ -453,7 +453,7 @@ export default function CartDrawer() {
 
               {/* Right Column (Order Summary) */}
               {checkoutStep !== "SUCCESS" && items.length > 0 && (
-                <div style={{ width: "320px", backgroundColor: "#fff", borderLeft: "1px solid var(--color-border)", padding: "32px", display: "flex", flexDirection: "column" }}>
+                <div className="cart-drawer-summary" style={{ width: "320px", backgroundColor: "#fff", borderLeft: "1px solid var(--color-border)", padding: "32px", display: "flex", flexDirection: "column" }}>
                    <h3 style={{ fontSize: "1.2rem", fontWeight: 700, marginBottom: "24px" }}>Resumen del pedido</h3>
                    
                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "16px", color: "var(--color-text-secondary)", fontSize: "0.95rem" }}>

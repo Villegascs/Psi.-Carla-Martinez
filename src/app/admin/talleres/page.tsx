@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { storage } from "@/lib/firebase/client";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import * as XLSX from "xlsx";
-import { format, parse } from "date-fns";
+import { format, parse, isValid } from "date-fns";
 import { es } from "date-fns/locale";
 import { DatePicker } from "@/components/ui/DatePicker";
 
@@ -63,6 +63,39 @@ export default function AdminTalleres() {
   const [loadingParticipants, setLoadingParticipants] = useState(false);
   const [currentWorkshopName, setCurrentWorkshopName] = useState("");
 
+  const parseDateSafe = (dateStr?: string): Date | undefined => {
+    if (!dateStr || typeof dateStr !== "string") return undefined;
+    const trimmed = dateStr.trim();
+    if (!trimmed) return undefined;
+
+    // 1. Formatos comunes en español y estándar
+    const formats = [
+      "d 'de' MMMM",
+      "d 'de' MMMM yyyy",
+      "d 'de' MMMM 'de' yyyy",
+      "yyyy-MM-dd",
+      "dd/MM/yyyy",
+      "d/M/yyyy"
+    ];
+
+    for (const fmt of formats) {
+      try {
+        const d = parse(trimmed, fmt, new Date(), { locale: es });
+        if (isValid(d) && !isNaN(d.getTime())) return d;
+      } catch {}
+    }
+
+    // 2. Parseo nativo de Date (ISO, etc)
+    try {
+      const d = new Date(trimmed);
+      if (isValid(d) && !isNaN(d.getTime()) && d.getFullYear() > 2000) {
+        return d;
+      }
+    } catch {}
+
+    return undefined;
+  };
+
   const fetchWorkshops = async () => {
     setLoading(true);
     try {
@@ -84,7 +117,23 @@ export default function AdminTalleres() {
   const handleOpenModal = (workshop: Workshop | null = null) => {
     setEditingWorkshop(workshop);
     if (workshop) {
-      setFormData(workshop);
+      setFormData({
+        ...workshop,
+        title: workshop.title || "",
+        price: workshop.price || "20€",
+        availableSpots: typeof workshop.availableSpots === "number" ? workshop.availableSpots : 10,
+        type: workshop.type || "Presencial",
+        virtualLink: workshop.virtualLink || "",
+        status: workshop.status || "Publicado",
+        image: workshop.image || "",
+        date: workshop.date || "",
+        description: workshop.description || "",
+        points: Array.isArray(workshop.points)
+          ? (workshop.points as any[]).join("\n")
+          : typeof workshop.points === "string"
+          ? workshop.points
+          : ""
+      });
     } else {
       setFormData({
         title: "",
@@ -265,21 +314,26 @@ export default function AdminTalleres() {
               <div className="responsive-grid" style={{ gap: "16px" }}>
                 <div>
                   <label style={{ display: "block", marginBottom: "8px", fontWeight: 600, fontSize: "0.9rem" }}>Nombre del Taller</label>
-                  <input required type="text" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} style={{ width: "100%", padding: "10px", border: "1px solid #d1d5db", borderRadius: "6px" }} />
+                  <input required type="text" value={formData.title || ""} onChange={e => setFormData({...formData, title: e.target.value})} style={{ width: "100%", padding: "10px", border: "1px solid #d1d5db", borderRadius: "6px" }} />
                 </div>
                 <div>
                   <label style={{ display: "block", marginBottom: "8px", fontWeight: 600, fontSize: "0.9rem" }}>Fecha</label>
                   <DatePicker 
-                    date={formData.date ? parse(formData.date, "d 'de' MMMM", new Date(), { locale: es }) : undefined}
+                    date={parseDateSafe(formData.date)}
                     setDate={(date) => setFormData({...formData, date: date ? format(date, "d 'de' MMMM", { locale: es }) : ""})}
-                    placeholder="Seleccionar Fecha"
+                    placeholder={formData.date || "Seleccionar Fecha"}
                   />
+                  {formData.date && !parseDateSafe(formData.date) && (
+                    <p style={{ fontSize: "0.75rem", color: "#6b7280", marginTop: "4px" }}>
+                      Texto actual: <strong>{formData.date}</strong> (puedes seleccionar una nueva fecha en el calendario)
+                    </p>
+                  )}
                 </div>
               </div>
               
               <div>
                 <label style={{ display: "block", marginBottom: "8px", fontWeight: 600, fontSize: "0.9rem" }}>Descripción Larga</label>
-                <textarea required value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} style={{ width: "100%", padding: "10px", border: "1px solid #d1d5db", borderRadius: "6px", minHeight: "100px" }} />
+                <textarea required value={formData.description || ""} onChange={e => setFormData({...formData, description: e.target.value})} style={{ width: "100%", padding: "10px", border: "1px solid #d1d5db", borderRadius: "6px", minHeight: "100px" }} />
               </div>
 
               <div>
@@ -290,11 +344,11 @@ export default function AdminTalleres() {
               <div className="responsive-grid" style={{ gap: "16px" }}>
                 <div>
                   <label style={{ display: "block", marginBottom: "8px", fontWeight: 600, fontSize: "0.9rem" }}>Cupos Disponibles</label>
-                  <input required type="number" min="0" value={formData.availableSpots} onChange={e => setFormData({...formData, availableSpots: parseInt(e.target.value)})} style={{ width: "100%", padding: "10px", border: "1px solid #d1d5db", borderRadius: "6px" }} />
+                  <input required type="number" min="0" value={formData.availableSpots ?? 0} onChange={e => setFormData({...formData, availableSpots: parseInt(e.target.value) || 0})} style={{ width: "100%", padding: "10px", border: "1px solid #d1d5db", borderRadius: "6px" }} />
                 </div>
                 <div>
                   <label style={{ display: "block", marginBottom: "8px", fontWeight: 600, fontSize: "0.9rem" }}>Precio (Ej: 20€)</label>
-                  <input required type="text" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} style={{ width: "100%", padding: "10px", border: "1px solid #d1d5db", borderRadius: "6px" }} />
+                  <input required type="text" value={formData.price || ""} onChange={e => setFormData({...formData, price: e.target.value})} style={{ width: "100%", padding: "10px", border: "1px solid #d1d5db", borderRadius: "6px" }} />
                 </div>
               </div>
 
@@ -308,7 +362,7 @@ export default function AdminTalleres() {
                 </div>
                 <div>
                   <label style={{ display: "block", marginBottom: "8px", fontWeight: 600, fontSize: "0.9rem" }}>Estado</label>
-                  <select required value={formData.status} onChange={e => setFormData({...formData, status: e.target.value as any})} style={{ width: "100%", padding: "10px", border: "1px solid #d1d5db", borderRadius: "6px" }}>
+                  <select required value={formData.status || "Publicado"} onChange={e => setFormData({...formData, status: e.target.value as any})} style={{ width: "100%", padding: "10px", border: "1px solid #d1d5db", borderRadius: "6px" }}>
                     <option value="Publicado">Publicado</option>
                     <option value="Oculto">Oculto</option>
                   </select>

@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/Calendar";
-import { format } from "date-fns";
+import { format, isValid } from "date-fns";
 import { es } from "date-fns/locale";
 
 interface DatePickerProps {
@@ -16,6 +16,8 @@ interface DatePickerProps {
 export function DatePicker({ date, setDate, placeholder = "Seleccionar fecha", className = "" }: DatePickerProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const popoverRef = React.useRef<HTMLDivElement>(null);
+
+  const safeDate = date && isValid(date) && !isNaN(date.getTime()) ? date : undefined;
 
   // Close popover when clicking outside
   React.useEffect(() => {
@@ -43,21 +45,21 @@ export function DatePicker({ date, setDate, placeholder = "Seleccionar fecha", c
           border: "1px solid #d1d5db",
           borderRadius: "6px",
           fontSize: "0.95rem",
-          color: date ? "#000" : "#6b7280",
+          color: safeDate ? "#000" : "#6b7280",
           cursor: "pointer",
           textAlign: "left",
           transition: "border-color 0.2s"
         }}
       >
         <CalendarIcon style={{ width: "16px", height: "16px", marginRight: "8px", opacity: 0.7 }} />
-        {date ? format(date, "PPP", { locale: es }) : placeholder}
+        {safeDate ? format(safeDate, "PPP", { locale: es }) : placeholder}
       </button>
 
       {isOpen && (
         <div className="popover-content">
           <Calendar
             mode="single"
-            selected={date}
+            selected={safeDate}
             onSelect={(day) => {
               setDate(day);
               setIsOpen(false);
