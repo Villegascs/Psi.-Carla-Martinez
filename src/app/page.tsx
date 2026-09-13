@@ -1,5 +1,5 @@
 import FadeIn from "@/components/FadeIn";
-import { Play } from "lucide-react";
+import { Play, Laptop, Users } from "lucide-react";
 
 export default function Home() {
   return (
@@ -151,7 +151,7 @@ export default function Home() {
               Formación Practica para tu Desarrollo Personal y Profesional
             </p>
 
-            {/* 2 Cards: Virtuales y Presenciales */}
+            {/* 2 Cards: Virtuales y Presenciales — Diseñadas con HTML/CSS prémium */}
             <div style={{
               display: "flex",
               gap: "24px",
@@ -159,32 +159,21 @@ export default function Home() {
               marginBottom: "44px",
               maxWidth: "520px",
             }}>
-              <div style={{ flex: "1 1 0", minWidth: 0 }}>
-                <img
-                  src="/talleres/virtuales.png"
-                  alt="Talleres Virtuales - Aprende desde donde estés"
-                  style={{
-                    width: "100%",
-                    height: "auto",
-                    display: "block",
-                    borderRadius: "16px",
-                    boxShadow: "0 4px 20px rgba(0,0,0,0.03)",
-                  }}
-                />
-              </div>
-              <div style={{ flex: "1 1 0", minWidth: 0 }}>
-                <img
-                  src="/talleres/presenciales.png"
-                  alt="Talleres Presenciales - Vive la experiencia en persona"
-                  style={{
-                    width: "100%",
-                    height: "auto",
-                    display: "block",
-                    borderRadius: "16px",
-                    boxShadow: "0 4px 20px rgba(0,0,0,0.03)",
-                  }}
-                />
-              </div>
+              <a href="/talleres" className="card-taller">
+                <div className="card-taller-icon-wrapper">
+                  <Laptop size={32} strokeWidth={1.9} />
+                </div>
+                <h3 className="card-taller-title">Virtuales</h3>
+                <p className="card-taller-desc">Aprende desde donde estés</p>
+              </a>
+
+              <a href="/talleres" className="card-taller">
+                <div className="card-taller-icon-wrapper">
+                  <Users size={32} strokeWidth={1.9} />
+                </div>
+                <h3 className="card-taller-title">Presenciales</h3>
+                <p className="card-taller-desc">Vive la experiencia en persona</p>
+              </a>
             </div>
 
             {/* CTA Button */}
