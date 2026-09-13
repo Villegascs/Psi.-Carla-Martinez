@@ -173,13 +173,14 @@ button {
 }
 
 .hero-cover-img {
-  width: 115% !important;
+  width: 100% !important;
   max-width: none !important;
   height: auto !important;
   display: block !important;
-  object-fit: cover !important;
-  margin: 0 0 0 -7.5% !important;
+  object-fit: contain !important;
+  margin: 0 !important;
   padding: 0 !important;
+  mix-blend-mode: multiply; /* MAGIA: hace que el fondo blanco de la foto se vuelva transparente y se fusione perfecto con la web */
 }
 
 @media (max-width: 768px) {
