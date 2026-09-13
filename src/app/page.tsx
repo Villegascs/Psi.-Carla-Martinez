@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div style={{ width: "100%" }}>
       {/* Hero Section — Portada Adaptable Desktop / Mobile (sin recortes) */}
-      <div style={{ 
+      <div className="hero-cover-container" style={{ 
         /* Rompe el padding del container para ancho completo */
         width: "100vw",
         marginLeft: "calc(-50vw + 50%)",
@@ -20,6 +20,7 @@ export default function Home() {
           <img
             src="/Portada.png"
             alt="Dra. Carla Martinez — Portada"
+            className="hero-cover-img"
             style={{
               width: "100%",
               height: "auto",
@@ -29,10 +30,10 @@ export default function Home() {
         </picture>
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "clamp(80px, 12vw, 220px)", alignItems: "stretch", paddingTop: "clamp(60px, 8vw, 140px)", paddingBottom: "clamp(80px, 12vw, 160px)" }}>
+      <div className="home-sections-flow">
 
       {/* Reservaciones Section — separado 85px de la izquierda, foto a la derecha a futuro */}
-      <FadeIn delay={200} direction="up" className="section-reservaciones-padding" style={{
+      <FadeIn delay={0} direction="up" className="section-reservaciones-padding" style={{
         width: "100vw",
         marginLeft: "calc(-50vw + 50%)",
         boxSizing: "border-box",

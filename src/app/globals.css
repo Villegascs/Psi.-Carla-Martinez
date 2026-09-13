@@ -162,6 +162,39 @@ button {
   }
 }
 
+/* Flujo de Secciones de la Página de Inicio */
+.home-sections-flow {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(80px, 12vw, 220px);
+  align-items: stretch;
+  padding-top: clamp(60px, 8vw, 140px);
+  padding-bottom: clamp(80px, 12vw, 160px);
+}
+
+@media (max-width: 768px) {
+  .hero-cover-container {
+    width: 100vw;
+    line-height: 0;
+    overflow: visible;
+  }
+
+  .hero-cover-img {
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+  }
+
+  .home-sections-flow {
+    padding-top: 0px !important;
+    gap: 48px !important;
+  }
+
+  .section-reservaciones-padding {
+    margin-top: -20px !important;
+  }
+}
+
 /* Responsive: Tablet y pantallas medianas (<= 960px) */
 @media (max-width: 960px) {
   .section-reservaciones-padding,
