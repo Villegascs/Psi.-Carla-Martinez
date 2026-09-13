@@ -172,23 +172,23 @@ button {
   padding-bottom: clamp(80px, 12vw, 160px);
 }
 
+.hero-cover-img {
+  width: 100% !important;
+  max-width: none !important;
+  height: auto !important;
+  display: block !important;
+  object-fit: cover !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: scale(1.06); /* Oculta bordes blancos nativos de la foto */
+  transform-origin: center center;
+}
+
 @media (max-width: 768px) {
   .hero-cover-container {
     width: 100vw;
     line-height: 0;
     overflow: visible;
-  }
-
-  .hero-cover-img {
-    width: 100% !important;
-    max-width: none !important;
-    height: auto !important;
-    display: block !important;
-    object-fit: cover !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    transform: scale(1.06); /* Ligeramente más grande para ocultar bordes blancos de la foto original */
-    transform-origin: center center;
   }
 
   .home-sections-flow {
