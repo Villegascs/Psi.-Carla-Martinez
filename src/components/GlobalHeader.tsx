@@ -78,9 +78,8 @@ export default function GlobalHeader() {
           transform: "translateY(0)",
           transition: "transform 0.28s cubic-bezier(0.4, 0, 0.2, 1)",
           willChange: "transform",
-          backgroundColor: "rgba(255, 255, 255, 0.85)",
-          backdropFilter: "blur(12px)",
-          borderBottom: "1px solid rgba(0, 0, 0, 0.05)",
+          backgroundColor: "transparent",
+          borderBottom: "none",
         }}
       >
         <div style={{
