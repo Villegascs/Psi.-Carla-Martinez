@@ -1,6 +1,6 @@
 import FadeIn from "@/components/FadeIn";
 import { Mail, Phone, MapPin } from "lucide-react";
-import { FaInstagram, FaFacebook, FaYoutube } from "react-icons/fa";
+import { FaInstagram, FaYoutube } from "react-icons/fa";
 
 export default function ContactoPage() {
   return (
@@ -36,7 +36,7 @@ export default function ContactoPage() {
                 </div>
                 <div>
                   <p style={{ fontSize: "0.9rem", color: "#6b7280", marginBottom: "4px", fontWeight: 600 }}>Teléfono / WhatsApp</p>
-                  <p style={{ fontSize: "1.1rem", fontWeight: 500 }}>+58 412 123 4567</p>
+                  <p style={{ fontSize: "1.1rem", fontWeight: 500 }}>+58 0414-4083780</p>
                 </div>
               </div>
 
@@ -46,7 +46,7 @@ export default function ContactoPage() {
                 </div>
                 <div>
                   <p style={{ fontSize: "0.9rem", color: "#6b7280", marginBottom: "4px", fontWeight: 600 }}>Correo Electrónico</p>
-                  <p style={{ fontSize: "1.1rem", fontWeight: 500 }}>contacto@carlamartinez.com</p>
+                  <p style={{ fontSize: "1.1rem", fontWeight: 500 }}>webcarlamartinez@gmail.com</p>
                 </div>
               </div>
 
@@ -56,7 +56,7 @@ export default function ContactoPage() {
                 </div>
                 <div>
                   <p style={{ fontSize: "0.9rem", color: "#6b7280", marginBottom: "4px", fontWeight: 600 }}>Ubicación</p>
-                  <p style={{ fontSize: "1.1rem", fontWeight: 500 }}>Caracas, Venezuela (Consultas online disponibles)</p>
+                  <p style={{ fontSize: "1.1rem", fontWeight: 500 }}>Valencia, Estado Carabobo, Venezuela</p>
                 </div>
               </div>
 
@@ -66,10 +66,7 @@ export default function ContactoPage() {
               <a href="https://www.instagram.com/carla___martinez/" target="_blank" rel="noopener noreferrer" className="social-icon instagram-icon">
                 <FaInstagram size={24} />
               </a>
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="social-icon facebook-icon">
-                <FaFacebook size={24} />
-              </a>
-              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="social-icon youtube-icon">
+              <a href="https://youtube.com/@carla___martinez?si=aOGZwa25JQls-CDb" target="_blank" rel="noopener noreferrer" className="social-icon youtube-icon">
                 <FaYoutube size={24} />
               </a>
             </div>
