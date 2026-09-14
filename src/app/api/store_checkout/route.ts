@@ -12,21 +12,8 @@ export async function POST(req: Request) {
     
     // Parse file if any
     const file = formData.get('file') as File | null;
-    let proofUrl = "";
-
-    if (file) {
-      const storage = getAdminStorage();
-      const bucket = storage.bucket();
-      const fileName = `store_proofs/${Date.now()}_${file.name}`;
-      const fileRef = bucket.file(fileName);
-      
-      const buffer = Buffer.from(await file.arrayBuffer());
-      await fileRef.save(buffer, {
-        metadata: { contentType: file.type }
-      });
-
-      proofUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(fileName)}?alt=media`;
-    }
+    // No longer saving to Firebase Storage, will send directly to Telegram
+    let proofFile: File | null = file;
 
     const adminDb = getAdminDb();
     
@@ -50,7 +37,7 @@ export async function POST(req: Request) {
       ...orderData,
       items: enrichedItems,
       id: newOrderRef.id,
-      proofUrl,
+      hasProofFile: !!proofFile,
       createdAt: new Date().toISOString(),
       status: "Pendiente"
     };
@@ -90,17 +77,22 @@ export async function POST(req: Request) {
         })
       });
 
-      // Send photo if proof exists
-      if (proofUrl) {
+      // Send photo if proof exists directly via multipart/form-data
+      if (proofFile) {
         const photoUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`;
+        const photoData = new FormData();
+        photoData.append('chat_id', TELEGRAM_CHAT_ID);
+        
+        // Convert File to Blob to prevent stream deadlock in Node.js fetch
+        const buffer = await proofFile.arrayBuffer();
+        const photoBlob = new Blob([buffer], { type: proofFile.type });
+        photoData.append('photo', photoBlob, proofFile.name || "proof.jpg");
+        
+        photoData.append('caption', `Comprobante de Pedido: ${orderData.customerName}`);
+        
         await fetch(photoUrl, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            chat_id: TELEGRAM_CHAT_ID,
-            photo: proofUrl,
-            caption: `Comprobante de Pedido: ${orderData.customerName}`
-          })
+          body: photoData
         });
       }
     }
