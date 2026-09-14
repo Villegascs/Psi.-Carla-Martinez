@@ -51,48 +51,51 @@ export async function POST(req: Request) {
     if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
       const itemsList = orderData.items.map((i: any) => `${i.quantity}x ${i.name} ${i.size ? `(Talla: ${i.size})` : ''} ${i.color ? `(Color: ${i.color})` : ''}`).join('\n');
       
-      const message = `🛍 *NUEVO PEDIDO DE TIENDA*\n\n` +
-        `*Cliente:* ${orderData.customerName}\n` +
-        `*Teléfono:* ${orderData.customerPhone}\n` +
-        `*Envío:* ${orderData.deliveryMethod === 'Pickup' ? 'Retiro en Persona' : orderData.address}\n\n` +
-        `*Productos:*\n${itemsList}\n\n` +
-        `*TOTAL:* ${orderData.total}€\n\n` +
-        `*Método de Pago:* ${orderData.paymentMethod.toUpperCase()}`;
+      const message = `🛍 <b>NUEVO PEDIDO DE TIENDA</b>\n\n` +
+        `<b>Cliente:</b> ${orderData.customerName}\n` +
+        `<b>Teléfono:</b> ${orderData.customerPhone}\n` +
+        `<b>Envío:</b> ${orderData.deliveryMethod === 'Pickup' ? 'Retiro en Persona' : orderData.address}\n\n` +
+        `<b>Productos:</b>\n${itemsList}\n\n` +
+        `<b>TOTAL:</b> ${orderData.total}€\n\n` +
+        `<b>Método de Pago:</b> ${orderData.paymentMethod.toUpperCase()}`;
 
-      // Send text
-      const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-      await fetch(telegramUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: TELEGRAM_CHAT_ID,
-          text: message,
-          parse_mode: 'Markdown',
-          reply_markup: {
-            inline_keyboard: [
-              [{ text: '✅ Aprobar Pago', callback_data: `store_approve_${newOrderRef.id}` }],
-              [{ text: '❌ Rechazar Pago', callback_data: `store_reject_${newOrderRef.id}` }]
-            ]
-          }
-        })
-      });
+      const replyMarkup = {
+        inline_keyboard: [
+          [{ text: '✅ Aprobar Pago', callback_data: `store_approve_${newOrderRef.id}` }],
+          [{ text: '❌ Rechazar Pago', callback_data: `store_reject_${newOrderRef.id}` }]
+        ]
+      };
 
-      // Send photo if proof exists directly via multipart/form-data
       if (proofFile) {
+        // Send single message with photo, caption, and buttons
         const photoUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`;
         const photoData = new FormData();
         photoData.append('chat_id', TELEGRAM_CHAT_ID);
         
-        // Convert File to Blob to prevent stream deadlock in Node.js fetch
         const buffer = await proofFile.arrayBuffer();
         const photoBlob = new Blob([buffer], { type: proofFile.type });
         photoData.append('photo', photoBlob, proofFile.name || "proof.jpg");
         
-        photoData.append('caption', `Comprobante de Pedido: ${orderData.customerName}`);
+        photoData.append('caption', message);
+        photoData.append('parse_mode', 'HTML');
+        photoData.append('reply_markup', JSON.stringify(replyMarkup));
         
         await fetch(photoUrl, {
           method: 'POST',
           body: photoData
+        });
+      } else {
+        // Send text only (e.g. for cash payments)
+        const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+        await fetch(telegramUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: TELEGRAM_CHAT_ID,
+            text: message,
+            parse_mode: 'HTML',
+            reply_markup: replyMarkup
+          })
         });
       }
     }
