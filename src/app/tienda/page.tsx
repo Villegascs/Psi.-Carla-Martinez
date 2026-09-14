@@ -121,7 +121,7 @@ export default function TiendaPage() {
                 </div>
                 <h3 style={{ fontSize: "1.2rem", fontWeight: 600 }}>{product.name}</h3>
                 <p style={{ fontSize: "1.25rem", fontWeight: 700, margin: "8px 0 16px 0", color: "var(--color-accent)" }}>
-                  {product.price}
+                  {product.price}€
                 </p>
                 <button 
                   className="btn-primary" 
@@ -158,7 +158,7 @@ export default function TiendaPage() {
                       </div>
                       <h3 style={{ fontSize: "1.2rem", fontWeight: 600 }}>{product.name}</h3>
                       <p style={{ fontSize: "1.25rem", fontWeight: 700, margin: "8px 0 16px 0", color: "var(--color-accent)" }}>
-                        {product.price}
+                        {product.price}€
                       </p>
                       <button className="btn-primary" style={{ width: "100%", marginTop: "auto" }} onClick={(e) => { e.stopPropagation(); openProductModal(product); }}>
                         Ver Detalles
@@ -191,7 +191,7 @@ export default function TiendaPage() {
                       </div>
                       <h3 style={{ fontSize: "1.2rem", fontWeight: 600 }}>{product.name}</h3>
                       <p style={{ fontSize: "1.25rem", fontWeight: 700, margin: "8px 0 16px 0", color: "var(--color-accent)" }}>
-                        {product.price}
+                        {product.price}€
                       </p>
                       <button className="btn-primary" style={{ width: "100%", marginTop: "auto" }} onClick={(e) => { e.stopPropagation(); openProductModal(product); }}>
                         Ver Detalles
@@ -275,7 +275,7 @@ export default function TiendaPage() {
             <div style={{ padding: "40px 32px", overflowY: "auto", display: "flex", flexDirection: "column" }}>
               <span style={{ fontSize: "0.85rem", textTransform: "uppercase", letterSpacing: "1px", color: "var(--color-text-secondary)", fontWeight: 600, marginBottom: "8px" }}>Tienda Oficial</span>
               <h2 style={{ fontSize: "2rem", fontWeight: 800, marginBottom: "12px", lineHeight: 1.1 }}>{selectedProduct.name}</h2>
-              <p style={{ fontSize: "1.5rem", fontWeight: 700, color: "var(--color-accent)", marginBottom: "24px" }}>{selectedProduct.price}</p>
+              <p style={{ fontSize: "1.5rem", fontWeight: 700, color: "var(--color-accent)", marginBottom: "24px" }}>{selectedProduct.price}€</p>
               
               <div style={{ marginBottom: "32px", paddingBottom: "24px", borderBottom: "1px solid var(--color-border)" }}>
                 <p style={{ color: "var(--color-text-secondary)", lineHeight: "1.6", fontSize: "1rem" }}>{selectedProduct.description}</p>
