@@ -5,14 +5,31 @@ export async function POST(request: Request) {
   try {
     const { ticketId, scannedBy } = await request.json();
 
-    if (!ticketId || !ticketId.includes("-")) {
-      return NextResponse.json({ success: false, error: "No se proporcionó un ID de ticket válido." }, { status: 400 });
+    if (!ticketId) {
+      return NextResponse.json({ success: false, error: "No se proporcionó un ID de ticket." }, { status: 400 });
     }
 
-    // El ticketId viene en formato: orderId-participantIndex (ej. XyZ123-0)
-    const parts = ticketId.split("-");
-    const orderId = parts[0];
-    const participantIndex = parseInt(parts[1]);
+    let orderId = "";
+    let participantIndex = 0;
+
+    // Handle both JSON format (from Telegram webhook) and raw string format
+    try {
+      if (ticketId.trim().startsWith('{')) {
+        const parsed = JSON.parse(ticketId);
+        orderId = parsed.orderId;
+        participantIndex = parseInt(parsed.participantIndex);
+      } else {
+        const parts = ticketId.split("-");
+        orderId = parts[0];
+        participantIndex = parseInt(parts[1]);
+      }
+    } catch (e) {
+      return NextResponse.json({ success: false, error: "El formato del código QR es inválido." }, { status: 400 });
+    }
+
+    if (!orderId || isNaN(participantIndex)) {
+      return NextResponse.json({ success: false, error: "Datos del código QR corruptos." }, { status: 400 });
+    }
 
     const adminDb = getAdminDb();
     const orderRef = adminDb.collection('tickets').doc(orderId);
