@@ -354,7 +354,8 @@ export default function CartDrawer() {
                             style={{ 
                               width: "100%", 
                               padding: "10px", 
-                              appearance: "none", 
+                              appearance: "none",
+                              color: "var(--color-text)", 
                               WebkitAppearance: "none", 
                               backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E\")", 
                               backgroundRepeat: "no-repeat", 
@@ -433,7 +434,7 @@ export default function CartDrawer() {
                           <div style={{ position: "relative" }}>
                             <select
                               className="input-field"
-                              style={{ appearance: "none", WebkitAppearance: "none", paddingRight: "40px", backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E\")", backgroundRepeat: "no-repeat", backgroundPosition: "right 14px center" }}
+                              style={{ appearance: "none", color: "var(--color-text)", WebkitAppearance: "none", paddingRight: "40px", backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E\")", backgroundRepeat: "no-repeat", backgroundPosition: "right 14px center" }}
                               value={contactData.deliveryZone}
                               onChange={e => setContactData({...contactData, deliveryZone: e.target.value})}
                             >
@@ -525,7 +526,7 @@ export default function CartDrawer() {
                             className="input-field"
                             value={paymentData.bank}
                             onChange={e => setPaymentData({...paymentData, bank: e.target.value})}
-                            style={{ appearance: "none", WebkitAppearance: "none", paddingRight: "40px", backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E\")", backgroundRepeat: "no-repeat", backgroundPosition: "right 14px center" }}
+                            style={{ appearance: "none", color: "var(--color-text)", WebkitAppearance: "none", paddingRight: "40px", backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E\")", backgroundRepeat: "no-repeat", backgroundPosition: "right 14px center" }}
                           >
                             <option value="">Selecciona tu banco de origen</option>
                             <option value="Banesco (0134)">Banesco (0134)</option>
@@ -555,7 +556,8 @@ export default function CartDrawer() {
                               style={{ 
                                 width: "100%",
                                 padding: "10px", 
-                                appearance: "none", 
+                                appearance: "none",
+                              color: "var(--color-text)", 
                                 WebkitAppearance: "none", 
                                 backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E\")", 
                                 backgroundRepeat: "no-repeat", 
