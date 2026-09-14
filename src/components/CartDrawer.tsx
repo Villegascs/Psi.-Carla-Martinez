@@ -21,6 +21,17 @@ export default function CartDrawer() {
       .catch(console.error);
   }, []);
 
+  useEffect(() => {
+    if (isCartOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isCartOpen]);
+
   // Checkout steps: CART -> CONTACT -> PAYMENT -> SUCCESS
   const [checkoutStep, setCheckoutStep] = useState<"CART" | "CONTACT" | "PAYMENT" | "SUCCESS">("CART");
   
