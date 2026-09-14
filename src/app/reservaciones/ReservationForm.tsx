@@ -454,16 +454,16 @@ export default function ReservationForm() {
             <div style={{ backgroundColor: "var(--color-bg-primary)", padding: "16px", borderRadius: "8px", border: "1px solid var(--color-border)" }}>
               <div style={{ marginBottom: "16px", fontSize: "0.9rem", display: "flex", flexDirection: "column", gap: "8px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <p style={{ margin: 0 }}><strong>Banco:</strong> Banesco (0134)</p>
-                  <CopyButton text="0134" />
+                  <p style={{ margin: 0 }}><strong>Banco:</strong> Banco de Venezuela (0102)</p>
+                  <CopyButton text="0102" />
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <p style={{ margin: 0 }}><strong>Cédula:</strong> V-12345678</p>
-                  <CopyButton text="V-12345678" />
+                  <p style={{ margin: 0 }}><strong>Cédula:</strong> V-20383871</p>
+                  <CopyButton text="V-20383871" />
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <p style={{ margin: 0 }}><strong>Teléfono:</strong> 0414-1234567</p>
-                  <CopyButton text="04141234567" />
+                  <p style={{ margin: 0 }}><strong>Teléfono:</strong> 0424-4115237</p>
+                  <CopyButton text="04244115237" />
                 </div>
               </div>
               <div className="form-group" style={{ marginBottom: "12px" }}>

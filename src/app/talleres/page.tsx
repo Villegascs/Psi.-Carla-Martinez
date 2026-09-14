@@ -505,9 +505,9 @@ export default function TalleresPage() {
                     
                     {paymentMethod === "pago_movil" && (
                       <>
-                        <CopyableText label="Banco" text="Banesco (0134)" />
-                        <CopyableText label="Cédula de Identidad" text="V-25417859" />
-                        <CopyableText label="Teléfono" text="04144083780" />
+                        <CopyableText label="Banco" text="Banco de Venezuela (0102)" />
+                        <CopyableText label="Cédula de Identidad" text="V-20383871" />
+                        <CopyableText label="Teléfono" text="04244115237" />
                       </>
                     )}
                     

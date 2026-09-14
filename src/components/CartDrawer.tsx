@@ -343,16 +343,16 @@ export default function CartDrawer() {
                         </div>
                         
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
-                          <p style={{ fontSize: "0.9rem", margin: 0 }}>Banco: Banesco (0134)</p>
-                          <CopyButton text="0134" />
+                          <p style={{ fontSize: "0.9rem", margin: 0 }}>Banco: Banco de Venezuela (0102)</p>
+                          <CopyButton text="0102" />
                         </div>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
-                          <p style={{ fontSize: "0.9rem", margin: 0 }}>Teléfono: 0414-4083780</p>
-                          <CopyButton text="04144083780" />
+                          <p style={{ fontSize: "0.9rem", margin: 0 }}>Teléfono: 0424-4115237</p>
+                          <CopyButton text="04244115237" />
                         </div>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-                          <p style={{ fontSize: "0.9rem", margin: 0 }}>Cédula: V-26345678</p>
-                          <CopyButton text="26345678" />
+                          <p style={{ fontSize: "0.9rem", margin: 0 }}>Cédula: V-20383871</p>
+                          <CopyButton text="20383871" />
                         </div>
                         
                         <select required className="input-field" value={paymentData.bank} onChange={e => setPaymentData({...paymentData, bank: e.target.value})} style={{ marginBottom: "8px" }}>
