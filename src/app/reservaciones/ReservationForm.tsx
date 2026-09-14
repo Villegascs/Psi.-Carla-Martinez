@@ -297,7 +297,7 @@ export default function ReservationForm() {
               <select className="input-field" style={{ width: "80px", padding: "10px" }} value={contactData.patientIdType} onChange={e => setContactData({...contactData, patientIdType: e.target.value})}>
                 <option value="V">V</option><option value="E">E</option><option value="J">J</option><option value="G">G</option><option value="P">P</option>
               </select>
-              <input type="text" className="input-field" style={{ flex: 1 }} placeholder="Solo números" value={contactData.patientId} onChange={e => setContactData({...contactData, patientId: e.target.value.replace(/\D/g, '')})} />
+              <input type="text" inputMode="numeric" pattern="[0-9]*" className="input-field" style={{ flex: 1 }} placeholder="Solo números" value={contactData.patientId} onChange={e => setContactData({...contactData, patientId: e.target.value.replace(/\D/g, '')})} />
             </div>
           </div>
 
@@ -309,7 +309,7 @@ export default function ReservationForm() {
           <div className="responsive-grid">
             <div className="form-group" style={{ marginBottom: 0 }}>
               <label className="form-label">Teléfono (WhatsApp)</label>
-              <input type="tel" className="input-field" placeholder="Solo números" value={contactData.patientPhone} onChange={e => setContactData({...contactData, patientPhone: e.target.value.replace(/\D/g, '')})} />
+              <input type="tel" inputMode="numeric" pattern="[0-9]*" className="input-field" placeholder="Solo números" value={contactData.patientPhone} onChange={e => setContactData({...contactData, patientPhone: e.target.value.replace(/\D/g, '')})} />
             </div>
             <div className="form-group" style={{ marginBottom: 0 }}>
               <label className="form-label">Fecha de Nacimiento</label>

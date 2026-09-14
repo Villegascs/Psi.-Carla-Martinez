@@ -361,7 +361,9 @@ export default function CartDrawer() {
                           <option value="P">P</option>
                         </select>
                         <input 
-                          type="text" 
+                          type="text"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
                           className="input-field" 
                           style={{ flex: 1 }}
                           placeholder="Solo números"
@@ -376,7 +378,7 @@ export default function CartDrawer() {
                     </div>
                     <div className="form-group" style={{ marginBottom: 0 }}>
                       <label className="form-label" style={{ fontSize: "0.85rem" }}>Teléfono (WhatsApp)</label>
-                      <input type="tel" className="input-field" placeholder="Solo números" value={contactData.customerPhone} onChange={e => setContactData({...contactData, customerPhone: e.target.value.replace(/\D/g, '')})} />
+                      <input type="tel" inputMode="numeric" pattern="[0-9]*" className="input-field" placeholder="Solo números" value={contactData.customerPhone} onChange={e => setContactData({...contactData, customerPhone: e.target.value.replace(/\D/g, '')})} />
                     </div>
                     <div className="form-group" style={{ marginBottom: 0 }}>
                       <label className="form-label" style={{ fontSize: "0.85rem" }}>Método de Entrega</label>
