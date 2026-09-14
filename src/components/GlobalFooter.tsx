@@ -15,7 +15,7 @@ export default function GlobalFooter() {
     <>
       <style>{`
         .footer-root {
-          background: linear-gradient(160deg, #fdfaf7 0%, #faf5ef 60%, #fdf9f5 100%);
+          background: #ffffff;
           color: #3d2b1f;
           padding: 72px 24px 0 24px;
           margin-top: auto;
@@ -52,7 +52,7 @@ export default function GlobalFooter() {
 
         .footer-grid {
           display: grid;
-          grid-template-columns: 1.6fr 1fr 1fr;
+          grid-template-columns: 2fr 1fr;
           gap: 60px;
           padding-bottom: 56px;
           border-bottom: 1px solid rgba(176, 139, 110, 0.2);
@@ -107,18 +107,14 @@ export default function GlobalFooter() {
         .footer-social-btn {
           display: flex;
           align-items: center;
-          gap: 8px;
-          padding: 9px 16px 9px 12px;
-          border-radius: 50px;
+          justify-content: center;
+          width: 44px;
+          height: 44px;
+          border-radius: 50%;
           border: 1px solid rgba(176, 139, 110, 0.4);
           background: rgba(176, 139, 110, 0.07);
           color: #6b4c38;
-          font-size: 0.78rem;
-          font-weight: 600;
-          letter-spacing: 0.05em;
-          text-decoration: none;
           transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-          white-space: nowrap;
         }
 
         .footer-social-btn:hover {
@@ -330,8 +326,7 @@ export default function GlobalFooter() {
                   className="footer-social-btn"
                   aria-label="Instagram de Carla Martinez"
                 >
-                  <FaInstagram size={15} />
-                  Instagram
+                  <FaInstagram size={18} />
                 </a>
                 <a
                   href="https://youtube.com/@carla___martinez?si=aOGZwa25JQls-CDb"
@@ -340,8 +335,7 @@ export default function GlobalFooter() {
                   className="footer-social-btn"
                   aria-label="YouTube de Carla Martinez"
                 >
-                  <FaYoutube size={15} />
-                  YouTube
+                  <FaYoutube size={18} />
                 </a>
               </div>
             </div>
@@ -357,26 +351,7 @@ export default function GlobalFooter() {
               </nav>
             </div>
 
-            {/* Contact Column */}
-            <div>
-              <h3 className="footer-col-title">Contacto</h3>
 
-              <div className="footer-contact-item">
-                <div className="footer-contact-icon">✉</div>
-                <div>
-                  <span className="footer-contact-label">Email</span>
-                  <span className="footer-contact-value">webcarlamartinez@gmail.com</span>
-                </div>
-              </div>
-
-              <div className="footer-contact-item">
-                <div className="footer-contact-icon">📍</div>
-                <div>
-                  <span className="footer-contact-label">Ubicación</span>
-                  <span className="footer-contact-value">Valencia, Estado Carabobo, Venezuela</span>
-                </div>
-              </div>
-            </div>
 
           </div>
 
