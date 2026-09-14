@@ -15,8 +15,8 @@ export default function GlobalFooter() {
     <>
       <style>{`
         .footer-root {
-          background: linear-gradient(160deg, #1a0f0a 0%, #0f0806 60%, #130d09 100%);
-          color: #e8ddd6;
+          background: linear-gradient(160deg, #fdfaf7 0%, #faf5ef 60%, #fdf9f5 100%);
+          color: #3d2b1f;
           padding: 72px 24px 0 24px;
           margin-top: auto;
           position: relative;
@@ -28,8 +28,8 @@ export default function GlobalFooter() {
           position: absolute;
           inset: 0;
           background:
-            radial-gradient(ellipse 60% 40% at 10% 0%, rgba(176, 139, 110, 0.12) 0%, transparent 70%),
-            radial-gradient(ellipse 50% 35% at 90% 80%, rgba(176, 139, 110, 0.07) 0%, transparent 70%);
+            radial-gradient(ellipse 60% 40% at 10% 0%, rgba(176, 139, 110, 0.08) 0%, transparent 70%),
+            radial-gradient(ellipse 50% 35% at 90% 80%, rgba(176, 139, 110, 0.05) 0%, transparent 70%);
           pointer-events: none;
         }
 
@@ -40,7 +40,7 @@ export default function GlobalFooter() {
           left: 24px;
           right: 24px;
           height: 1px;
-          background: linear-gradient(90deg, transparent 0%, rgba(176, 139, 110, 0.5) 30%, rgba(176, 139, 110, 0.8) 50%, rgba(176, 139, 110, 0.5) 70%, transparent 100%);
+          background: linear-gradient(90deg, transparent 0%, rgba(176, 139, 110, 0.35) 30%, rgba(176, 139, 110, 0.6) 50%, rgba(176, 139, 110, 0.35) 70%, transparent 100%);
         }
 
         .footer-inner {
@@ -55,7 +55,7 @@ export default function GlobalFooter() {
           grid-template-columns: 1.6fr 1fr 1fr;
           gap: 60px;
           padding-bottom: 56px;
-          border-bottom: 1px solid rgba(176, 139, 110, 0.15);
+          border-bottom: 1px solid rgba(176, 139, 110, 0.2);
         }
 
         /* Brand */
@@ -64,7 +64,7 @@ export default function GlobalFooter() {
           font-weight: 800;
           letter-spacing: 0.18em;
           text-transform: uppercase;
-          color: #ffffff;
+          color: #1c1008;
           margin-bottom: 6px;
           display: flex;
           align-items: center;
@@ -76,7 +76,7 @@ export default function GlobalFooter() {
           display: inline-block;
           width: 28px;
           height: 2px;
-          background: linear-gradient(90deg, #b08b6e, #d4a882);
+          background: linear-gradient(90deg, #b08b6e, #c9996e);
           border-radius: 2px;
           flex-shrink: 0;
         }
@@ -92,7 +92,7 @@ export default function GlobalFooter() {
         }
 
         .footer-brand-desc {
-          color: rgba(232, 221, 214, 0.65);
+          color: #7a5c48;
           font-size: 0.9rem;
           line-height: 1.75;
           max-width: 280px;
@@ -110,9 +110,9 @@ export default function GlobalFooter() {
           gap: 8px;
           padding: 9px 16px 9px 12px;
           border-radius: 50px;
-          border: 1px solid rgba(176, 139, 110, 0.3);
-          background: rgba(176, 139, 110, 0.06);
-          color: rgba(232, 221, 214, 0.75);
+          border: 1px solid rgba(176, 139, 110, 0.4);
+          background: rgba(176, 139, 110, 0.07);
+          color: #6b4c38;
           font-size: 0.78rem;
           font-weight: 600;
           letter-spacing: 0.05em;
@@ -122,11 +122,11 @@ export default function GlobalFooter() {
         }
 
         .footer-social-btn:hover {
-          background: rgba(176, 139, 110, 0.18);
-          border-color: rgba(176, 139, 110, 0.65);
-          color: #ffffff;
+          background: rgba(176, 139, 110, 0.15);
+          border-color: rgba(176, 139, 110, 0.7);
+          color: #3d2b1f;
           transform: translateY(-2px);
-          box-shadow: 0 8px 24px rgba(176, 139, 110, 0.2);
+          box-shadow: 0 8px 24px rgba(176, 139, 110, 0.18);
         }
 
         .footer-social-btn svg {
@@ -166,12 +166,12 @@ export default function GlobalFooter() {
         }
 
         .footer-nav-link {
-          color: rgba(232, 221, 214, 0.6);
+          color: #7a5c48;
           text-decoration: none;
           font-size: 0.9rem;
           font-weight: 400;
           padding: 7px 10px 7px 0;
-          border-bottom: 1px solid rgba(176, 139, 110, 0.07);
+          border-bottom: 1px solid rgba(176, 139, 110, 0.12);
           display: flex;
           align-items: center;
           gap: 10px;
@@ -194,7 +194,7 @@ export default function GlobalFooter() {
         }
 
         .footer-nav-link:hover {
-          color: #ffffff;
+          color: #1c1008;
           padding-left: 4px;
         }
 
@@ -209,7 +209,7 @@ export default function GlobalFooter() {
           align-items: flex-start;
           gap: 12px;
           margin-bottom: 16px;
-          color: rgba(232, 221, 214, 0.6);
+          color: #7a5c48;
           font-size: 0.88rem;
           line-height: 1.5;
         }
@@ -238,7 +238,7 @@ export default function GlobalFooter() {
         }
 
         .footer-contact-value {
-          color: rgba(232, 221, 214, 0.75);
+          color: #5c3d2a;
           font-size: 0.88rem;
         }
 
@@ -254,12 +254,12 @@ export default function GlobalFooter() {
 
         .footer-copy {
           font-size: 0.8rem;
-          color: rgba(232, 221, 214, 0.35);
+          color: rgba(61, 43, 31, 0.45);
           letter-spacing: 0.03em;
         }
 
         .footer-copy span {
-          color: rgba(176, 139, 110, 0.7);
+          color: rgba(176, 139, 110, 0.9);
         }
 
         .footer-badge {
@@ -267,7 +267,7 @@ export default function GlobalFooter() {
           align-items: center;
           gap: 6px;
           font-size: 0.72rem;
-          color: rgba(232, 221, 214, 0.3);
+          color: rgba(61, 43, 31, 0.35);
           letter-spacing: 0.05em;
         }
 
