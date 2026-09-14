@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Html5QrcodeScanner } from "html5-qrcode";
+import { Html5Qrcode } from "html5-qrcode";
 
 export default function EscanerQRPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -27,26 +27,28 @@ export default function EscanerQRPage() {
     // Only initialize scanner if we are in the scanning state and window is available
     if (!isScanning) return;
     
-    let html5QrcodeScanner: Html5QrcodeScanner | null = null;
+    let html5QrCode: Html5Qrcode | null = null;
     
     // Slight delay to ensure DOM element exists
     setTimeout(() => {
-      html5QrcodeScanner = new Html5QrcodeScanner(
-        "qr-reader",
+      html5QrCode = new Html5Qrcode("qr-reader");
+      html5QrCode.start(
+        { facingMode: "environment" },
         { fps: 10, qrbox: { width: 250, height: 250 } },
-        /* verbose= */ false
-      );
-
-      html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        onScanSuccess,
+        onScanFailure
+      ).catch(err => {
+        console.error("Error al iniciar la cámara:", err);
+      });
     }, 100);
 
     return () => {
-      if (html5QrcodeScanner) {
-        try {
-          html5QrcodeScanner.clear();
-        } catch (e) {
-          console.error("Failed to clear scanner", e);
-        }
+      if (html5QrCode) {
+        html5QrCode.stop().then(() => {
+          html5QrCode?.clear();
+        }).catch(err => {
+          console.error("Failed to clear scanner", err);
+        });
       }
     };
   }, [isScanning]);
@@ -69,8 +71,8 @@ export default function EscanerQRPage() {
       if (data.success) {
         setScanResult({
           success: true,
-          message: data.message, // "¡Acceso concedido!"
-          detail: `${data.participant} - ${data.workshop}`
+          message: `Acceso Autorizado a ${data.participant}`,
+          detail: `${data.workshop}`
         });
       } else {
         setScanResult({
