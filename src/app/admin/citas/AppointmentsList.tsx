@@ -188,13 +188,16 @@ export default function AppointmentsList() {
                   binanceUser: "Usuario Binance",
                   billDenomination: "Denominación",
                 };
-                const entries = Object.entries(pd).filter(([, v]) => v !== "" && v !== null && v !== undefined);
+                // Bank always first, rest filter empty
+                const bankEntry: [string, unknown][] = [["bank", pd.bank || "No indicado"]];
+                const rest = Object.entries(pd).filter(([k, v]) => k !== "bank" && v !== "" && v !== null && v !== undefined);
+                const entries = [...bankEntry, ...rest];
                 return (
                   <div style={{ backgroundColor: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: "10px", overflow: "hidden" }}>
                     {entries.map(([key, value], i) => (
                       <div key={key} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 14px", borderBottom: i < entries.length - 1 ? "1px solid #e5e7eb" : "none", backgroundColor: i % 2 === 0 ? "#ffffff" : "#f9fafb" }}>
-                        <span style={{ fontSize: "0.82rem", color: "#6b7280", fontWeight: 500 }}>{labels[key] || key}</span>
-                        <span style={{ fontSize: "0.88rem", color: "#111827", fontWeight: 600, textAlign: "right", maxWidth: "60%", wordBreak: "break-all" }}>{String(value)}</span>
+                        <span style={{ fontSize: "0.82rem", color: "#6b7280", fontWeight: 500 }}>{labels[key as string] || key}</span>
+                        <span style={{ fontSize: "0.88rem", color: value === "No indicado" ? "#f59e0b" : "#111827", fontWeight: 600, textAlign: "right", maxWidth: "60%", wordBreak: "break-all" }}>{String(value)}</span>
                       </div>
                     ))}
                   </div>
