@@ -98,8 +98,9 @@ export default function PlansManager() {
   };
 
   return (
-    <div className="card" style={{ marginBottom: "24px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+    <>
+      <div className="card" style={{ marginBottom: "24px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
         <div>
           <h2 className="heading-2" style={{ fontSize: "1.25rem" }}>Planes de Consulta y Complementos</h2>
           <p className="text-muted" style={{ fontSize: "0.9rem" }}>Configura los precios de las consultas y el extra de Coaching.</p>
@@ -143,9 +144,12 @@ export default function PlansManager() {
           </table>
         </div>
       )}
-
-      {showModal && (
-        <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", backgroundColor: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
+          </table>
+        </div>
+      )}
+    </div>
+    {showModal && (
+        <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", backgroundColor: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100000 }}>
           <div className="card" style={{ width: "100%", maxWidth: "500px", position: "relative" }}>
             <h3 className="heading-2" style={{ marginBottom: "20px" }}>{editingId ? "Editar Plan" : "Nuevo Plan"}</h3>
             <button onClick={closeModal} style={{ position: "absolute", top: "20px", right: "20px", background: "none", border: "none", fontSize: "1.5rem", cursor: "pointer" }}>&times;</button>
@@ -176,6 +180,6 @@ export default function PlansManager() {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
