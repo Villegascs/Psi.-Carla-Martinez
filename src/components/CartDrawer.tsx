@@ -28,18 +28,15 @@ export default function CartDrawer() {
     if (isCartOpen) {
       document.body.style.overflow = 'hidden';
       document.documentElement.style.overflow = 'hidden';
-      lenis?.stop();
     } else {
       document.body.style.overflow = '';
       document.documentElement.style.overflow = '';
-      lenis?.start();
     }
     return () => {
       document.body.style.overflow = '';
       document.documentElement.style.overflow = '';
-      lenis?.start();
     };
-  }, [isCartOpen, lenis]);
+  }, [isCartOpen]);
 
   // Checkout steps: CART -> CONTACT -> PAYMENT -> SUCCESS
   const [checkoutStep, setCheckoutStep] = useState<"CART" | "CONTACT" | "PAYMENT" | "SUCCESS">("CART");
@@ -59,6 +56,30 @@ export default function CartDrawer() {
   const [paymentData, setPaymentData] = useState({
     bank: "", paymentIdType: "V", paymentId: "", paymentPhone: "", binanceUser: "", reference: "", billDenomination: ""
   });
+  
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  useEffect(() => {
+    const savedStep = localStorage.getItem("cart_checkoutStep");
+    if (savedStep) setCheckoutStep(savedStep as any);
+    const savedContact = localStorage.getItem("cart_contactData");
+    if (savedContact) try { setContactData(JSON.parse(savedContact)); } catch(e){}
+    const savedMethod = localStorage.getItem("cart_paymentMethod");
+    if (savedMethod) setPaymentMethod(savedMethod);
+    const savedPayment = localStorage.getItem("cart_paymentData");
+    if (savedPayment) try { setPaymentData(JSON.parse(savedPayment)); } catch(e){}
+    setIsInitialized(true);
+  }, []);
+
+  useEffect(() => {
+    if (isInitialized) {
+      localStorage.setItem("cart_checkoutStep", checkoutStep);
+      localStorage.setItem("cart_contactData", JSON.stringify(contactData));
+      localStorage.setItem("cart_paymentMethod", paymentMethod);
+      localStorage.setItem("cart_paymentData", JSON.stringify(paymentData));
+    }
+  }, [checkoutStep, contactData, paymentMethod, paymentData, isInitialized]);
+
   const [proofFile, setProofFile] = useState<File | null>(null);
   
   const [loading, setLoading] = useState(false);
@@ -195,7 +216,7 @@ export default function CartDrawer() {
 
       {/* Modal del Carrito (Wizard) */}
       {isCartOpen && typeof document !== "undefined" && createPortal(
-        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999, padding: "20px", animation: "fadeIn 0.3s", overscrollBehavior: "contain" }}>
+        <div data-lenis-prevent="true" style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999, padding: "20px", animation: "fadeIn 0.3s", overscrollBehavior: "contain" }}>
           <div style={{ backgroundColor: "#f9fafb", borderRadius: "16px", width: "100%", maxWidth: "1000px", maxHeight: "90vh", display: "flex", flexDirection: "column", overflow: "hidden", position: "relative", boxShadow: "0 20px 40px rgba(0,0,0,0.2)" }}>
             <button onClick={() => { setIsCartOpen(false); if(checkoutStep==="SUCCESS") setCheckoutStep("CART"); }} style={{ position: "absolute", top: "24px", right: "24px", background: "none", border: "none", fontSize: "1.5rem", cursor: "pointer", color: "var(--color-text-secondary)", zIndex: 10 }}>&times;</button>
             

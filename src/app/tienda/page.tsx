@@ -53,18 +53,15 @@ export default function TiendaPage() {
     if (selectedProduct) {
       document.body.style.overflow = 'hidden';
       document.documentElement.style.overflow = 'hidden';
-      lenis?.stop();
     } else {
       document.body.style.overflow = '';
       document.documentElement.style.overflow = '';
-      lenis?.start();
     }
     return () => {
       document.body.style.overflow = '';
       document.documentElement.style.overflow = '';
-      lenis?.start();
     };
-  }, [selectedProduct, lenis]);
+  }, [selectedProduct]);
 
   const openProductModal = (product: Product) => {
     setSelectedProduct(product);
@@ -227,7 +224,7 @@ export default function TiendaPage() {
 
       {/* Modal Detalles del Producto */}
       {selectedProduct && typeof document !== "undefined" && createPortal(
-        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999, padding: "20px", animation: "fadeIn 0.3s" }}>
+        <div data-lenis-prevent="true" style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999, padding: "20px", animation: "fadeIn 0.3s" }}>
           <div className="modal-grid" style={{ backgroundColor: "#ffffff", borderRadius: "16px", width: "100%", maxWidth: "850px", maxHeight: "90vh", overflowY: "auto", overflowX: "hidden", position: "relative", boxShadow: "0 20px 40px rgba(0,0,0,0.2)" }}>
             <button onClick={() => setSelectedProduct(null)} style={{ position: "absolute", top: "16px", right: "16px", background: "rgba(255,255,255,0.8)", border: "none", width: "36px", height: "36px", borderRadius: "50%", fontSize: "1.5rem", cursor: "pointer", color: "#000", zIndex: 10, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}>&times;</button>
             
