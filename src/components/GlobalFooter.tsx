@@ -317,9 +317,9 @@ export default function GlobalFooter() {
             {/* Brand Column */}
             <div className="footer-brand-col">
               <p className="footer-brand-name">Carla Martinez</p>
-              <p className="footer-brand-tagline">Psicología Clínica</p>
+              <p className="footer-brand-tagline">Licenciada en Psicología</p>
               <p className="footer-brand-desc">
-                Especialista en psicología clínica, comprometida con tu bienestar mental y crecimiento personal. Un espacio seguro para sanar y crecer.
+                Psicóloga clínica, comprometida con el bienestar emocional, mental y el crecimiento personal. Un espacio seguro para sanar y crecer.
               </p>
 
               <div className="footer-social-row">
@@ -365,7 +365,7 @@ export default function GlobalFooter() {
                 <div className="footer-contact-icon">✉</div>
                 <div>
                   <span className="footer-contact-label">Email</span>
-                  <span className="footer-contact-value">contacto@carlamartinez.com</span>
+                  <span className="footer-contact-value">webcarlamartinez@gmail.com</span>
                 </div>
               </div>
 
@@ -373,7 +373,7 @@ export default function GlobalFooter() {
                 <div className="footer-contact-icon">📍</div>
                 <div>
                   <span className="footer-contact-label">Ubicación</span>
-                  <span className="footer-contact-value">Caracas, Venezuela</span>
+                  <span className="footer-contact-value">Valencia, Estado Carabobo, Venezuela</span>
                 </div>
               </div>
             </div>
