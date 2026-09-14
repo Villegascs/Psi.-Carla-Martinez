@@ -348,18 +348,28 @@ export default function CartDrawer() {
                     <div className="form-group" style={{ marginBottom: 0 }}>
                       <label className="form-label" style={{ fontSize: "0.85rem" }}>Cédula / Documento de Identidad</label>
                       <div style={{ display: "flex", gap: "8px" }}>
-                        <select 
-                          className="input-field" 
-                          style={{ width: "80px", padding: "10px" }}
-                          value={contactData.customerIdType}
-                          onChange={e => setContactData({...contactData, customerIdType: e.target.value})}
-                        >
-                          <option value="V">V</option>
-                          <option value="E">E</option>
-                          <option value="J">J</option>
-                          <option value="G">G</option>
-                          <option value="P">P</option>
-                        </select>
+                        {/* Pill selector tipo de documento */}
+                        <div style={{ display: "flex", borderRadius: "10px", border: "1px solid var(--color-border)", overflow: "hidden", flexShrink: 0 }}>
+                          {["V","E","J","G","P"].map(t => (
+                            <button
+                              key={t}
+                              type="button"
+                              onClick={() => setContactData({...contactData, customerIdType: t})}
+                              style={{
+                                padding: "12px 11px",
+                                fontSize: "0.9rem",
+                                fontWeight: 600,
+                                border: "none",
+                                borderRight: t !== "P" ? "1px solid var(--color-border)" : "none",
+                                cursor: "pointer",
+                                background: contactData.customerIdType === t ? "#111827" : "#fff",
+                                color: contactData.customerIdType === t ? "#fff" : "#6b7280",
+                                transition: "all 0.15s ease",
+                                minWidth: "36px",
+                              }}
+                            >{t}</button>
+                          ))}
+                        </div>
                         <input 
                           type="text"
                           inputMode="numeric"
@@ -382,25 +392,60 @@ export default function CartDrawer() {
                     </div>
                     <div className="form-group" style={{ marginBottom: 0 }}>
                       <label className="form-label" style={{ fontSize: "0.85rem" }}>Método de Entrega</label>
-                      <select className="input-field" value={contactData.deliveryMethod} onChange={e => setContactData({...contactData, deliveryMethod: e.target.value})}>
-                        <option value="Pickup">Retiro en consultorio</option>
-                        <option value="Delivery">Envío (Delivery / Nacional)</option>
-                      </select>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginTop: "4px" }}>
+                        {[
+                          { value: "Pickup", label: "Retiro en consultorio", icon: "🏥" },
+                          { value: "Delivery", label: "Envío a domicilio", icon: "🚚" },
+                        ].map(opt => (
+                          <button
+                            key={opt.value}
+                            type="button"
+                            onClick={() => setContactData({...contactData, deliveryMethod: opt.value})}
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                              gap: "6px",
+                              padding: "14px 10px",
+                              borderRadius: "12px",
+                              border: contactData.deliveryMethod === opt.value ? "2px solid #111827" : "1.5px solid var(--color-border)",
+                              background: contactData.deliveryMethod === opt.value ? "#111827" : "#fff",
+                              color: contactData.deliveryMethod === opt.value ? "#fff" : "#374151",
+                              cursor: "pointer",
+                              transition: "all 0.18s ease",
+                              fontSize: "0.82rem",
+                              fontWeight: 600,
+                              lineHeight: 1.3,
+                              textAlign: "center",
+                            }}
+                          >
+                            <span style={{ fontSize: "1.4rem" }}>{opt.icon}</span>
+                            {opt.label}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                     {contactData.deliveryMethod === "Delivery" && (
                       <>
                         <div className="form-group" style={{ marginBottom: 0 }}>
                           <label className="form-label" style={{ fontSize: "0.85rem" }}>Zona de Envío</label>
-                          <select className="input-field" value={contactData.deliveryZone} onChange={e => setContactData({...contactData, deliveryZone: e.target.value})}>
-                            <option value="">Selecciona tu zona</option>
-                            <option value="Valencia Norte">Valencia Norte</option>
-                            <option value="Valencia Centro">Valencia Centro</option>
-                            <option value="Valencia Sur">Valencia Sur</option>
-                            <option value="San Diego">San Diego</option>
-                            <option value="Naguanagua">Naguanagua</option>
-                            <option value="Los Guayos">Los Guayos</option>
-                            <option value="Otra Ciudad / Envío Nacional">Otra Ciudad / Envío Nacional</option>
-                          </select>
+                          <div style={{ position: "relative" }}>
+                            <select
+                              className="input-field"
+                              style={{ appearance: "none", WebkitAppearance: "none", paddingRight: "40px", backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E\")", backgroundRepeat: "no-repeat", backgroundPosition: "right 14px center" }}
+                              value={contactData.deliveryZone}
+                              onChange={e => setContactData({...contactData, deliveryZone: e.target.value})}
+                            >
+                              <option value="">Selecciona tu zona</option>
+                              <option value="Valencia Norte">Valencia Norte</option>
+                              <option value="Valencia Centro">Valencia Centro</option>
+                              <option value="Valencia Sur">Valencia Sur</option>
+                              <option value="San Diego">San Diego</option>
+                              <option value="Naguanagua">Naguanagua</option>
+                              <option value="Los Guayos">Los Guayos</option>
+                              <option value="Otra Ciudad / Envío Nacional">Otra Ciudad / Envío Nacional</option>
+                            </select>
+                          </div>
                         </div>
                         <div className="form-group" style={{ marginBottom: 0 }}>
                           <label className="form-label" style={{ fontSize: "0.85rem" }}>Dirección Completa de Envío</label>
@@ -419,13 +464,38 @@ export default function CartDrawer() {
                     
                     <div className="form-group">
                       <label className="form-label">Método de Pago</label>
-                      <select className="input-field" value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
-                        <option value="">Selecciona un método</option>
-                        <option value="pago_movil">Pago Móvil (Bs)</option>
-                        <option value="zelle">Zelle</option>
-                        <option value="binance">Binance USDT</option>
-                        <option value="efectivo">Efectivo (Presencial)</option>
-                      </select>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+                        {[
+                          { value: "pago_movil", label: "Pago Móvil", sub: "Bolívares", icon: "📱" },
+                          { value: "zelle",      label: "Zelle",       sub: "Dólares",   icon: "💵" },
+                          { value: "binance",    label: "Binance",     sub: "USDT",       icon: "🔶" },
+                          { value: "efectivo",   label: "Efectivo",    sub: "Presencial", icon: "💴" },
+                        ].map(opt => (
+                          <button
+                            key={opt.value}
+                            type="button"
+                            onClick={() => setPaymentMethod(opt.value)}
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                              gap: "4px",
+                              padding: "14px 8px",
+                              borderRadius: "12px",
+                              border: paymentMethod === opt.value ? "2px solid #111827" : "1.5px solid var(--color-border)",
+                              background: paymentMethod === opt.value ? "#111827" : "#fff",
+                              color: paymentMethod === opt.value ? "#fff" : "#374151",
+                              cursor: "pointer",
+                              transition: "all 0.18s ease",
+                              textAlign: "center",
+                            }}
+                          >
+                            <span style={{ fontSize: "1.5rem" }}>{opt.icon}</span>
+                            <span style={{ fontSize: "0.82rem", fontWeight: 700 }}>{opt.label}</span>
+                            <span style={{ fontSize: "0.72rem", opacity: 0.7 }}>{opt.sub}</span>
+                          </button>
+                        ))}
+                      </div>
                     </div>
 
                     {paymentMethod === "pago_movil" && (
@@ -447,44 +517,60 @@ export default function CartDrawer() {
                           <CopyButton text="20383871" />
                         </div>
                         
-                        <select required className="input-field" value={paymentData.bank} onChange={e => setPaymentData({...paymentData, bank: e.target.value})} style={{ marginBottom: "8px" }}>
-                          <option value="">Selecciona Banco de Origen</option>
-                          <option value="Banesco (0134)">Banesco (0134)</option>
-                          <option value="Banco de Venezuela (0102)">Banco de Venezuela (0102)</option>
-                          <option value="BBVA Provincial (0108)">BBVA Provincial (0108)</option>
-                          <option value="Banco Mercantil (0105)">Banco Mercantil (0105)</option>
-                          <option value="Banco Nacional de Crédito (0191)">Banco Nacional de Crédito (0191)</option>
-                          <option value="Bancamiga (0172)">Bancamiga (0172)</option>
-                          <option value="Bancaribe (0114)">Bancaribe (0114)</option>
-                          <option value="Banco del Tesoro (0163)">Banco del Tesoro (0163)</option>
-                          <option value="Banco Bicentenario (0175)">Banco Bicentenario (0175)</option>
-                          <option value="Banco Exterior (0115)">Banco Exterior (0115)</option>
-                          <option value="Banplus (0174)">Banplus (0174)</option>
-                          <option value="Banco Sofitasa (0137)">Banco Sofitasa (0137)</option>
-                          <option value="Banco Plaza (0138)">Banco Plaza (0138)</option>
-                          <option value="Banco Caroní (0128)">Banco Caroní (0128)</option>
-                          <option value="Banco Activo (0171)">Banco Activo (0171)</option>
-                          <option value="100% Banco (0156)">100% Banco (0156)</option>
-                          <option value="Mi Banco (0169)">Mi Banco (0169)</option>
-                          <option value="Banco Agrícola (0166)">Banco Agrícola (0166)</option>
-                        </select>
-                        <div style={{ display: "flex", gap: "8px", marginBottom: "8px" }}>
-                          <select className="input-field" style={{ width: "70px" }} value={paymentData.paymentIdType} onChange={e => setPaymentData({...paymentData, paymentIdType: e.target.value})}>
-                            <option value="V">V</option><option value="E">E</option>
+                        {/* Banco selector estilizado */}
+                        <div style={{ position: "relative", marginBottom: "8px" }}>
+                          <select
+                            required
+                            className="input-field"
+                            value={paymentData.bank}
+                            onChange={e => setPaymentData({...paymentData, bank: e.target.value})}
+                            style={{ appearance: "none", WebkitAppearance: "none", paddingRight: "40px", backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E\")", backgroundRepeat: "no-repeat", backgroundPosition: "right 14px center" }}
+                          >
+                            <option value="">Selecciona tu banco de origen</option>
+                            <option value="Banesco (0134)">Banesco (0134)</option>
+                            <option value="Banco de Venezuela (0102)">Banco de Venezuela (0102)</option>
+                            <option value="BBVA Provincial (0108)">BBVA Provincial (0108)</option>
+                            <option value="Banco Mercantil (0105)">Banco Mercantil (0105)</option>
+                            <option value="Banco Nacional de Crédito (0191)">Banco Nacional de Crédito (0191)</option>
+                            <option value="Bancamiga (0172)">Bancamiga (0172)</option>
+                            <option value="Bancaribe (0114)">Bancaribe (0114)</option>
+                            <option value="Banco del Tesoro (0163)">Banco del Tesoro (0163)</option>
+                            <option value="Banco Bicentenario (0175)">Banco Bicentenario (0175)</option>
+                            <option value="Banco Exterior (0115)">Banco Exterior (0115)</option>
+                            <option value="Banplus (0174)">Banplus (0174)</option>
+                            <option value="Banco Sofitasa (0137)">Banco Sofitasa (0137)</option>
+                            <option value="Banco Plaza (0138)">Banco Plaza (0138)</option>
+                            <option value="Banco Caroní (0128)">Banco Caroní (0128)</option>
+                            <option value="Banco Activo (0171)">Banco Activo (0171)</option>
+                            <option value="100% Banco (0156)">100% Banco (0156)</option>
+                            <option value="Mi Banco (0169)">Mi Banco (0169)</option>
+                            <option value="Banco Agrícola (0166)">Banco Agrícola (0166)</option>
                           </select>
+                        </div>
+                        {/* Tipo cédula pagador: pills */}
+                        <div style={{ display: "flex", gap: "8px", marginBottom: "8px" }}>
+                          <div style={{ display: "flex", borderRadius: "10px", border: "1px solid var(--color-border)", overflow: "hidden", flexShrink: 0 }}>
+                            {["V","E"].map(t => (
+                              <button key={t} type="button"
+                                onClick={() => setPaymentData({...paymentData, paymentIdType: t})}
+                                style={{ padding: "12px 14px", fontWeight: 600, fontSize: "0.9rem", border: "none", borderRight: t === "V" ? "1px solid var(--color-border)" : "none", cursor: "pointer", background: paymentData.paymentIdType === t ? "#111827" : "#fff", color: paymentData.paymentIdType === t ? "#fff" : "#6b7280", transition: "all 0.15s ease" }}
+                              >{t}</button>
+                            ))}
+                          </div>
                           <input required type="text" inputMode="numeric" pattern="[0-9]*" placeholder="Cédula" className="input-field" value={paymentData.paymentId} onChange={e => setPaymentData({...paymentData, paymentId: e.target.value.replace(/\D/g, '')})} style={{ flex: 1 }} />
                         </div>
+                        {/* Prefijo teléfono: pills */}
                         <div style={{ display: "flex", gap: "8px", marginBottom: "8px" }}>
-                          <select className="input-field" style={{ width: "90px" }} value={(paymentData.paymentPhone || "0414").substring(0,4)} onChange={e => setPaymentData({...paymentData, paymentPhone: e.target.value + (paymentData.paymentPhone || "0414").substring(4)})}>
-                            <option value="0414">0414</option>
-                            <option value="0424">0424</option>
-                            <option value="0412">0412</option>
-                            <option value="0416">0416</option>
-                            <option value="0426">0426</option>
-                            <option value="0212">0212</option>
-                          </select>
-                          <input required type="text" inputMode="numeric" pattern="[0-9]*" placeholder="1234567" className="input-field" value={(paymentData.paymentPhone || "0414").substring(4)} onChange={e => setPaymentData({...paymentData, paymentPhone: (paymentData.paymentPhone || "0414").substring(0,4) + e.target.value.replace(/\D/g, '')})} style={{ flex: 1 }} />
+                          <div style={{ display: "flex", borderRadius: "10px", border: "1px solid var(--color-border)", overflow: "hidden", flexShrink: 0 }}>
+                            {["0414","0424","0412","0416","0426","0212"].map((pfx, i, arr) => (
+                              <button key={pfx} type="button"
+                                onClick={() => setPaymentData({...paymentData, paymentPhone: pfx + (paymentData.paymentPhone || "0414").substring(4)})}
+                                style={{ padding: "12px 9px", fontWeight: 600, fontSize: "0.78rem", border: "none", borderRight: i < arr.length - 1 ? "1px solid var(--color-border)" : "none", cursor: "pointer", background: (paymentData.paymentPhone || "0414").substring(0,4) === pfx ? "#111827" : "#fff", color: (paymentData.paymentPhone || "0414").substring(0,4) === pfx ? "#fff" : "#6b7280", transition: "all 0.15s ease", whiteSpace: "nowrap" }}
+                              >{pfx}</button>
+                            ))}
+                          </div>
                         </div>
+                        <input required type="text" inputMode="numeric" pattern="[0-9]*" placeholder="7 dígitos" className="input-field" value={(paymentData.paymentPhone || "0414").substring(4)} onChange={e => setPaymentData({...paymentData, paymentPhone: (paymentData.paymentPhone || "0414").substring(0,4) + e.target.value.replace(/\D/g, '')})} style={{ marginBottom: "8px" }} />
                         <input required type="text" placeholder="Referencia" className="input-field" value={paymentData.reference} onChange={e => setPaymentData({...paymentData, reference: e.target.value})} />
                       </div>
                     )}
