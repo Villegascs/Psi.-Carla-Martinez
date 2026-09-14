@@ -14,7 +14,7 @@ type Workshop = {
   title: string;
   price: string;
   availableSpots: number;
-  type: "Presencial" | "Virtual";
+  type: "Presencial" | "Virtual" | "A tu ritmo";
   virtualLink?: string;
   status: "Publicado" | "Oculto";
   image: string;
@@ -364,6 +364,7 @@ export default function AdminTalleres() {
                   <select required value={formData.type || "Presencial"} onChange={e => setFormData({...formData, type: e.target.value as any})} style={{ width: "100%", padding: "10px", border: "1px solid #d1d5db", borderRadius: "6px" }}>
                     <option value="Presencial">Presencial (Ticket con QR)</option>
                     <option value="Virtual">Virtual (Botón de Ingreso)</option>
+                    <option value="A tu ritmo">A tu ritmo (Curso Grabado)</option>
                   </select>
                 </div>
                 <div>
@@ -375,7 +376,7 @@ export default function AdminTalleres() {
                 </div>
               </div>
 
-              {(formData.type === "Virtual" || !formData.type) && (
+              {(formData.type === "Virtual" || formData.type === "A tu ritmo" || !formData.type) && (
                 <div>
                   <label style={{ display: "block", marginBottom: "8px", fontWeight: 600, fontSize: "0.9rem" }}>Enlace del Curso Virtual (Zoom, Meet, etc)</label>
                   <input required type="url" value={formData.virtualLink || ""} onChange={e => setFormData({...formData, virtualLink: e.target.value})} style={{ width: "100%", padding: "10px", border: "1px solid #d1d5db", borderRadius: "6px" }} placeholder="https://..." />

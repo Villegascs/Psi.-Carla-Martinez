@@ -179,6 +179,14 @@ export default function Home() {
                 <h3 className="card-taller-title">Presenciales</h3>
                 <p className="card-taller-desc">Vive la experiencia en persona</p>
               </a>
+
+              <a href="/talleres" className="card-taller">
+                <div className="card-taller-icon-wrapper">
+                  <Play size={32} strokeWidth={1.9} />
+                </div>
+                <h3 className="card-taller-title">A tu ritmo</h3>
+                <p className="card-taller-desc">Estudia a tu propio paso</p>
+              </a>
             </div>
 
             {/* CTA Button */}

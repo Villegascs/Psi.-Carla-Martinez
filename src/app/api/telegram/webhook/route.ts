@@ -55,7 +55,7 @@ export async function POST(req: Request) {
         if (!workshopSnapshot.empty) {
           workshopData = workshopSnapshot.docs[0].data();
         }
-        const isVirtual = workshopData && workshopData.type === 'Virtual';
+        const isVirtual = workshopData && (workshopData.type === 'Virtual' || workshopData.type === 'A tu ritmo');
         const virtualLink = workshopData ? workshopData.virtualLink : '#';
 
         const attachments = [];
@@ -124,7 +124,7 @@ export async function POST(req: Request) {
                 <div style="padding: 30px;">
                   <p style="font-size: 1.1rem; color: #111111; font-weight: 600;">Hola,</p>
                   <p style="font-size: 1.1rem; color: #333333; line-height: 1.5;">Tu pago para el <strong>${orderData.workshopName}</strong> ha sido verificado con éxito.</p>
-                  <p style="font-size: 1.1rem; color: #333333; line-height: 1.5; margin-bottom: 30px;">${isVirtual ? 'A continuación encontrarás el acceso a tu curso virtual.' : 'A continuación encontrarás tus entradas. Por favor, muéstralas desde tu teléfono el día del evento.'}</p>
+                  <p style="font-size: 1.1rem; color: #333333; line-height: 1.5; margin-bottom: 30px;">${isVirtual ? 'A continuación encontrarás el acceso a tu curso.' : 'A continuación encontrarás tus entradas. Por favor, muéstralas desde tu teléfono el día del evento.'}</p>
                   
                   ${ticketsHtml}
                   
