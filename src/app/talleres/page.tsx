@@ -437,13 +437,30 @@ export default function TalleresPage() {
                     <div className="form-group" style={{ marginBottom: 0 }}>
                       <label className="form-label" style={{ fontSize: "0.8rem" }}>Cédula de Identidad</label>
                       <div style={{ display: "flex", gap: "8px" }}>
-                        <select name="idType" value={participant.idType} onChange={(e) => handleParticipantChange(index, e)} className="input-field" style={{ width: "70px", padding: "12px 8px" }}>
-                          <option value="V">V</option>
-                          <option value="E">E</option>
-                          <option value="J">J</option>
-                          <option value="G">G</option>
-                          <option value="P">P</option>
-                        </select>
+                        <div style={{ position: "relative", width: "70px", flexShrink: 0 }}>
+                          <select 
+                            name="idType" 
+                            value={participant.idType} 
+                            onChange={(e) => handleParticipantChange(index, e)} 
+                            className="input-field" 
+                            style={{ 
+                              width: "100%",
+                              padding: "12px 8px", 
+                              appearance: "none", 
+                              WebkitAppearance: "none", 
+                              backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E\")", 
+                              backgroundRepeat: "no-repeat", 
+                              backgroundPosition: "right 8px center",
+                              paddingRight: "24px"
+                            }}
+                          >
+                            <option value="V">V</option>
+                            <option value="E">E</option>
+                            <option value="J">J</option>
+                            <option value="G">G</option>
+                            <option value="P">P</option>
+                          </select>
+                        </div>
                         <input required type="text" inputMode="numeric" pattern="[0-9]*" name="idNumber" value={participant.idNumber} onChange={(e) => handleParticipantChange(index, e)} className="input-field" placeholder="12345678" style={{ flexGrow: 1 }} />
                       </div>
                     </div>
@@ -481,13 +498,38 @@ export default function TalleresPage() {
 
                 <h3 style={{ fontSize: "1.1rem", fontWeight: 700, borderBottom: "1px solid var(--color-border)", paddingBottom: "8px", marginBottom: "16px" }}>Método de Pago</h3>
                 <div className="form-group">
-                  <select required className="input-field" value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
-                    <option value="">Selecciona un método</option>
-                    <option value="pago_movil">Pago Móvil (Bs)</option>
-                    <option value="zelle">Zelle (€)</option>
-                    <option value="binance">Binance USDT (€)</option>
-                    <option value="efectivo">Efectivo (Presencial)</option>
-                  </select>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+                    {[
+                      { value: "pago_movil", label: "Pago Móvil", sub: "Bs", icon: "📱" },
+                      { value: "zelle",      label: "Zelle",       sub: "€", icon: "💵" },
+                      { value: "binance",    label: "Binance",     sub: "USDT", icon: "🔶" },
+                      { value: "efectivo",   label: "Efectivo",    sub: "Presencial", icon: "💴" },
+                    ].map(opt => (
+                      <button
+                        key={opt.value}
+                        type="button"
+                        onClick={() => setPaymentMethod(opt.value)}
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          gap: "4px",
+                          padding: "14px 8px",
+                          borderRadius: "12px",
+                          border: paymentMethod === opt.value ? "2px solid #111827" : "1.5px solid var(--color-border)",
+                          background: paymentMethod === opt.value ? "#111827" : "#fff",
+                          color: paymentMethod === opt.value ? "#fff" : "#374151",
+                          cursor: "pointer",
+                          transition: "all 0.18s ease",
+                          textAlign: "center",
+                        }}
+                      >
+                        <span style={{ fontSize: "1.5rem" }}>{opt.icon}</span>
+                        <span style={{ fontSize: "0.82rem", fontWeight: 700 }}>{opt.label}</span>
+                        <span style={{ fontSize: "0.72rem", opacity: 0.7 }}>{opt.sub}</span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 {paymentMethod && paymentMethod !== "efectivo" && (
@@ -531,7 +573,21 @@ export default function TalleresPage() {
                     <div className="responsive-grid" style={{ marginBottom: "16px" }}>
                       <div className="form-group" style={{ marginBottom: 0 }}>
                         <label className="form-label">Banco Emisor</label>
-                        <select required name="bank" className="input-field" value={paymentData.bank} onChange={handlePaymentChange}>
+                        <select 
+                          required 
+                          name="bank" 
+                          className="input-field" 
+                          value={paymentData.bank} 
+                          onChange={handlePaymentChange}
+                          style={{ 
+                            appearance: "none", 
+                            WebkitAppearance: "none", 
+                            paddingRight: "40px", 
+                            backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E\")", 
+                            backgroundRepeat: "no-repeat", 
+                            backgroundPosition: "right 14px center" 
+                          }}
+                        >
                           <option value="">Seleccione Banco</option>
                           {VENEZUELAN_BANKS.map(b => <option key={b} value={b}>{b}</option>)}
                         </select>
@@ -539,14 +595,29 @@ export default function TalleresPage() {
                       <div className="form-group" style={{ marginBottom: 0 }}>
                         <label className="form-label">Teléfono Emisor</label>
                         <div style={{ display: "flex", gap: "8px" }}>
-                          <select className="input-field" style={{ width: "90px" }} value={(paymentData.paymentPhone || "0414").substring(0,4)} onChange={e => setPaymentData({...paymentData, paymentPhone: e.target.value + (paymentData.paymentPhone || "0414").substring(4)})}>
-                            <option value="0414">0414</option>
-                            <option value="0424">0424</option>
-                            <option value="0412">0412</option>
-                            <option value="0416">0416</option>
-                            <option value="0426">0426</option>
-                            <option value="0212">0212</option>
-                          </select>
+                          <div style={{ position: "relative", width: "90px", flexShrink: 0 }}>
+                            <select 
+                              className="input-field" 
+                              style={{ 
+                                width: "100%",
+                                appearance: "none", 
+                                WebkitAppearance: "none", 
+                                backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E\")", 
+                                backgroundRepeat: "no-repeat", 
+                                backgroundPosition: "right 8px center",
+                                paddingRight: "24px"
+                              }}
+                              value={(paymentData.paymentPhone || "0414").substring(0,4)} 
+                              onChange={e => setPaymentData({...paymentData, paymentPhone: e.target.value + (paymentData.paymentPhone || "0414").substring(4)})}
+                            >
+                              <option value="0414">0414</option>
+                              <option value="0424">0424</option>
+                              <option value="0412">0412</option>
+                              <option value="0416">0416</option>
+                              <option value="0426">0426</option>
+                              <option value="0212">0212</option>
+                            </select>
+                          </div>
                           <input required type="text" inputMode="numeric" pattern="[0-9]*" name="paymentPhone" value={(paymentData.paymentPhone || "0414").substring(4)} onChange={e => setPaymentData({...paymentData, paymentPhone: (paymentData.paymentPhone || "0414").substring(0,4) + e.target.value.replace(/\D/g, '')})} className="input-field" placeholder="1234567" style={{ flexGrow: 1 }} />
                         </div>
                       </div>
@@ -554,13 +625,30 @@ export default function TalleresPage() {
                     <div className="form-group" style={{ marginBottom: "16px" }}>
                       <label className="form-label">Cédula del Titular</label>
                       <div style={{ display: "flex", gap: "8px" }}>
-                        <select name="paymentIdType" value={paymentData.paymentIdType} onChange={handlePaymentChange} className="input-field" style={{ width: "70px", padding: "12px 8px" }}>
-                          <option value="V">V</option>
-                          <option value="E">E</option>
-                          <option value="J">J</option>
-                          <option value="G">G</option>
-                          <option value="P">P</option>
-                        </select>
+                        <div style={{ position: "relative", width: "70px", flexShrink: 0 }}>
+                          <select 
+                            name="paymentIdType" 
+                            value={paymentData.paymentIdType} 
+                            onChange={handlePaymentChange} 
+                            className="input-field" 
+                            style={{ 
+                              width: "100%",
+                              padding: "12px 8px",
+                              appearance: "none", 
+                              WebkitAppearance: "none", 
+                              backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E\")", 
+                              backgroundRepeat: "no-repeat", 
+                              backgroundPosition: "right 8px center",
+                              paddingRight: "24px"
+                            }}
+                          >
+                            <option value="V">V</option>
+                            <option value="E">E</option>
+                            <option value="J">J</option>
+                            <option value="G">G</option>
+                            <option value="P">P</option>
+                          </select>
+                        </div>
                         <input required type="text" inputMode="numeric" pattern="[0-9]*" name="paymentId" value={paymentData.paymentId} onChange={handlePaymentChange} className="input-field" placeholder="12345678" style={{ flexGrow: 1 }} />
                       </div>
                     </div>

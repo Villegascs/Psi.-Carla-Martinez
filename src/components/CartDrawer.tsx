@@ -348,27 +348,28 @@ export default function CartDrawer() {
                     <div className="form-group" style={{ marginBottom: 0 }}>
                       <label className="form-label" style={{ fontSize: "0.85rem" }}>Cédula / Documento de Identidad</label>
                       <div style={{ display: "flex", gap: "8px" }}>
-                        {/* Pill selector tipo de documento */}
-                        <div style={{ display: "flex", borderRadius: "10px", border: "1px solid var(--color-border)", overflow: "hidden", flexShrink: 0 }}>
-                          {["V","E","J","G","P"].map(t => (
-                            <button
-                              key={t}
-                              type="button"
-                              onClick={() => setContactData({...contactData, customerIdType: t})}
-                              style={{
-                                padding: "12px 11px",
-                                fontSize: "0.9rem",
-                                fontWeight: 600,
-                                border: "none",
-                                borderRight: t !== "P" ? "1px solid var(--color-border)" : "none",
-                                cursor: "pointer",
-                                background: contactData.customerIdType === t ? "#111827" : "#fff",
-                                color: contactData.customerIdType === t ? "#fff" : "#6b7280",
-                                transition: "all 0.15s ease",
-                                minWidth: "36px",
-                              }}
-                            >{t}</button>
-                          ))}
+                        <div style={{ position: "relative", width: "80px", flexShrink: 0 }}>
+                          <select 
+                            className="input-field" 
+                            style={{ 
+                              width: "100%", 
+                              padding: "10px", 
+                              appearance: "none", 
+                              WebkitAppearance: "none", 
+                              backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E\")", 
+                              backgroundRepeat: "no-repeat", 
+                              backgroundPosition: "right 10px center",
+                              paddingRight: "28px"
+                            }}
+                            value={contactData.customerIdType}
+                            onChange={e => setContactData({...contactData, customerIdType: e.target.value})}
+                          >
+                            <option value="V">V</option>
+                            <option value="E">E</option>
+                            <option value="J">J</option>
+                            <option value="G">G</option>
+                            <option value="P">P</option>
+                          </select>
                         </div>
                         <input 
                           type="text"
@@ -547,15 +548,26 @@ export default function CartDrawer() {
                             <option value="Banco Agrícola (0166)">Banco Agrícola (0166)</option>
                           </select>
                         </div>
-                        {/* Tipo cédula pagador: pills */}
                         <div style={{ display: "flex", gap: "8px", marginBottom: "8px" }}>
-                          <div style={{ display: "flex", borderRadius: "10px", border: "1px solid var(--color-border)", overflow: "hidden", flexShrink: 0 }}>
-                            {["V","E"].map(t => (
-                              <button key={t} type="button"
-                                onClick={() => setPaymentData({...paymentData, paymentIdType: t})}
-                                style={{ padding: "12px 14px", fontWeight: 600, fontSize: "0.9rem", border: "none", borderRight: t === "V" ? "1px solid var(--color-border)" : "none", cursor: "pointer", background: paymentData.paymentIdType === t ? "#111827" : "#fff", color: paymentData.paymentIdType === t ? "#fff" : "#6b7280", transition: "all 0.15s ease" }}
-                              >{t}</button>
-                            ))}
+                          <div style={{ position: "relative", width: "70px", flexShrink: 0 }}>
+                            <select 
+                              className="input-field" 
+                              style={{ 
+                                width: "100%",
+                                padding: "10px", 
+                                appearance: "none", 
+                                WebkitAppearance: "none", 
+                                backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E\")", 
+                                backgroundRepeat: "no-repeat", 
+                                backgroundPosition: "right 8px center",
+                                paddingRight: "24px"
+                              }}
+                              value={paymentData.paymentIdType}
+                              onChange={e => setPaymentData({...paymentData, paymentIdType: e.target.value})}
+                            >
+                              <option value="V">V</option>
+                              <option value="E">E</option>
+                            </select>
                           </div>
                           <input required type="text" inputMode="numeric" pattern="[0-9]*" placeholder="Cédula" className="input-field" value={paymentData.paymentId} onChange={e => setPaymentData({...paymentData, paymentId: e.target.value.replace(/\D/g, '')})} style={{ flex: 1 }} />
                         </div>
