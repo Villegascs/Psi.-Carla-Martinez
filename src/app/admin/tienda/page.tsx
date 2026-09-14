@@ -228,8 +228,6 @@ export default function AdminTiendaPage() {
                 <textarea required value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} style={{ width: "100%", padding: "10px", border: "1px solid #d1d5db", borderRadius: "6px", minHeight: "80px" }} />
               </div>
               
-              </div>
-              
               {formData.category !== "Producto Digital" && (
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
                   {(!formData.category || formData.category === "Merch") && (
