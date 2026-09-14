@@ -127,12 +127,12 @@ export async function POST(req: Request) {
               };
 
               await transporter.sendMail(mailOptions);
-              actionText += "\\n\\n(📧 Nota de entrega enviada al cliente)";
+              actionText += "\n\n(📧 Nota de entrega enviada al cliente)";
               await orderRef.update({ emailSentAt: new Date().toISOString() });
             }
           } catch (emailErr) {
             console.error("Error sending delivery note:", emailErr);
-            actionText += "\\n\\n(⚠️ Error al enviar correo)";
+            actionText += "\n\n(⚠️ Error al enviar correo)";
           }
         }
 
