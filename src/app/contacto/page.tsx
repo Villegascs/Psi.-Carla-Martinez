@@ -13,7 +13,7 @@ export default function ContactoPage() {
           <div style={{ flex: "1 1 400px", display: "flex", justifyContent: "center" }}>
             <div style={{ width: "100%", maxWidth: "450px", aspectRatio: "3/4", borderRadius: "24px", overflow: "hidden", position: "relative", boxShadow: "0 20px 50px rgba(0,0,0,0.15)", border: "4px solid #fff" }}>
               <img 
-                src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=800&q=80" 
+                src="/contacto.png" 
                 alt="Carla Martinez" 
                 style={{ width: "100%", height: "100%", objectFit: "cover" }} 
               />
