@@ -97,10 +97,15 @@ export default function TiendaPage() {
       ) : products.length === 0 ? (
         <p style={{ textAlign: "center", color: "var(--color-text-secondary)" }}>No hay productos disponibles por ahora.</p>
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "24px" }}>
-          {products.map((product) => {
-            const firstImg = product.images?.[0] || product.image;
-            return (
+        <div style={{ display: "flex", flexDirection: "column", gap: "60px" }}>
+          {/* Merch Category */}
+          {products.filter(p => !p.category || p.category === 'Merch').length > 0 && (
+            <div>
+              <h2 className="heading-2" style={{ marginBottom: "24px" }}>Merch Oficial</h2>
+              <div className="responsive-grid-3">
+                {products.filter(p => !p.category || p.category === 'Merch').map((product) => {
+                  const firstImg = product.images?.[0] || product.image;
+                  return (
               <div key={product.id} className="card" style={{ display: "flex", flexDirection: "column", padding: "16px", cursor: "pointer" }} onClick={() => openProductModal(product)}>
                 <div style={{ backgroundColor: "var(--color-bg-secondary)", height: "240px", borderRadius: "var(--radius-md)", marginBottom: "16px", overflow: "hidden", position: "relative" }}>
                   {firstImg ? (
@@ -131,6 +136,72 @@ export default function TiendaPage() {
               </div>
             );
           })}
+              </div>
+            </div>
+          )}
+
+          {/* Productos Físicos */}
+          {products.filter(p => p.category === 'Producto Físico').length > 0 && (
+            <div>
+              <h2 className="heading-2" style={{ marginBottom: "24px" }}>Productos Físicos</h2>
+              <div className="responsive-grid-3">
+                {products.filter(p => p.category === 'Producto Físico').map((product) => {
+                  const firstImg = product.images?.[0] || product.image;
+                  return (
+                    <div key={product.id} className="card" style={{ display: "flex", flexDirection: "column", padding: "16px", cursor: "pointer" }} onClick={() => openProductModal(product)}>
+                      <div style={{ backgroundColor: "var(--color-bg-secondary)", height: "240px", borderRadius: "var(--radius-md)", marginBottom: "16px", overflow: "hidden", position: "relative" }}>
+                        {firstImg ? (
+                          <img src={firstImg} alt={product.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                        ) : (
+                          <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--color-text-secondary)" }}>Sin imagen</div>
+                        )}
+                      </div>
+                      <h3 style={{ fontSize: "1.2rem", fontWeight: 600 }}>{product.name}</h3>
+                      <p style={{ fontSize: "1.25rem", fontWeight: 700, margin: "8px 0 16px 0", color: "var(--color-accent)" }}>
+                        {product.price}
+                      </p>
+                      <button className="btn-primary" style={{ width: "100%", marginTop: "auto" }} onClick={(e) => { e.stopPropagation(); openProductModal(product); }}>
+                        Ver Detalles
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Productos Digitales */}
+          {products.filter(p => p.category === 'Producto Digital').length > 0 && (
+            <div>
+              <h2 className="heading-2" style={{ marginBottom: "24px" }}>Productos Digitales</h2>
+              <div className="responsive-grid-3">
+                {products.filter(p => p.category === 'Producto Digital').map((product) => {
+                  const firstImg = product.images?.[0] || product.image;
+                  return (
+                    <div key={product.id} className="card" style={{ display: "flex", flexDirection: "column", padding: "16px", cursor: "pointer" }} onClick={() => openProductModal(product)}>
+                      <div style={{ backgroundColor: "var(--color-bg-secondary)", height: "240px", borderRadius: "var(--radius-md)", marginBottom: "16px", overflow: "hidden", position: "relative" }}>
+                        {firstImg ? (
+                          <img src={firstImg} alt={product.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                        ) : (
+                          <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--color-text-secondary)" }}>Sin imagen</div>
+                        )}
+                        <div style={{ position: "absolute", top: "12px", right: "12px", backgroundColor: "#10b981", color: "white", padding: "4px 10px", borderRadius: "20px", fontSize: "0.75rem", fontWeight: 700, boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}>
+                          Descarga Digital
+                        </div>
+                      </div>
+                      <h3 style={{ fontSize: "1.2rem", fontWeight: 600 }}>{product.name}</h3>
+                      <p style={{ fontSize: "1.25rem", fontWeight: 700, margin: "8px 0 16px 0", color: "var(--color-accent)" }}>
+                        {product.price}
+                      </p>
+                      <button className="btn-primary" style={{ width: "100%", marginTop: "auto" }} onClick={(e) => { e.stopPropagation(); openProductModal(product); }}>
+                        Ver Detalles
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
