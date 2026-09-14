@@ -51,13 +51,24 @@ export async function POST(req: Request) {
     if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
       const itemsList = orderData.items.map((i: any) => `${i.quantity}x ${i.name} ${i.size ? `(Talla: ${i.size})` : ''} ${i.color ? `(Color: ${i.color})` : ''}`).join('\n');
       
+      let paymentDetails = `<b>Método de Pago:</b> ${orderData.paymentMethod.toUpperCase()}`;
+      if (orderData.paymentMethod.toLowerCase().includes("pago movil")) {
+        paymentDetails += `\n<b>Banco:</b> ${orderData.paymentData?.bank || "N/A"}\n<b>Referencia:</b> ${orderData.paymentData?.reference || "N/A"}`;
+      } else if (orderData.paymentMethod.toLowerCase() === "zelle") {
+        paymentDetails += `\n<b>Referencia:</b> ${orderData.paymentData?.reference || "N/A"}`;
+      } else if (orderData.paymentMethod.toLowerCase() === "binance") {
+        paymentDetails += `\n<b>Usuario:</b> ${orderData.paymentData?.binanceUser || "N/A"}\n<b>Referencia:</b> ${orderData.paymentData?.reference || "N/A"}`;
+      } else if (orderData.paymentMethod.toLowerCase() === "efectivo") {
+        paymentDetails += `\n<b>Billetes:</b> ${orderData.paymentData?.billDenomination || "N/A"}`;
+      }
+
       const message = `🛍 <b>NUEVO PEDIDO DE TIENDA</b>\n\n` +
         `<b>Cliente:</b> ${orderData.customerName}\n` +
         `<b>Teléfono:</b> ${orderData.customerPhone}\n` +
         `<b>Envío:</b> ${orderData.deliveryMethod === 'Pickup' ? 'Retiro en Persona' : orderData.address}\n\n` +
         `<b>Productos:</b>\n${itemsList}\n\n` +
         `<b>TOTAL:</b> ${orderData.total}€\n\n` +
-        `<b>Método de Pago:</b> ${orderData.paymentMethod.toUpperCase()}`;
+        paymentDetails;
 
       const replyMarkup = {
         inline_keyboard: [

@@ -20,8 +20,27 @@ export async function POST(req: Request) {
         const adminDb = getAdminDb();
         const orderRef = adminDb.collection('store_orders').doc(orderId);
         
+        const doc = await orderRef.get();
+        if (!doc.exists) return NextResponse.json({ ok: false, error: 'Order not found' });
+        
+        const orderData = doc.data();
+        if (orderData?.status !== 'Pendiente') {
+          // Already processed, just answer callback and return
+          const answerUrl = `https://api.telegram.org/bot${process.env.STORE_TELEGRAM_BOT_TOKEN}/answerCallbackQuery`;
+          await fetch(answerUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              callback_query_id: callbackQuery.id,
+              text: 'Esta orden ya fue procesada previamente',
+              show_alert: true
+            })
+          });
+          return NextResponse.json({ ok: true });
+        }
+
         await orderRef.update({
-          status: isApprove ? 'En Proceso' : 'Cancelado'
+          status: isApprove ? 'Aprobado' : 'Cancelado'
         });
 
         // Edit Telegram message to remove buttons and show result
@@ -59,7 +78,7 @@ export async function POST(req: Request) {
                   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eaeaea; padding: 20px; border-radius: 12px;">
                     <h1 style="color: #333; text-align: center;">¡Tu pago ha sido aprobado!</h1>
                     <p style="font-size: 16px; color: #555;">Hola ${orderData.customerName},</p>
-                    <p style="font-size: 16px; color: #555;">Tu pedido está <strong>En Proceso</strong>. A continuación, adjuntamos tu nota de entrega:</p>
+                    <p style="font-size: 16px; color: #555;">Tu pedido está <strong>Aprobado</strong>. A continuación, adjuntamos tu nota de entrega:</p>
                     
                     <h3 style="margin-top: 30px; border-bottom: 1px solid #ccc; padding-bottom: 10px;">Detalles del Pedido</h3>
                     <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
@@ -117,16 +136,20 @@ export async function POST(req: Request) {
           }
         }
 
-        const originalText = callbackQuery.message.text || "Pedido de la Tienda";
+        const originalText = callbackQuery.message.caption || callbackQuery.message.text || "Pedido de la Tienda";
+        const hasPhoto = !!callbackQuery.message.photo;
+        const endpoint = hasPhoto ? 'editMessageCaption' : 'editMessageText';
+        const payloadKey = hasPhoto ? 'caption' : 'text';
 
-        const editUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/editMessageText`;
+        const editUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/${endpoint}`;
         await fetch(editUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             chat_id: chatId,
             message_id: messageId,
-            text: `${originalText}\n\n${actionText}`
+            [payloadKey]: `${originalText}\n\n${actionText}`,
+            parse_mode: 'HTML' // Because we used HTML when sending it!
           })
         });
 
