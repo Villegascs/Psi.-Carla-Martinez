@@ -116,13 +116,60 @@ export default function CartDrawer() {
       alert("Por favor selecciona un método de pago.");
       return;
     }
-    if (paymentMethod !== "efectivo" && !paymentData.reference) {
-      alert("Por favor ingresa el número de referencia.");
-      return;
+
+    // Validación específica por método de pago
+    if (paymentMethod === "pago_movil") {
+      if (!paymentData.bank) {
+        alert("Por favor selecciona tu banco de origen.");
+        return;
+      }
+      if (!paymentData.paymentId || paymentData.paymentId.length < 5) {
+        alert("Por favor ingresa tu número de cédula.");
+        return;
+      }
+      const phoneDigits = (paymentData.paymentPhone || "").replace(/\D/g, "");
+      if (phoneDigits.length < 11) {
+        alert("Por favor ingresa tu número de teléfono completo.");
+        return;
+      }
+      if (!paymentData.reference) {
+        alert("Por favor ingresa el número de referencia del pago.");
+        return;
+      }
+      if (!proofFile) {
+        alert("Por favor adjunta el comprobante (captura) de tu pago móvil.");
+        return;
+      }
     }
-    if (paymentMethod !== "efectivo" && !proofFile) {
-      alert("Por favor adjunta el comprobante (capture) de tu pago.");
-      return;
+
+    if (paymentMethod === "zelle") {
+      if (!paymentData.bank) {
+        alert("Por favor ingresa el nombre del titular de la cuenta Zelle.");
+        return;
+      }
+      if (!paymentData.reference) {
+        alert("Por favor ingresa el número de referencia de Zelle.");
+        return;
+      }
+      if (!proofFile) {
+        alert("Por favor adjunta el comprobante de tu pago Zelle.");
+        return;
+      }
+    }
+
+    if (paymentMethod === "binance") {
+      if (!paymentData.binanceUser) {
+        alert("Por favor ingresa tu usuario de Binance.");
+        return;
+      }
+      if (!paymentData.reference) {
+        alert("Por favor ingresa el número de referencia de Binance.");
+        return;
+      }
+      if (!proofFile) {
+        alert("Por favor adjunta el comprobante de tu pago Binance.");
+        return;
+      }
     }
 
     setLoading(true);

@@ -150,14 +150,21 @@ export default function ReservationForm() {
         setErrorMsg("Por favor selecciona un método de pago.");
         return;
       }
-      if (paymentMethod === "Zelle" && (!paymentData.reference)) return setErrorMsg("Ingresa la referencia de Zelle");
-      if (paymentMethod === "Pago Movil" && (!paymentData.bank || !paymentData.paymentId || !paymentData.paymentPhone || !paymentData.reference)) return setErrorMsg("Completa los datos del Pago Móvil");
+      if (paymentMethod === "Zelle" && (!paymentData.bank || !paymentData.reference)) return setErrorMsg("Ingresa el nombre del titular y la referencia de Zelle");
+      if (paymentMethod === "Pago Movil") {
+        if (!paymentData.bank) return setErrorMsg("Selecciona tu banco de origen");
+        if (!paymentData.paymentId || paymentData.paymentId.length < 5) return setErrorMsg("Ingresa tu número de cédula");
+        const phoneDigits = (paymentData.paymentPhone || "").replace(/\D/g, "");
+        if (phoneDigits.length < 11) return setErrorMsg("Ingresa tu número de teléfono completo (11 dígitos)");
+        if (!paymentData.reference) return setErrorMsg("Ingresa el número de referencia del pago");
+      }
       if (paymentMethod === "Binance" && (!paymentData.binanceUser || !paymentData.reference)) return setErrorMsg("Completa los datos de Binance");
       if (paymentMethod === "Efectivo" && (!paymentData.billDenomination)) return setErrorMsg("Indica la denominación de tus billetes");
       
       if (paymentMethod !== "Efectivo" && !proofFile) {
         return setErrorMsg("Debes adjuntar el comprobante de pago");
       }
+
 
       handleCheckout();
     }
