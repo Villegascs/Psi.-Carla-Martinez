@@ -276,11 +276,29 @@ export default function CartDrawer() {
               </h2>
               {checkoutStep !== "SUCCESS" && (
                 <div style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "0.9rem", fontWeight: 600, color: "var(--color-text-secondary)" }}>
-                  <span style={{ color: checkoutStep === "CART" ? "var(--color-accent)" : "inherit" }}>1. Carrito</span>
+                  <span 
+                    onClick={() => (checkoutStep === "CONTACT" || checkoutStep === "PAYMENT") && setCheckoutStep("CART")}
+                    style={{ 
+                      color: checkoutStep === "CART" ? "var(--color-accent)" : "inherit",
+                      cursor: (checkoutStep === "CONTACT" || checkoutStep === "PAYMENT") ? "pointer" : "default" 
+                    }}
+                  >
+                    1. Carrito
+                  </span>
                   <span>/</span>
-                  <span style={{ color: checkoutStep === "CONTACT" ? "var(--color-accent)" : "inherit" }}>2. Envío</span>
+                  <span 
+                    onClick={() => checkoutStep === "PAYMENT" && setCheckoutStep("CONTACT")}
+                    style={{ 
+                      color: checkoutStep === "CONTACT" ? "var(--color-accent)" : "inherit",
+                      cursor: checkoutStep === "PAYMENT" ? "pointer" : "default"
+                    }}
+                  >
+                    2. Envío
+                  </span>
                   <span>/</span>
-                  <span style={{ color: checkoutStep === "PAYMENT" ? "var(--color-accent)" : "inherit" }}>3. Pago</span>
+                  <span style={{ color: checkoutStep === "PAYMENT" ? "var(--color-accent)" : "inherit" }}>
+                    3. Pago
+                  </span>
                 </div>
               )}
             </div>
