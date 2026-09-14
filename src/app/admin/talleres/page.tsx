@@ -234,6 +234,9 @@ export default function AdminTalleres() {
       "Apellido": p.lastName,
       "Cédula": `${p.idType}-${p.idNumber}`,
       "Correo Comprador": p.buyerEmail,
+      "Teléfono (Pago Móvil)": p.buyerPhone || "N/A",
+      "Entradas en la orden": p.quantity || 1,
+      "Estatus": p.used ? "Escaneada ✅" : "No escaneada",
       "Fecha Compra": new Date(p.purchaseDate).toLocaleString()
     })));
     
@@ -427,7 +430,9 @@ export default function AdminTalleres() {
                   <tr>
                     <th style={{ padding: "12px", fontWeight: 600, fontSize: "0.9rem", color: "#6b7280" }}>Nombre</th>
                     <th style={{ padding: "12px", fontWeight: 600, fontSize: "0.9rem", color: "#6b7280" }}>Cédula</th>
-                    <th style={{ padding: "12px", fontWeight: 600, fontSize: "0.9rem", color: "#6b7280" }}>Correo del Comprador</th>
+                    <th style={{ padding: "12px", fontWeight: 600, fontSize: "0.9rem", color: "#6b7280" }}>Comprador (Contacto)</th>
+                    <th style={{ padding: "12px", fontWeight: 600, fontSize: "0.9rem", color: "#6b7280", textAlign: "center" }}>Cant. Compradas</th>
+                    <th style={{ padding: "12px", fontWeight: 600, fontSize: "0.9rem", color: "#6b7280" }}>Estatus QR</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -435,7 +440,20 @@ export default function AdminTalleres() {
                     <tr key={i} style={{ borderBottom: "1px solid #e5e7eb" }}>
                       <td style={{ padding: "12px" }}>{p.firstName} {p.lastName}</td>
                       <td style={{ padding: "12px" }}>{p.idType}-{p.idNumber}</td>
-                      <td style={{ padding: "12px" }}>{p.buyerEmail}</td>
+                      <td style={{ padding: "12px" }}>
+                        <div style={{ fontSize: "0.9rem" }}>{p.buyerEmail}</div>
+                        {p.buyerPhone && p.buyerPhone !== "N/A" && (
+                          <div style={{ fontSize: "0.8rem", color: "#6b7280" }}>Tel: {p.buyerPhone}</div>
+                        )}
+                      </td>
+                      <td style={{ padding: "12px", textAlign: "center", fontWeight: 600 }}>{p.quantity || 1}</td>
+                      <td style={{ padding: "12px" }}>
+                        {p.used ? (
+                          <span style={{ backgroundColor: "#d1fae5", color: "#065f46", padding: "4px 8px", borderRadius: "12px", fontSize: "0.8rem", fontWeight: 600 }}>Escaneada ✅</span>
+                        ) : (
+                          <span style={{ backgroundColor: "#f3f4f6", color: "#4b5563", padding: "4px 8px", borderRadius: "12px", fontSize: "0.8rem", fontWeight: 600 }}>Pendiente</span>
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>

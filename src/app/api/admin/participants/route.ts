@@ -38,8 +38,11 @@ export async function GET(request: Request) {
             idType: p.idType,
             idNumber: p.idNumber,
             buyerEmail: ticket.buyerEmail, // Correo de quien compró
+            buyerPhone: ticket.paymentDetails?.paymentPhone || "N/A", // Teléfono (si pagó con pago móvil)
             ticketId: ticket.id,
-            purchaseDate: ticket.createdAt
+            purchaseDate: ticket.createdAt,
+            used: p.used || false, // Estatus de escaneo
+            quantity: ticket.quantity || 1 // Cuántas entradas compró en total
           });
         });
       }
