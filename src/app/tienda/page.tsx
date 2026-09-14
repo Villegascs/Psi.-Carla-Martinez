@@ -13,6 +13,7 @@ type Product = {
   colors: string;
   image?: string;
   images?: string[];
+  category?: string;
 };
 
 export default function TiendaPage() {
@@ -101,11 +102,16 @@ export default function TiendaPage() {
             const firstImg = product.images?.[0] || product.image;
             return (
               <div key={product.id} className="card" style={{ display: "flex", flexDirection: "column", padding: "16px", cursor: "pointer" }} onClick={() => openProductModal(product)}>
-                <div style={{ backgroundColor: "var(--color-bg-secondary)", height: "240px", borderRadius: "var(--radius-md)", marginBottom: "16px", overflow: "hidden" }}>
+                <div style={{ backgroundColor: "var(--color-bg-secondary)", height: "240px", borderRadius: "var(--radius-md)", marginBottom: "16px", overflow: "hidden", position: "relative" }}>
                   {firstImg ? (
                     <img src={firstImg} alt={product.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   ) : (
                     <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--color-text-secondary)" }}>Sin imagen</div>
+                  )}
+                  {product.category === 'Producto Digital' && (
+                    <div style={{ position: "absolute", top: "12px", right: "12px", backgroundColor: "#10b981", color: "white", padding: "4px 10px", borderRadius: "20px", fontSize: "0.75rem", fontWeight: 700, boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}>
+                      Descarga Digital
+                    </div>
                   )}
                 </div>
                 <h3 style={{ fontSize: "1.2rem", fontWeight: 600 }}>{product.name}</h3>
@@ -136,12 +142,33 @@ export default function TiendaPage() {
             
             {/* Columna Izquierda: Imagen y Galería */}
             <div style={{ backgroundColor: "#f9fafb", display: "flex", flexDirection: "column", overflow: "hidden" }}>
-              <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px", minHeight: "300px" }}>
-                <img 
-                  src={selectedProduct.images?.[currentImageIndex] || selectedProduct.image} 
-                  alt={selectedProduct.name} 
-                  style={{ width: "100%", height: "100%", objectFit: "contain", maxHeight: "400px", borderRadius: "8px" }} 
-                />
+              <div 
+                style={{ 
+                  flex: 1, 
+                  display: "flex", 
+                  overflowX: "auto", 
+                  scrollSnapType: "x mandatory", 
+                  scrollBehavior: "smooth",
+                  WebkitOverflowScrolling: "touch",
+                  minHeight: "300px" 
+                }}
+                onScroll={(e) => {
+                  const target = e.target as HTMLDivElement;
+                  const index = Math.round(target.scrollLeft / target.clientWidth);
+                  if (index !== currentImageIndex) setCurrentImageIndex(index);
+                }}
+              >
+                {(selectedProduct.images && selectedProduct.images.length > 0) ? (
+                  selectedProduct.images.map((img, idx) => (
+                    <div id={`carousel-img-${idx}`} key={idx} style={{ minWidth: "100%", flexShrink: 0, scrollSnapAlign: "start", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
+                      <img src={img} alt={`${selectedProduct.name} - ${idx + 1}`} style={{ width: "100%", height: "100%", objectFit: "contain", maxHeight: "400px", borderRadius: "8px" }} />
+                    </div>
+                  ))
+                ) : (
+                  <div style={{ minWidth: "100%", flexShrink: 0, scrollSnapAlign: "start", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
+                    <img src={selectedProduct.image} alt={selectedProduct.name} style={{ width: "100%", height: "100%", objectFit: "contain", maxHeight: "400px", borderRadius: "8px" }} />
+                  </div>
+                )}
               </div>
               
               {selectedProduct.images && selectedProduct.images.length > 1 && (
@@ -149,7 +176,10 @@ export default function TiendaPage() {
                   {selectedProduct.images.map((img, idx) => (
                     <button 
                       key={idx}
-                      onClick={() => setCurrentImageIndex(idx)}
+                      onClick={() => {
+                        setCurrentImageIndex(idx);
+                        document.getElementById(`carousel-img-${idx}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+                      }}
                       style={{ 
                         width: "60px", 
                         height: "60px", 

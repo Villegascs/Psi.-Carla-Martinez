@@ -87,6 +87,18 @@ export async function POST(req: Request) {
                       ${orderData.address ? `<strong>Dirección:</strong> ${orderData.address}` : ''}
                     </p>
 
+                    ${orderData.items.filter((item: any) => item.isDigital && item.digitalLink).length > 0 ? `
+                      <div style="margin-top: 30px; padding: 20px; background-color: #f0fdf4; border: 1px solid #10b981; border-radius: 8px; text-align: center;">
+                        <h3 style="color: #065f46; margin-top: 0;">¡Tus Productos Digitales están listos!</h3>
+                        <p style="color: #064e3b; font-size: 14px; margin-bottom: 20px;">Haz clic en los enlaces a continuación para acceder a tu contenido digital.</p>
+                        ${orderData.items.filter((item: any) => item.isDigital && item.digitalLink).map((item: any) => `
+                          <a href="${item.digitalLink}" target="_blank" style="display: inline-block; margin: 5px; padding: 12px 24px; background-color: #10b981; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 14px;">
+                            Descargar: ${item.name}
+                          </a>
+                        `).join("")}
+                      </div>
+                    ` : ''}
+
                     <p style="font-size: 14px; color: #555; margin-top: 20px; text-align: center;">
                       Puedes rastrear el estado de tu pedido en cualquier momento ingresando aquí:<br/>
                       <a href="https://psi-carla-martinez.vercel.app/tienda/ordenes/${orderId}" style="display: inline-block; margin-top: 10px; padding: 10px 20px; background-color: #10b981; color: white; text-decoration: none; border-radius: 8px;">Rastrear Orden</a>

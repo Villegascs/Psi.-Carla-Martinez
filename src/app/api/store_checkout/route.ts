@@ -31,10 +31,25 @@ export async function POST(req: Request) {
 
     const adminDb = getAdminDb();
     
+    // Enrich items securely with digitalLink if applicable
+    const enrichedItems = await Promise.all(orderData.items.map(async (item: any) => {
+      if (item.id) {
+        const productDoc = await adminDb.collection('products').doc(item.id).get();
+        if (productDoc.exists) {
+          const pData = productDoc.data();
+          if (pData?.category === 'Producto Digital' && pData?.digitalLink) {
+            return { ...item, digitalLink: pData.digitalLink, isDigital: true };
+          }
+        }
+      }
+      return item;
+    }));
+    
     // Create Store Order
     const newOrderRef = adminDb.collection('store_orders').doc();
     const finalOrderData = {
       ...orderData,
+      items: enrichedItems,
       id: newOrderRef.id,
       proofUrl,
       createdAt: new Date().toISOString(),

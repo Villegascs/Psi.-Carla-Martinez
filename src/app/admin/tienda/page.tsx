@@ -12,6 +12,8 @@ type Product = {
   status: "Publicado" | "Oculto";
   image?: string; // Legacy support
   images: string[];
+  category?: "Merch" | "Producto Físico" | "Producto Digital";
+  digitalLink?: string;
 };
 
 export default function AdminTiendaPage() {
@@ -21,7 +23,7 @@ export default function AdminTiendaPage() {
   const [showModal, setShowModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [formData, setFormData] = useState<Product>({
-    name: "", price: "", description: "", sizes: "", colors: "", status: "Publicado", images: []
+    name: "", price: "", description: "", sizes: "", colors: "", status: "Publicado", images: [], category: "Merch", digitalLink: ""
   });
   
   const [imageFiles, setImageFiles] = useState<File[]>([]);
@@ -54,11 +56,13 @@ export default function AdminTiendaPage() {
     if (product) {
       setFormData({
         ...product,
+        category: product.category || "Merch",
+        digitalLink: product.digitalLink || "",
         images: product.images || (product.image ? [product.image] : [])
       });
     } else {
       setFormData({
-        name: "", price: "10€", description: "", sizes: "", colors: "", status: "Publicado", images: []
+        name: "", price: "", description: "", sizes: "", colors: "", status: "Publicado", images: [], category: "Merch", digitalLink: ""
       });
     }
     setImageFiles([]);
@@ -149,7 +153,7 @@ export default function AdminTiendaPage() {
                 <th style={{ padding: "16px", fontWeight: 600, fontSize: "0.85rem", color: "#6b7280" }}>PRODUCTO</th>
                 <th style={{ padding: "16px", fontWeight: 600, fontSize: "0.85rem", color: "#6b7280" }}>ESTADO</th>
                 <th style={{ padding: "16px", fontWeight: 600, fontSize: "0.85rem", color: "#6b7280" }}>PRECIO</th>
-                <th style={{ padding: "16px", fontWeight: 600, fontSize: "0.85rem", color: "#6b7280" }}>TALLAS / COLORES</th>
+                <th style={{ padding: "16px", fontWeight: 600, fontSize: "0.85rem", color: "#6b7280" }}>TIPO / VARIANTE</th>
                 <th style={{ padding: "16px", fontWeight: 600, fontSize: "0.85rem", color: "#6b7280", textAlign: "right" }}>ACCIONES</th>
               </tr>
             </thead>
@@ -167,8 +171,10 @@ export default function AdminTiendaPage() {
                   </td>
                   <td style={{ padding: "16px" }}>{p.price}</td>
                   <td style={{ padding: "16px", fontSize: "0.85rem", color: "#6b7280" }}>
-                    Tallas: {p.sizes || 'N/A'}<br/>
-                    Colores: {p.colors || 'N/A'}
+                    <strong>{p.category || 'Merch'}</strong><br/>
+                    {(!p.category || p.category === 'Merch') && <>Tallas: {p.sizes || 'N/A'}<br/></>}
+                    {p.category !== 'Producto Digital' && <>Colores: {p.colors || 'N/A'}</>}
+                    {p.category === 'Producto Digital' && <span style={{ color: '#10b981' }}>Enlace configurado</span>}
                   </td>
                   <td style={{ padding: "16px", textAlign: "right" }}>
                     <button onClick={() => handleOpenModal(p)} style={{ padding: "6px 12px", marginRight: "8px", border: "1px solid #e5e7eb", borderRadius: "6px", backgroundColor: "#fff", cursor: "pointer", fontSize: "0.85rem" }}>
@@ -209,20 +215,43 @@ export default function AdminTiendaPage() {
               </div>
               
               <div>
+                <label style={{ display: "block", marginBottom: "8px", fontWeight: 600, fontSize: "0.9rem" }}>Categoría</label>
+                <select required value={formData.category} onChange={e => setFormData({...formData, category: e.target.value as any})} style={{ width: "100%", padding: "10px", border: "1px solid #d1d5db", borderRadius: "6px" }}>
+                  <option value="Merch">Merch (Ropa, gorras, etc.)</option>
+                  <option value="Producto Físico">Producto Físico General (Termos, Tazas, etc.)</option>
+                  <option value="Producto Digital">Producto Digital (E-Book, Guía Virtual, etc.)</option>
+                </select>
+              </div>
+
+              <div>
                 <label style={{ display: "block", marginBottom: "8px", fontWeight: 600, fontSize: "0.9rem" }}>Descripción</label>
                 <textarea required value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} style={{ width: "100%", padding: "10px", border: "1px solid #d1d5db", borderRadius: "6px", minHeight: "80px" }} />
               </div>
               
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
-                <div>
-                  <label style={{ display: "block", marginBottom: "8px", fontWeight: 600, fontSize: "0.9rem" }}>Tallas (Separadas por coma)</label>
-                  <input type="text" placeholder="S, M, L, XL" value={formData.sizes} onChange={e => setFormData({...formData, sizes: e.target.value})} style={{ width: "100%", padding: "10px", border: "1px solid #d1d5db", borderRadius: "6px" }} />
-                </div>
-                <div>
-                  <label style={{ display: "block", marginBottom: "8px", fontWeight: 600, fontSize: "0.9rem" }}>Colores (Separados por coma)</label>
-                  <input type="text" placeholder="Blanco, Negro" value={formData.colors} onChange={e => setFormData({...formData, colors: e.target.value})} style={{ width: "100%", padding: "10px", border: "1px solid #d1d5db", borderRadius: "6px" }} />
-                </div>
               </div>
+              
+              {formData.category !== "Producto Digital" && (
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+                  {(!formData.category || formData.category === "Merch") && (
+                    <div>
+                      <label style={{ display: "block", marginBottom: "8px", fontWeight: 600, fontSize: "0.9rem" }}>Tallas (Separadas por coma)</label>
+                      <input type="text" placeholder="S, M, L, XL" value={formData.sizes} onChange={e => setFormData({...formData, sizes: e.target.value})} style={{ width: "100%", padding: "10px", border: "1px solid #d1d5db", borderRadius: "6px" }} />
+                    </div>
+                  )}
+                  <div>
+                    <label style={{ display: "block", marginBottom: "8px", fontWeight: 600, fontSize: "0.9rem" }}>Colores (Separados por coma)</label>
+                    <input type="text" placeholder="Blanco, Negro" value={formData.colors} onChange={e => setFormData({...formData, colors: e.target.value})} style={{ width: "100%", padding: "10px", border: "1px solid #d1d5db", borderRadius: "6px" }} />
+                  </div>
+                </div>
+              )}
+
+              {formData.category === "Producto Digital" && (
+                <div>
+                  <label style={{ display: "block", marginBottom: "8px", fontWeight: 600, fontSize: "0.9rem", color: "#10b981" }}>Enlace del Producto Digital (Secreto)</label>
+                  <input required type="url" placeholder="https://drive.google.com/... o https://..." value={formData.digitalLink || ""} onChange={e => setFormData({...formData, digitalLink: e.target.value})} style={{ width: "100%", padding: "10px", border: "1px solid #10b981", borderRadius: "6px" }} />
+                  <p style={{ fontSize: "0.8rem", color: "#6b7280", marginTop: "4px" }}>Este enlace solo será enviado al cliente por correo una vez apruebes su pago.</p>
+                </div>
+              )}
 
               <div>
                 <label style={{ display: "block", marginBottom: "8px", fontWeight: 600, fontSize: "0.9rem" }}>Estado</label>
@@ -233,7 +262,9 @@ export default function AdminTiendaPage() {
               </div>
 
               <div>
-                <label style={{ display: "block", marginBottom: "8px", fontWeight: 600, fontSize: "0.9rem" }}>Imágenes del Producto</label>
+                <label style={{ display: "block", marginBottom: "8px", fontWeight: 600, fontSize: "0.9rem" }}>
+                  {formData.category === "Producto Digital" ? "Imagen de Portada" : "Imágenes del Producto"}
+                </label>
                 
                 {formData.images && formData.images.length > 0 && (
                   <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "12px" }}>
@@ -246,7 +277,7 @@ export default function AdminTiendaPage() {
                   </div>
                 )}
 
-                <input type="file" multiple accept="image/*" onChange={e => setImageFiles(Array.from(e.target.files || []))} style={{ display: "block", marginBottom: "8px" }} required={formData.images.length === 0 && imageFiles.length === 0} />
+                <input type="file" multiple={formData.category !== "Producto Digital"} accept="image/*" onChange={e => setImageFiles(Array.from(e.target.files || []))} style={{ display: "block", marginBottom: "8px" }} required={formData.images.length === 0 && imageFiles.length === 0} />
               </div>
 
               <div style={{ display: "flex", justifyContent: "flex-end", gap: "12px", marginTop: "16px" }}>
