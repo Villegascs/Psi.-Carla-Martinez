@@ -16,8 +16,7 @@ export async function POST(req: Request) {
 
     if (file) {
       const storage = getAdminStorage();
-      const bucketName = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET?.replace('.firebasestorage.app', '.appspot.com');
-      const bucket = storage.bucket(bucketName);
+      const bucket = storage.bucket();
       const fileName = `store_proofs/${Date.now()}_${file.name}`;
       const fileRef = bucket.file(fileName);
       
