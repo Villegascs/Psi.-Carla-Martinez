@@ -158,8 +158,11 @@ export default function PlansManager() {
                 <input required type="text" className="input-field" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} placeholder="Ej. Consulta Económica" />
               </div>
               <div className="form-group">
-                <label className="form-label">Precio (€)</label>
-                <input required type="number" min="0" step="any" className="input-field" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} />
+                <label className="form-label">Precio</label>
+                <div style={{ position: "relative" }}>
+                  <span style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "#6b7280", fontWeight: 500 }}>€</span>
+                  <input required type="number" min="0" step="any" className="input-field" style={{ paddingLeft: "28px" }} value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} />
+                </div>
               </div>
               <div className="form-group">
                 <label className="form-label">Descripción (Opcional)</label>
