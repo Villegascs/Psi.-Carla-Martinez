@@ -3,6 +3,7 @@
 import { useCart } from "@/context/CartContext";
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { useLenis } from "lenis/react";
 
 type Product = {
   id: string;
@@ -45,6 +46,25 @@ export default function TiendaPage() {
         setLoading(false);
       });
   }, []);
+
+  const lenis = useLenis();
+
+  useEffect(() => {
+    if (selectedProduct) {
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+      lenis?.stop();
+    } else {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+      lenis?.start();
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+      lenis?.start();
+    };
+  }, [selectedProduct, lenis]);
 
   const openProductModal = (product: Product) => {
     setSelectedProduct(product);

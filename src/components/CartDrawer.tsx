@@ -4,6 +4,7 @@ import { useCart } from "@/context/CartContext";
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { CopyButton } from "@/components/ui/CopyButton";
+import { useLenis } from "lenis/react";
 
 export default function CartDrawer() {
   const { items, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, total, clearCart } = useCart();
@@ -21,16 +22,24 @@ export default function CartDrawer() {
       .catch(console.error);
   }, []);
 
+  const lenis = useLenis();
+
   useEffect(() => {
     if (isCartOpen) {
       document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+      lenis?.stop();
     } else {
       document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+      lenis?.start();
     }
     return () => {
       document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+      lenis?.start();
     };
-  }, [isCartOpen]);
+  }, [isCartOpen, lenis]);
 
   // Checkout steps: CART -> CONTACT -> PAYMENT -> SUCCESS
   const [checkoutStep, setCheckoutStep] = useState<"CART" | "CONTACT" | "PAYMENT" | "SUCCESS">("CART");
@@ -186,7 +195,7 @@ export default function CartDrawer() {
 
       {/* Modal del Carrito (Wizard) */}
       {isCartOpen && typeof document !== "undefined" && createPortal(
-        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999, padding: "20px", animation: "fadeIn 0.3s" }}>
+        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999, padding: "20px", animation: "fadeIn 0.3s", overscrollBehavior: "contain" }}>
           <div style={{ backgroundColor: "#f9fafb", borderRadius: "16px", width: "100%", maxWidth: "1000px", maxHeight: "90vh", display: "flex", flexDirection: "column", overflow: "hidden", position: "relative", boxShadow: "0 20px 40px rgba(0,0,0,0.2)" }}>
             <button onClick={() => { setIsCartOpen(false); if(checkoutStep==="SUCCESS") setCheckoutStep("CART"); }} style={{ position: "absolute", top: "24px", right: "24px", background: "none", border: "none", fontSize: "1.5rem", cursor: "pointer", color: "var(--color-text-secondary)", zIndex: 10 }}>&times;</button>
             
@@ -210,7 +219,7 @@ export default function CartDrawer() {
             <div className="cart-drawer-body" style={{ display: "flex", flex: 1, overflow: "hidden", flexDirection: "row" }}>
               
               {/* Left Column (Forms / Cart Items) */}
-              <div className="cart-drawer-content" style={{ flex: 1, padding: "32px", overflowY: "auto" }}>
+              <div className="cart-drawer-content" style={{ flex: 1, padding: "32px", overflowY: "auto", overscrollBehavior: "contain" }}>
                 
                 {checkoutStep === "CART" && (
                   items.length === 0 ? (
