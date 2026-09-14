@@ -4,10 +4,12 @@ import { useCart } from "@/context/CartContext";
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { CopyButton } from "@/components/ui/CopyButton";
+import { useRouter } from "next/navigation";
 import { useLenis } from "lenis/react";
 
 export default function CartDrawer() {
   const { items, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, total, clearCart } = useCart();
+  const router = useRouter();
   
   const [bcvRate, setBcvRate] = useState<number | null>(null);
   const [eurRate, setEurRate] = useState<number | null>(null);
@@ -485,9 +487,20 @@ export default function CartDrawer() {
                   <div style={{ textAlign: "center", paddingTop: "60px" }}>
                     <div style={{ fontSize: "5rem", marginBottom: "24px" }}>🛍️</div>
                     <h3 className="heading-2" style={{ color: "var(--color-accent)", marginBottom: "16px" }}>¡Pedido Recibido!</h3>
-                    <p className="text-muted" style={{ lineHeight: "1.6", maxWidth: "400px", margin: "0 auto" }}>
+                    <p className="text-muted" style={{ lineHeight: "1.6", maxWidth: "400px", margin: "0 auto", marginBottom: "32px" }}>
                       Hemos recibido tu pedido correctamente. Nos pondremos en contacto contigo pronto a través de WhatsApp para coordinar los detalles.
                     </p>
+                    <button 
+                      className="btn-primary" 
+                      onClick={() => {
+                        setIsCartOpen(false);
+                        setCheckoutStep("CART");
+                        router.push("/");
+                      }}
+                      style={{ padding: "14px 32px", fontSize: "1rem" }}
+                    >
+                      Volver al inicio
+                    </button>
                   </div>
                 )}
               </div>
