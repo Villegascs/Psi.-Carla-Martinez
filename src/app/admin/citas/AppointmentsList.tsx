@@ -173,12 +173,33 @@ export default function AppointmentsList() {
             </div>
 
             <div style={{ marginBottom: "24px" }}>
-              <p style={{ fontSize: "0.85rem", color: "#6b7280", marginBottom: "8px" }}>Pago: {selectedAppointment.paymentMethod || 'No especificado'}</p>
-              {selectedAppointment.paymentData && (
-                <pre style={{ backgroundColor: "#f9fafb", padding: "12px", borderRadius: "8px", fontSize: "0.85rem", overflowX: "auto" }}>
-                  {JSON.stringify(selectedAppointment.paymentData, null, 2)}
-                </pre>
-              )}
+              <p style={{ fontSize: "0.8rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: "#9ca3af", marginBottom: "10px" }}>
+                Método de Pago: <span style={{ color: "#374151" }}>{selectedAppointment.paymentMethod || 'No especificado'}</span>
+              </p>
+              {selectedAppointment.paymentData && (() => {
+                const pd = selectedAppointment.paymentData;
+                const labels: Record<string, string> = {
+                  bank: "Banco",
+                  paymentIdType: "Tipo de Documento",
+                  paymentId: "Número de Documento",
+                  paymentTd: "Número de Documento",
+                  paymentPhone: "Teléfono",
+                  reference: "Referencia / Nro. Confirmación",
+                  binanceUser: "Usuario Binance",
+                  billDenomination: "Denominación",
+                };
+                const entries = Object.entries(pd).filter(([, v]) => v !== "" && v !== null && v !== undefined);
+                return (
+                  <div style={{ backgroundColor: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: "10px", overflow: "hidden" }}>
+                    {entries.map(([key, value], i) => (
+                      <div key={key} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 14px", borderBottom: i < entries.length - 1 ? "1px solid #e5e7eb" : "none", backgroundColor: i % 2 === 0 ? "#ffffff" : "#f9fafb" }}>
+                        <span style={{ fontSize: "0.82rem", color: "#6b7280", fontWeight: 500 }}>{labels[key] || key}</span>
+                        <span style={{ fontSize: "0.88rem", color: "#111827", fontWeight: 600, textAlign: "right", maxWidth: "60%", wordBreak: "break-all" }}>{String(value)}</span>
+                      </div>
+                    ))}
+                  </div>
+                );
+              })()}
               {selectedAppointment.proofUrl && (
                 <div style={{ marginTop: "12px" }}>
                   <p style={{ fontSize: "0.85rem", color: "#6b7280", marginBottom: "4px" }}>Comprobante:</p>
