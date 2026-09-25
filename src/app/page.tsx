@@ -1,5 +1,5 @@
 import FadeIn from "@/components/FadeIn";
-import { Play, Laptop, Users, Truck, ShieldCheck, Leaf } from "lucide-react";
+import { Play, Laptop, Users, Truck, ShieldCheck, Leaf, HeartHandshake, Sparkles, CheckCircle2 } from "lucide-react";
 import ProductCarousel from "@/components/ProductCarousel";
 
 export default function Home() {
@@ -34,8 +34,163 @@ export default function Home() {
 
       <div className="home-sections-flow">
 
+      {/* Sobre Mí Section — Foto a la izquierda en recuadro, descripción a la derecha */}
+      <FadeIn delay={0} direction="up" className="section-sobre-mi-padding" style={{
+        width: "100vw",
+        marginLeft: "calc(-50vw + 50%)",
+        boxSizing: "border-box",
+      }}>
+        <div className="sobre-mi-container">
+
+          {/* LEFT — Foto de Carla Martínez en Recuadro */}
+          <div className="sobre-mi-col-left">
+            <div className="sobre-mi-frame">
+              <div className="sobre-mi-img-wrapper">
+                <img
+                  src="/carla-martinez.jpg"
+                  alt="Psicóloga Carla Martínez"
+                  className="sobre-mi-img"
+                />
+              </div>
+
+              {/* Insignia / Tarjeta flotante en el recuadro */}
+              <div className="sobre-mi-badge">
+                <div>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "#111111", lineHeight: 1.2 }}>
+                    Psic. Carla Martínez
+                  </div>
+                  <div style={{ fontSize: "0.76rem", color: "#9c785d", fontWeight: 600, letterSpacing: "0.02em", marginTop: "2px" }}>
+                    Licenciada en Psicología Clínica
+                  </div>
+                </div>
+                <div style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  backgroundColor: "rgba(34, 197, 94, 0.12)",
+                  padding: "4px 10px",
+                  borderRadius: "9999px",
+                }}>
+                  <span style={{
+                    width: "7px",
+                    height: "7px",
+                    borderRadius: "50%",
+                    backgroundColor: "#16a34a",
+                  }} />
+                  <span style={{ fontSize: "0.72rem", fontWeight: 600, color: "#15803d" }}>
+                    Citas activas
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>{/* END LEFT */}
+
+          {/* RIGHT — Descripción y perfil profesional */}
+          <div className="sobre-mi-col-right">
+            {/* Eyebrow */}
+            <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "12px" }}>
+              <span style={{
+                fontSize: "0.78rem",
+                fontWeight: 700,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                color: "#111111",
+              }}>SOBRE MÍ</span>
+              <div style={{ flex: 1, height: "1px", backgroundColor: "#111111", maxWidth: "80px" }} />
+            </div>
+
+            {/* Title */}
+            <h2 style={{
+              fontSize: "clamp(2.1rem, 7vw, 4.2rem)",
+              fontWeight: 700,
+              letterSpacing: "-2px",
+              lineHeight: 1.05,
+              margin: "0 0 10px 0",
+              color: "#111111",
+            }}>Psic. Carla Martínez</h2>
+
+            <p style={{
+              fontSize: "1.08rem",
+              fontWeight: 600,
+              color: "#9c785d",
+              marginBottom: "18px",
+            }}>
+              Psicóloga Clínica · Psicoterapeuta
+            </p>
+
+            <p style={{ fontSize: "1.02rem", color: "#444444", lineHeight: 1.65, marginBottom: "14px" }}>
+              Bienvenido a este espacio pensado para tu bienestar y salud mental. Mi propósito como psicóloga es acompañarte con empatía, calidez y profesionalismo en cada etapa de tu proceso de crecimiento personal.
+            </p>
+
+            <p style={{ fontSize: "0.98rem", color: "#555555", lineHeight: 1.65, marginBottom: "26px" }}>
+              Creo firmemente en la psicoterapia como un entorno seguro, humano y libre de juicios, donde trabajamos juntos para sanar heridas, comprender tus emociones y desarrollar herramientas prácticas que te permitan vivir con mayor armonía y plenitud.
+            </p>
+
+            {/* Feature Highlights */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: "34px" }}>
+              <div className="sobre-mi-feature-item">
+                <div className="sobre-mi-feature-icon">
+                  <HeartHandshake size={20} strokeWidth={2} />
+                </div>
+                <div>
+                  <h4 style={{ fontSize: "0.96rem", fontWeight: 600, color: "#111111", margin: 0 }}>
+                    Acompañamiento Humano y Cercano
+                  </h4>
+                  <p style={{ fontSize: "0.85rem", color: "#666666", margin: "2px 0 0 0", lineHeight: 1.4 }}>
+                    Un espacio confidencial, respetuoso y totalmente adaptado a tu ritmo de vida.
+                  </p>
+                </div>
+              </div>
+
+              <div className="sobre-mi-feature-item">
+                <div className="sobre-mi-feature-icon">
+                  <Sparkles size={20} strokeWidth={2} />
+                </div>
+                <div>
+                  <h4 style={{ fontSize: "0.96rem", fontWeight: 600, color: "#111111", margin: 0 }}>
+                    Enfoque Basado en Evidencia
+                  </h4>
+                  <p style={{ fontSize: "0.85rem", color: "#666666", margin: "2px 0 0 0", lineHeight: 1.4 }}>
+                    Estrategias terapéuticas comprobadas para superar la ansiedad, el estrés y desbloquear tu potencial.
+                  </p>
+                </div>
+              </div>
+
+              <div className="sobre-mi-feature-item">
+                <div className="sobre-mi-feature-icon">
+                  <CheckCircle2 size={20} strokeWidth={2} />
+                </div>
+                <div>
+                  <h4 style={{ fontSize: "0.96rem", fontWeight: 600, color: "#111111", margin: 0 }}>
+                    Modalidad Virtual y Presencial
+                  </h4>
+                  <p style={{ fontSize: "0.85rem", color: "#666666", margin: "2px 0 0 0", lineHeight: 1.4 }}>
+                    Flexibilidad para iniciar tus sesiones desde la comodidad de tu hogar o presencialmente.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Action CTA Buttons */}
+            <div style={{ display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
+              <a href="/reservaciones" className="btn-reserva">
+                AGENDAR CITA
+                <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 8H19M19 8L12 1M19 8L12 15" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </a>
+              <a href="/talleres" className="btn-sobre-mi-secondary">
+                CONOCE LOS TALLERES
+              </a>
+            </div>
+
+          </div>{/* END RIGHT */}
+
+        </div>
+      </FadeIn>
+
       {/* Reservaciones Section — separado 85px de la izquierda, foto a la derecha a futuro */}
-      <FadeIn delay={0} direction="up" className="section-reservaciones-padding" style={{
+      <FadeIn delay={150} direction="up" className="section-reservaciones-padding" style={{
         width: "100vw",
         marginLeft: "calc(-50vw + 50%)",
         boxSizing: "border-box",

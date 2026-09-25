@@ -202,6 +202,7 @@ button {
 
 /* Responsive: Tablet y pantallas medianas (<= 960px) */
 @media (max-width: 960px) {
+  .section-sobre-mi-padding,
   .section-reservaciones-padding,
   .section-talleres-padding,
   .section-tienda-padding {
@@ -212,6 +213,10 @@ button {
 
 /* Reglas de separación en escritorio (> 960px) según diseño original */
 @media (min-width: 961px) {
+  .section-sobre-mi-padding {
+    padding-left: clamp(32px, 5vw, 64px) !important;
+    padding-right: 85px !important;
+  }
   .section-reservaciones-padding {
     padding-left: 85px !important;
     padding-right: 24px !important;
@@ -228,6 +233,7 @@ button {
 
 /* Responsive: Móviles (<= 640px) */
 @media (max-width: 640px) {
+  .section-sobre-mi-padding,
   .section-reservaciones-padding,
   .section-talleres-padding,
   .section-tienda-padding {
@@ -888,6 +894,7 @@ button {
   .cart-drawer-content {
     overflow-y: visible !important;
     padding: 20px 16px !important;
+    overscroll-behavior: contain;
   }
   
   .cart-drawer-summary {
@@ -1062,4 +1069,200 @@ button {
   position: absolute;
   margin-top: 4px;
   animation: fadeIn 0.2s ease-out;
+}
+
+/* =========================================================
+   Sección Sobre Mí — Psicóloga Carla Martínez
+   ========================================================= */
+.sobre-mi-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(32px, 5vw, 64px);
+  width: 100%;
+}
+
+.sobre-mi-col-left {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.sobre-mi-col-right {
+  flex: 0 1 580px;
+  max-width: 580px;
+  min-width: 0;
+  width: 100%;
+}
+
+/* Recuadro de la Foto con marco prémium */
+.sobre-mi-frame {
+  position: relative;
+  background: #ffffff;
+  border: 1.5px solid rgba(176, 139, 110, 0.32);
+  border-radius: 28px;
+  padding: 14px;
+  width: 100%;
+  max-width: clamp(320px, 30vw, 415px);
+  box-shadow: 
+    0 24px 50px -16px rgba(176, 139, 110, 0.22),
+    0 8px 24px -6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+}
+
+.sobre-mi-frame:hover {
+  transform: translateY(-5px);
+  border-color: rgba(176, 139, 110, 0.6);
+  box-shadow: 
+    0 32px 64px -16px rgba(176, 139, 110, 0.3),
+    0 12px 28px -6px rgba(0, 0, 0, 0.08);
+}
+
+/* Marco decorativo sutil exterior */
+.sobre-mi-frame::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  right: -8px;
+  bottom: -8px;
+  border-radius: 34px;
+  border: 1.5px dashed rgba(176, 139, 110, 0.35);
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.8;
+}
+
+.sobre-mi-img-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 20px;
+  overflow: hidden;
+  background-color: #f6f3ef;
+}
+
+.sobre-mi-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sobre-mi-frame:hover .sobre-mi-img {
+  transform: scale(1.03);
+}
+
+/* Insignia / Tarjeta flotante en la foto */
+.sobre-mi-badge {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  right: 24px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 18px;
+  padding: 14px 18px;
+  box-shadow: 0 12px 30px -6px rgba(0, 0, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* Pills de características */
+.sobre-mi-feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background-color: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(176, 139, 110, 0.14);
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.sobre-mi-feature-item:hover {
+  background-color: #ffffff;
+  border-color: rgba(176, 139, 110, 0.35);
+  transform: translateX(4px);
+}
+
+.sobre-mi-feature-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background-color: rgba(176, 139, 110, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9c785d;
+  flex-shrink: 0;
+}
+
+/* Botón secundario */
+.btn-sobre-mi-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background-color: transparent;
+  color: #111111;
+  border: 1.5px solid #d4c5b9;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 18px 34px;
+  border-radius: 16px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.btn-sobre-mi-secondary:hover {
+  border-color: #b08b6e;
+  color: #9c785d;
+  background-color: rgba(176, 139, 110, 0.08);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 960px) {
+  .sobre-mi-container {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 48px !important;
+  }
+  .sobre-mi-col-left {
+    flex: none !important;
+    max-width: 440px !important;
+  }
+  .sobre-mi-col-right {
+    flex: none !important;
+    max-width: 100% !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .sobre-mi-frame {
+    padding: 12px;
+    border-radius: 22px;
+  }
+  .sobre-mi-frame::before {
+    display: none;
+  }
+  .sobre-mi-img-wrapper {
+    border-radius: 16px;
+  }
+  .sobre-mi-badge {
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    padding: 10px 14px;
+  }
 }
