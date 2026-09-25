@@ -1,0 +1,222 @@
+.outer-container {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.step-circle-container {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 44rem;
+  border-radius: 1.5rem;
+  background-color: var(--color-bg-primary, #ffffff);
+  border: 1px solid var(--color-border, #e2e8f0);
+  box-shadow:
+    0 20px 40px -15px rgba(0, 0, 0, 0.06),
+    0 1px 3px rgba(0, 0, 0, 0.04);
+  overflow: visible;
+  transition: box-shadow 0.3s ease;
+}
+
+.step-indicator-row {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.75rem 2rem 1.5rem 2rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  background: linear-gradient(180deg, #fdfcfb 0%, #ffffff 100%);
+  border-top-left-radius: 1.5rem;
+  border-top-right-radius: 1.5rem;
+}
+
+.step-content-default {
+  position: relative;
+  width: 100%;
+}
+
+.step-default {
+  padding: 1.75rem 2rem 1.5rem 2rem;
+}
+
+.footer-container {
+  padding: 1rem 2rem 2rem 2rem;
+}
+
+.footer-nav {
+  display: flex;
+  align-items: center;
+}
+
+.footer-nav.spread {
+  justify-content: space-between;
+}
+
+.footer-nav.end {
+  justify-content: flex-end;
+}
+
+.back-button {
+  transition: all 250ms ease;
+  border-radius: 0.75rem;
+  padding: 0.65rem 1.25rem;
+  color: #666666;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  background-color: transparent;
+  border: 1px solid #e5e7eb;
+}
+
+.back-button:hover {
+  color: #111111;
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.back-button.inactive {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.next-button {
+  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 0.85rem;
+  background-color: var(--color-primary, #b08b6e);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
+  padding: 0.75rem 1.75rem;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 4px 14px rgba(176, 139, 110, 0.35);
+}
+
+.next-button:hover:not(:disabled) {
+  background-color: var(--color-primary-hover, #9c785d);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(176, 139, 110, 0.42);
+}
+
+.next-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.next-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.step-indicator {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+}
+
+.step-indicator-inner {
+  display: flex;
+  height: 2.25rem;
+  width: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.step-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: color 0.3s ease;
+  white-space: nowrap;
+}
+
+.step-label.active {
+  color: var(--color-primary, #b08b6e);
+}
+
+.step-label.complete {
+  color: var(--color-primary, #b08b6e);
+}
+
+.step-label.inactive {
+  color: #9ca3af;
+}
+
+.active-dot {
+  height: 0.65rem;
+  width: 0.65rem;
+  border-radius: 9999px;
+  background-color: #ffffff;
+}
+
+.step-number {
+  font-size: 0.875rem;
+}
+
+.step-connector {
+  position: relative;
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
+  height: 2px;
+  flex: 1;
+  overflow: hidden;
+  border-radius: 9999px;
+  background-color: #e5e7eb;
+}
+
+.step-connector-inner {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+}
+
+.check-icon {
+  height: 1.1rem;
+  width: 1.1rem;
+  color: #ffffff;
+}
+
+@media (max-width: 640px) {
+  .step-circle-container {
+    border-radius: 1rem;
+  }
+  .step-indicator-row {
+    padding: 1.25rem 1rem 1rem 1rem;
+  }
+  .step-default {
+    padding: 1.25rem 1rem 1rem 1rem;
+  }
+  .footer-container {
+    padding: 0.75rem 1rem 1.5rem 1rem;
+  }
+  .step-connector {
+    margin-left: 0.35rem;
+    margin-right: 0.35rem;
+  }
+  .step-indicator-inner {
+    height: 1.85rem;
+    width: 1.85rem;
+    font-size: 0.8rem;
+  }
+  .step-label {
+    font-size: 0.7rem;
+  }
+}
